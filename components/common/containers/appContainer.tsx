@@ -10,7 +10,7 @@ function AppContainer({
   return (
     <div className="global-div min-h-screen flex flex-col">
       <Sidebar></Sidebar>
-      <div className="wrapper flex-grow bg-bgFond">{children}</div>
+      <div className="wrapper flex-grow bg-bgFond lg:pl-[250px] lg:py-5">{children}</div>
     </div>
   );
 }
