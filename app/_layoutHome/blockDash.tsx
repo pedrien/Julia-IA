@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Mic,
   ArrowUpToLine,
@@ -12,15 +12,26 @@ import { Button, Input } from "@heroui/react";
 import Image from "next/image";
 
 const BlockDash = () => {
-  const hours = new Date().getHours();
-  let greeting = "";
-  if (hours >= 0 && hours < 12) {
-    greeting = "Bonjour";
-  } else if (hours >= 12 && hours < 16) {
-    greeting = "Bon après-midi";
-  } else {
-    greeting = "Bonsoir";
-  }
+  const [greeting, setGreeting] = useState("");
+
+  // Fonction qui met à jour le salut
+  const updateGreeting = () => {
+    const hours = new Date().getHours();
+    if (hours >= 0 && hours < 12) {
+      setGreeting("Bonjour");
+    } else if (hours >= 12 && hours < 16) {
+      setGreeting("Bon après-midi");
+    } else {
+      setGreeting("Bonsoir");
+    }
+  };
+
+  useEffect(() => {
+    updateGreeting(); // initialisation
+    const interval = setInterval(updateGreeting, 60 * 1000); // vérifie chaque minute
+
+    return () => clearInterval(interval); // nettoyage
+  }, []);
   return (
     <div className="container-fluid lg:px-7 px-2">
       <div

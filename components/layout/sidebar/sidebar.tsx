@@ -98,7 +98,7 @@ const Sidebar = () => {
           
         </div>
       </div>
-      <div className="footer p-3">
+      <div className="footer p-3 border-t border-colorBorder">
         <div className="block-user-login border border-colorBorder px-1 py-2 rounded-xl flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <Avatar
