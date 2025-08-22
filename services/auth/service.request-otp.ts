@@ -5,6 +5,10 @@ import { handleServerActionError } from "@/libs/handleServerActionError";
 import { actionClient } from "@/libs/safeAction";
 import axios from "axios";
 import shemaRequestOtp from "@/validators/auth/validator.request-otp";
+import {
+  IActionError,
+  IActionSuccess,
+} from "@/interfaces/interface.result-actions";
 
 /**
  * Requests an OTP (One-Time Password) for user authentication.
@@ -32,7 +36,7 @@ export const requestOtp = actionClient
   .action(
     async ({
       parsedInput: { username },
-    }): Promise<{ success: boolean; message?: string; error?: string }> => {
+    }): Promise<IActionSuccess | IActionError> => {
       try {
         const response = await axios.post(
           `${ENV.API_LOCAL_BASE_URL}auth/request-otp`,

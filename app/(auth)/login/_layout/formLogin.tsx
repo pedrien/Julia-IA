@@ -6,21 +6,27 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRequestOtp } from "@/hooks/features/auth/hook.request-otp";
 
 const FormLogin = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState<"login" | "verification">(
     "login"
   );
+  const [username, setUsername] = useState("");
+
+  const { mutate: requestOtp, isPending: isRequestingOtp } = useRequestOtp({
+    onSuccessCallback: () => {
+      setCurrentStep("verification");
+    },
+  });
 
   const handleLoginClick = async () => {
-    if (isSubmitting) return;
+    if (isSubmitting || !username.trim()) return;
     setIsSubmitting(true);
     try {
-      // Remplacer par votre logique de connexion (appel API)
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      // Passer à l'étape de vérification après la connexion
-      setCurrentStep("verification");
+      // Appeler le service de demande d'OTP
+      requestOtp({ username: username.trim() });
     } finally {
       setIsSubmitting(false);
     }
@@ -101,6 +107,13 @@ const FormLogin = () => {
                         className="lg:h-[52px] border outline-none w-full rounded-xl bg-[#ffffff12] backdrop-blur-[34px] border-[#ffffff10] focus-visible:ring-[0px] focus-visible:border-[#ffffff10] text-white pl-12"
                         type="text"
                         placeholder="Entrez votre pseudo"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === "Enter") {
+                            handleLoginClick();
+                          }
+                        }}
                       />
                       <div className="line -z-[1] bg-white w-[0%] h-[7px] bottom-[-1px] rounded-[100%] blur-[1px] absolute transition-all duration-300"></div>
                     </div>
@@ -108,14 +121,16 @@ const FormLogin = () => {
                   <div className="flex justify-center">
                     <Button
                       onPress={handleLoginClick}
-                      disabled={isSubmitting}
+                      disabled={
+                        isSubmitting || isRequestingOtp || !username.trim()
+                      }
                       className={`text-white ${
-                        isSubmitting
+                        isSubmitting || isRequestingOtp
                           ? "lg:w-[52px] p-0 lg:h-[52px] rounded-full"
                           : "w-full lg:h-[52px]"
                       }  placeholder:text-white shadow-none bg-[#782efa] rounded-xl mt-2 cursor-pointer hover:bg-[#782efa] disabled:opacity-70 transition-all duration-300`}
                     >
-                      {isSubmitting ? (
+                      {isSubmitting || isRequestingOtp ? (
                         <>
                           <Loader2 className="h-4 w-4 animate-spin" />
                         </>

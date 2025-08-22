@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Public_Sans } from "next/font/google";
 import "./globals.css";
 import HeroUIProvider from "@/providers/HeroUIProvider";
+import ProviderQuery from "@/providers/QueryProvider";
 
 const publicSans = Public_Sans({
   subsets: ["latin"],
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={publicSans.className}>
-        <HeroUIProvider>{children}</HeroUIProvider>
+        <ProviderQuery>
+          <HeroUIProvider>{children}</HeroUIProvider>
+        </ProviderQuery>
       </body>
     </html>
   );

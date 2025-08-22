@@ -3,6 +3,8 @@
 import {
   useCustomMutation,
   MutationResult,
+  IActionSuccess,
+  IActionError,
 } from "@/hooks/common/hook.use-mutation";
 import { requestOtp } from "@/services/auth/service.request-otp";
 import { RequestOtpFormData } from "@/validators/auth/validator.request-otp";
@@ -10,20 +12,13 @@ import { RequestOtpFormData } from "@/validators/auth/validator.request-otp";
 // Type pour les paramètres supplémentaires
 export interface RequestOtpOptions {
   onSuccessCallback?: (
-    data: MutationResult<{
-      success: boolean;
-      message?: string;
-      error?: string;
-    }>,
+    data: MutationResult<IActionSuccess | IActionError>,
     otpData: RequestOtpFormData
   ) => void;
 }
 
 export const useRequestOtp = (options?: RequestOtpOptions) => {
-  return useCustomMutation<
-    { success: boolean; message?: string; error?: string },
-    RequestOtpFormData
-  >({
+  return useCustomMutation<IActionSuccess | IActionError, RequestOtpFormData>({
     mutationFn: requestOtp,
     messages: {
       success: "Code de vérification envoyé avec succès",
