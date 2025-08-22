@@ -54,6 +54,9 @@ body {
   }
 }
 
+* {
+  user-select: none !important;
+}
 .table-bordered {
   thead {
     th {
