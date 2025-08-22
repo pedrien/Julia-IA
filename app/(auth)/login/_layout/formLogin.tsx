@@ -18,15 +18,49 @@ const FormLogin = () => {
   const [username, setUsername] = useState<string>("");
   const [otp, setOtp] = useState<string>("");
   const [isVerifying, startVerification] = useTransition();
+  const [timeLeft, setTimeLeft] = useState<number>(120); // 2 minutes en secondes
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
 
   const { mutate: requestOtp, isPending: isRequestingOtp } = useRequestOtp({
     onSuccessCallback: () => {
       setCurrentStep("verification");
+      setTimeLeft(120); // Reset timer à 2 minutes
+      setIsTimerRunning(true);
     },
   });
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/";
   const error = searchParams.get("error");
+
+  // Gestion du timer
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (isTimerRunning && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            setIsTimerRunning(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isTimerRunning, timeLeft]);
+
+  // Formatage du temps en MM:SS
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
 
   const handleLoginClick = async () => {
     if (isSubmitting || !username.trim()) return;
@@ -54,7 +88,6 @@ const FormLogin = () => {
           username: username,
           otp: otp,
         });
-        console.log("requestLogin", requestLogin);
 
         if (
           requestLogin?.error &&
@@ -247,7 +280,7 @@ const FormLogin = () => {
                   e‑mail
                 </p>
                 <span className="text-center text-sm block text-white/80">
-                  00:00
+                  {formatTime(timeLeft)}
                 </span>
                 <div className="flex flex-col">
                   <InputOtp
@@ -264,8 +297,20 @@ const FormLogin = () => {
                 </div>
                 <p className="text-center text-white/80 lg:mb-6 lg:mt-4">
                   {"Vous n'avez pas reçu le code ?"}{" "}
-                  <Link href={"#"} className="font-medium text-[#782efa]">
-                    Revoyez le code
+                  <Link
+                    href={"#"}
+                    className={`font-medium ${
+                      timeLeft === 0
+                        ? "text-[#782efa]"
+                        : "text-white/50 cursor-not-allowed"
+                    }`}
+                    onClick={(e) => {
+                      if (timeLeft > 0) {
+                        e.preventDefault();
+                      }
+                    }}
+                  >
+                    {timeLeft === 0 ? "Revoyez le code" : "Revoyez le code"}
                   </Link>
                 </p>
                 <div className="flex gap-3">
