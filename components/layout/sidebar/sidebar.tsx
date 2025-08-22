@@ -6,10 +6,10 @@ import {
   LayoutDashboard,
   LogOut,
   FileText,
-  BotMessageSquare,
   Mail,
   Settings,
   Moon,
+  Sparkles
 } from "lucide-react";
 import LinkNav from "./LinkNav";
 import { Avatar } from "@heroui/react";
@@ -78,10 +78,10 @@ const Sidebar = () => {
         <div className="block-new-discussion">
           <Link
             href={"#"}
-            className="flex items-center gap-2 duration-300 relative overflow-hidden z-10 transition-all    text-white p-2 px-3 rounded-xl text-sm font-medium bg-primaryColor hover:text-white"
+            className="flex items-center justify-center gap-2 duration-300 relative overflow-hidden z-10 transition-all    text-white p-3 px-3 rounded-xl text-sm font-medium bg-primaryColor hover:text-white"
           >
             <div className="circle absolute w-[70px] h-[70px]  -z-10 bg-white rounded-full opacity-40 blur-[10px] -left-[30px] -top-[30px]"></div>
-            <BotMessageSquare size={22} />
+            <Sparkles size={20} />
             Discuter avec Julia
             <div className="circle absolute w-[70px] h-[70px]  -z-10 bg-white rounded-full opacity-40 blur-[10px] -right-[30px] -bottom-[30px]"></div>
             <div className="w-full h-full absolute top-0 left-0 -z-10 opacity-40">
