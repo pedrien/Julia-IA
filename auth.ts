@@ -42,15 +42,20 @@ const config = {
     Credentials({
       credentials: {
         username: {},
+        otp_code: {},
       },
       authorize: async (credentials) => {
         const username = credentials.username as string | undefined;
+        const otp_code = credentials.otp_code as string | undefined;
 
-        if (!username) {
-          throw new CredentialsSignin("Please provide both username");
+        if (!username || !otp_code) {
+          throw new CredentialsSignin(
+            "Please provide both username and otp_code"
+          );
         }
         const body = {
           username,
+          otp_code,
           provider: PROVIDER,
         };
 
@@ -58,7 +63,7 @@ const config = {
           const requestAuthCredential = await axios.post(LOGIN_URL, body);
 
           if (requestAuthCredential.status !== 200) {
-            throw new AuthError("Please provide both email & password");
+            throw new AuthError("Please provide both username & otp_code");
           }
 
           const response = fakeSessionUser;
