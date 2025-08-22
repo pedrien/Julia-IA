@@ -2,7 +2,6 @@ import { DefaultUser, DefaultJWT } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
-    id: string | null;
     username: string;
     email: string | null;
     name: string;
@@ -12,12 +11,11 @@ declare module "next-auth" {
     created_at: string;
     token: {
       access_token: string;
-      expire_at: string;
+      expires_at: number;
     };
   }
 
   interface User extends DefaultUser {
-    id: string | null;
     username: string;
     email: string | null;
     name: string;
@@ -27,14 +25,13 @@ declare module "next-auth" {
     created_at: string;
     token: {
       access_token: string;
-      expire_at: string;
+      expires_at: number; // Changed from string to number to match auth.ts
     };
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
-    id: string | null;
     username: string;
     email: string | null;
     name: string;
@@ -44,7 +41,7 @@ declare module "next-auth/jwt" {
     created_at: string;
     token: {
       access_token: string;
-      expire_at: string;
+      expires_at: number; // Changed from string to number to match auth.ts
     };
   }
 }

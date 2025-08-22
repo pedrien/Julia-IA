@@ -14,7 +14,7 @@ import { SessionApp, SessionSchema } from "./validators/auth/validator.session";
 import { convertExpiresInToSeconds } from "./utils/utils.times";
 import { ENV } from "./env";
 import { encryptToken } from "./libs/cryptoToken";
-import { fakeCompleteSessionUser } from "./mocks/session/fake.session-user";
+import { fakeSessionUser } from "./mocks/session/fake.session-user";
 
 // Constants
 const PROVIDER = "GOOGLE";
@@ -41,19 +41,16 @@ const config = {
   providers: [
     Credentials({
       credentials: {
-        email: {},
-        password: {},
+        username: {},
       },
       authorize: async (credentials) => {
-        const email = credentials.email as string | undefined;
-        const password = credentials.password as string | undefined;
+        const username = credentials.username as string | undefined;
 
-        if (!email || !password) {
-          throw new CredentialsSignin("Please provide both email & password");
+        if (!username) {
+          throw new CredentialsSignin("Please provide both username");
         }
         const body = {
-          email,
-          password,
+          username,
           provider: PROVIDER,
         };
 
@@ -64,30 +61,29 @@ const config = {
             throw new AuthError("Please provide both email & password");
           }
 
-          const response = requestAuthCredential.data.data;
-          // const response = fakeCompleteSessionUser;
+          const response = fakeSessionUser;
+
           const session: SessionApp = validateApiResponse(
             response,
             SessionSchema
           );
 
           // Set token expiration 30 minutes before actual expiry
-          const expireDate = new Date(response.token.expire_at);
+          const expireDate = new Date(response.data.token.expire_at);
           expireDate.setMinutes(expireDate.getMinutes() - 30);
 
           const encryptedToken: string = await encryptToken(
-            response.token.access_token
+            response.data.token.access_token
           );
 
           return {
             username: session.user.data.username,
             email: session.user.data.email,
-            prenom: session.user.data.prenom,
-            nom: session.user.data.nom,
-            profileUrl: session.user.data.profileUrl,
-            dark_mode: session.user.data.dark_mode,
-            status: session.user.data.status,
-            user_type: session.user.data.user_type,
+            name: session.user.data.name,
+            avatar: session.user.data.avatar,
+            is_active: session.user.data.is_active,
+            last_login_at: session.user.data.last_login_at,
+            created_at: session.user.data.created_at,
             token: {
               access_token: encryptedToken,
               expires_at: expireDate.getTime(),
