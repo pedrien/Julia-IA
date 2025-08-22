@@ -2,21 +2,16 @@ import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
 // Define routes that don't require authentication
-const PUBLIC_ROUTES = [
-  "/auth/login",
-  "/auth/forgot-password",
-  "/auth/reset-password",
-];
+const PUBLIC_ROUTES = ["/login", "/forgot-password", "/reset-password"];
 
 // Define routes that should not be accessible when authenticated
 const AUTH_ROUTES = [
-  "/",
-  "/auth/login",
-  "/auth/signup",
-  "/auth/forgot-password",
-  "/auth/reset-password",
-  "/auth/verify-email",
-  "/auth/resend-verification",
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/reset-password",
+  "/verify-email",
+  "/resend-verification",
   "/appartements",
   "/services",
   "/experience",
@@ -24,7 +19,7 @@ const AUTH_ROUTES = [
 ];
 
 function buildLoginUrl(origin: string, callbackUrl: string, error: string) {
-  const loginUrl = new URL("/auth/login", origin);
+  const loginUrl = new URL("/login", origin);
   loginUrl.searchParams.set("error", error);
   loginUrl.searchParams.set("callbackUrl", callbackUrl);
   return loginUrl;
@@ -43,7 +38,7 @@ export default auth(async (req) => {
 
   // If authenticated but session expired, redirect to login (except on login/signup)
   if (req.auth && req.auth.token.expires_at < currentTime) {
-    if (!["/auth/login", "/auth/signup"].includes(pathname)) {
+    if (!["/login", "/signup"].includes(pathname)) {
       return NextResponse.redirect(
         buildLoginUrl(req.nextUrl.origin, req.nextUrl.href, "session_expired")
       );
@@ -62,6 +57,6 @@ export default auth(async (req) => {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|assets|images|icons).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|assets|images|icons|videos).*)",
   ],
 };
