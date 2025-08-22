@@ -42,29 +42,28 @@ const config = {
     Credentials({
       credentials: {
         username: {},
-        otp_code: {},
+        otp: {},
       },
       authorize: async (credentials) => {
+        console.log("credentials", credentials);
         const username = credentials.username as string | undefined;
-        const otp_code = credentials.otp_code as string | undefined;
+        const otp = credentials.otp as string | undefined;
 
-        if (!username || !otp_code) {
-          throw new CredentialsSignin(
-            "Please provide both username and otp_code"
-          );
+        if (!username || !otp) {
+          throw new CredentialsSignin("Please provide both username and otp");
         }
         const body = {
           username,
-          otp_code,
+          otp,
           provider: PROVIDER,
         };
 
         try {
-          const requestAuthCredential = await axios.post(LOGIN_URL, body);
+          // const requestAuthCredential = await axios.post(LOGIN_URL, body);
 
-          if (requestAuthCredential.status !== 200) {
-            throw new AuthError("Please provide both username & otp_code");
-          }
+          // if (requestAuthCredential.status !== 200) {
+          //   throw new AuthError("Please provide both username & otp");
+          // }
 
           const response = fakeSessionUser;
 

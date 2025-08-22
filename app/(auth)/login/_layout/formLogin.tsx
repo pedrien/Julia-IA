@@ -1,31 +1,37 @@
 "use client";
-import { Button } from "@heroui/react";
+import { addToast, Button } from "@heroui/react";
 import { InputOtp } from "@heroui/input-otp";
 import { Loader2, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRequestOtp } from "@/hooks/features/auth/hook.request-otp";
+import { useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const FormLogin = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState<"login" | "verification">(
     "login"
   );
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [otp, setOtp] = useState<string>("");
+  const [isVerifying, startVerification] = useTransition();
 
   const { mutate: requestOtp, isPending: isRequestingOtp } = useRequestOtp({
     onSuccessCallback: () => {
       setCurrentStep("verification");
     },
   });
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
+  const error = searchParams.get("error");
 
   const handleLoginClick = async () => {
     if (isSubmitting || !username.trim()) return;
     setIsSubmitting(true);
     try {
-      // Appeler le service de demande d'OTP
       requestOtp({ username: username.trim() });
     } finally {
       setIsSubmitting(false);
@@ -34,6 +40,45 @@ const FormLogin = () => {
 
   const handleBackToLogin = () => {
     setCurrentStep("login");
+  };
+
+  const handleInputOtp = (value?: string) => {
+    setOtp(value || "");
+  };
+
+  const handleVerifyOtp = () => {
+    startVerification(async () => {
+      try {
+        const requestLogin = await signIn("credentials", {
+          redirect: false,
+          username: username,
+          otp: otp,
+        });
+        console.log("requestLogin", requestLogin);
+
+        if (
+          requestLogin?.error &&
+          requestLogin.error !== "no_session" &&
+          requestLogin.error !== "session_expired"
+        ) {
+          addToast({
+            title: "Échec de la connexion",
+            description:
+              "Le code de vérification est incorrect. Veuillez réessayer.",
+            color: "danger",
+          });
+        } else {
+          window.location.assign(callbackUrl);
+        }
+      } catch {
+        addToast({
+          title: "Une erreur s'est produite",
+          description:
+            "Une erreur s'est produite lors de la connexion. Veuillez réessayer.",
+          color: "danger",
+        });
+      }
+    });
   };
 
   const slideVariants = {
@@ -52,6 +97,29 @@ const FormLogin = () => {
       opacity: 0,
     }),
   };
+
+  useEffect(() => {
+    if (error === "session_expired") {
+      const timeoutId = setTimeout(() => {
+        addToast({
+          title: "Votre session a expiré",
+          description: "Veuillez vous reconnecter.",
+          color: "warning",
+        });
+      }, 500);
+      return () => clearTimeout(timeoutId);
+    }
+    if (error === "AccessDenied") {
+      const timeoutId = setTimeout(() => {
+        addToast({
+          title: "Il semble que vous n'ayez encore pas de compte",
+          description: "Veuillez vous inscrire pour continuer.",
+          color: "warning",
+        });
+      }, 500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [error]);
 
   return (
     <div className="card-login backdrop-blur-[34px] rounded-[24px] relative z-10 lg:p-[40px] border border-t-0 border-[#ffffff0f] bg-[#b1aaaa17]">
@@ -191,6 +259,7 @@ const FormLogin = () => {
                       segment:
                         "w-[calc(100%/6)] lg:h-[52px] rounded-[12px] bg-[#ffffff12] backdrop-blur-[34px] border-[#ffffff10] border-1 text-[#fff!important]",
                     }}
+                    onComplete={handleInputOtp}
                   />
                 </div>
                 <p className="text-center text-white/80 lg:mb-6 lg:mt-4">
@@ -206,7 +275,12 @@ const FormLogin = () => {
                   >
                     Retour
                   </Button>
-                  <Button className="text-white flex-1 lg:h-[52px] placeholder:text-white shadow-none bg-[#782efa] rounded-xl mt-2 cursor-pointer hover:bg-[#782efa]">
+                  <Button
+                    onPress={handleVerifyOtp}
+                    isLoading={isVerifying}
+                    isDisabled={otp.length !== 6}
+                    className="text-white flex-1 lg:h-[52px] placeholder:text-white shadow-none bg-[#782efa] rounded-xl mt-2 cursor-pointer hover:bg-[#782efa]"
+                  >
                     Valider
                   </Button>
                 </div>
