@@ -7,7 +7,7 @@ declare module "next-auth" {
     name: string;
     avatar: string | null;
     is_active: boolean;
-    last_login_at: string | null;
+
     created_at: string;
     token: {
       access_token: string;
@@ -21,7 +21,7 @@ declare module "next-auth" {
     name: string;
     avatar: string | null;
     is_active: boolean;
-    last_login_at: string | null;
+
     created_at: string;
     token: {
       access_token: string;
@@ -37,7 +37,7 @@ declare module "next-auth/jwt" {
     name: string;
     avatar: string | null;
     is_active: boolean;
-    last_login_at: string | null;
+
     created_at: string;
     token: {
       access_token: string;

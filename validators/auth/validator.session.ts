@@ -13,7 +13,6 @@ export const SessionUserDataSchema = z.object({
   name: z.string(),
   avatar: z.string().nullable(),
   is_active: z.boolean(),
-  last_login_at: z.string().nullable(),
   created_at: z.string(),
 });
 export type SessionUserData = z.infer<typeof SessionUserDataSchema>;

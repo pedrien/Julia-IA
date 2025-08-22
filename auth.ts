@@ -14,11 +14,10 @@ import { SessionApp, SessionSchema } from "./validators/auth/validator.session";
 import { convertExpiresInToSeconds } from "./utils/utils.times";
 import { ENV } from "./env";
 import { encryptToken } from "./libs/cryptoToken";
-import { fakeSessionUser } from "./mocks/session/fake.session-user";
 
 // Constants
 const PROVIDER = "GOOGLE";
-const LOGIN_URL = `${ENV.API_BASE_URL}auth/login`;
+const LOGIN_URL = `${ENV.API_BASE_URL}auth/verify-otp`;
 const SESSION_EXPIRATION = convertExpiresInToSeconds(
   ENV.EXPIRATION_TIME_SESSION
 );
@@ -45,27 +44,27 @@ const config = {
         otp: {},
       },
       authorize: async (credentials) => {
-        console.log("credentials", credentials);
         const username = credentials.username as string | undefined;
         const otp = credentials.otp as string | undefined;
 
         if (!username || !otp) {
           throw new CredentialsSignin("Please provide both username and otp");
         }
+
         const body = {
           username,
-          otp,
+          otp_code: otp,
           provider: PROVIDER,
         };
 
         try {
-          // const requestAuthCredential = await axios.post(LOGIN_URL, body);
+          const requestAuthCredential = await axios.post(LOGIN_URL, body);
 
-          // if (requestAuthCredential.status !== 200) {
-          //   throw new AuthError("Please provide both username & otp");
-          // }
+          if (requestAuthCredential.status !== 200) {
+            throw new AuthError("Please provide both username & otp");
+          }
 
-          const response = fakeSessionUser;
+          const response = requestAuthCredential.data.data;
 
           const session: SessionApp = validateApiResponse(
             response,
@@ -73,11 +72,10 @@ const config = {
           );
 
           // Set token expiration 30 minutes before actual expiry
-          const expireDate = new Date(response.data.token.expire_at);
-          expireDate.setMinutes(expireDate.getMinutes() - 30);
+          // L'API renvoie un string au format 'YYYY-MM-DD HH:mm:ss', il faut le parser correctement
 
           const encryptedToken: string = await encryptToken(
-            response.data.token.access_token
+            session.token.access_token
           );
 
           return {
@@ -86,11 +84,11 @@ const config = {
             name: session.user.data.name,
             avatar: session.user.data.avatar,
             is_active: session.user.data.is_active,
-            last_login_at: session.user.data.last_login_at,
+
             created_at: session.user.data.created_at,
             token: {
               access_token: encryptedToken,
-              expires_at: expireDate.getTime(),
+              expires_at: Math.floor(Date.now() / 1000) + 48 * 60 * 60,
             },
           };
         } catch (error: unknown) {
