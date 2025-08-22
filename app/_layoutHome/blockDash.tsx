@@ -10,12 +10,15 @@ import {
 import { Button, Input } from "@heroui/react";
 
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 const BlockDash = () => {
+  const { data: session } = useSession();
   const [greeting, setGreeting] = useState("");
 
   // Fonction qui met à jour le salut
   const updateGreeting = () => {
+    
     const hours = new Date().getHours();
     if (hours >= 0 && hours < 12) {
       setGreeting("Bonjour");
@@ -32,6 +35,8 @@ const BlockDash = () => {
 
     return () => clearInterval(interval); // nettoyage
   }, []);
+  
+  
   return (
     <div className="container-fluid lg:px-7 px-2">
       <div
@@ -41,14 +46,21 @@ const BlockDash = () => {
         // }}
       >
         <div className="w-full h-full absolute top-0 left-0 -z-10 opacity-40">
-         <Image src={"/images/img.png"} layout="responsive" alt="image" width={0} height={0} className="w-full h-[100%!important] object-cover scale-[.8] relative -right-40"/>
+          <Image
+            src={"/images/img.png"}
+            layout="responsive"
+            alt="image"
+            width={0}
+            height={0}
+            className="w-full h-[100%!important] object-cover scale-[.8] relative -right-40"
+          />
         </div>
         <div className="circle absolute w-[350px] h-[350px] -z-10 bg-white rounded-full opacity-40 blur-[100px] -left-[100px] -top-[250px]"></div>
         <div className="circle absolute w-[350px] h-[350px] -z-10 bg-white rounded-full opacity-40 blur-[100px] -right-[100px] -bottom-[250px]"></div>
         <div className="grid grid-cols-12">
           <div className="col-span-12 lg:col-span-6">
             <h1 className="lg:text-[28px] text-white font-bold">
-              {greeting}, Martins
+              {greeting}, {session?.user?.name}
             </h1>
             <p className="text-white/80">
               Bienvenu sur Julia, votre assistante virtuelle

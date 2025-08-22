@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { Public_Sans } from "next/font/google";
 import "./globals.css";
-import FloatingBot from "@/components/layout/floatingBot/floatingBot";
-
-
-
 import HeroUIProvider from "@/providers/HeroUIProvider";
+import ProviderQuery from "@/providers/QueryProvider";
 
 const publicSans = Public_Sans({
   subsets: ["latin"],
@@ -24,13 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={publicSans.className}
-      >
-        <HeroUIProvider>
-          {children}
-          <FloatingBot/>
-          </HeroUIProvider>
+      <body className={publicSans.className}>
+        <ProviderQuery>
+          <HeroUIProvider>{children}</HeroUIProvider>
+        </ProviderQuery>
       </body>
     </html>
   );
