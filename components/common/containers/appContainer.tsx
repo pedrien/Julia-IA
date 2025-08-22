@@ -10,6 +10,7 @@ import OverlayWaiting from "../overlay/OverlayWainting/OverlayWaiting";
 import { SidebarProvider } from "@/contexts/SidebarApp/SidebarContext";
 import { FullscreenProvider } from "@/contexts/FullscreenContext/context.fullscreen.context";
 import Sidebar from "@/components/layout/sidebar/sidebar";
+import FloatingBot from "@/components/layout/floatingBot/floatingBot";
 
 function AppContainer({
   children,
@@ -30,6 +31,7 @@ function AppContainer({
                       {children}
                     </div>
                   </div>
+                  <FloatingBot />
                   <ToastMain />
                   <OverlayWaiting />
                 </SidebarProvider>

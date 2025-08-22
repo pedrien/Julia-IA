@@ -1,55 +1,44 @@
 "use server";
 
 import { ENV } from "@/env";
-import {
-  IActionError,
-  IActionSuccess,
-} from "@/interfaces/interface.result-actions";
 import { handleServerActionError } from "@/libs/handleServerActionError";
 import { actionClient } from "@/libs/safeAction";
 import axios from "axios";
-import { z } from "zod";
-import { ListAppartementsResponse } from "@/validators/appartements/validator.list-appartements";
+import shemaRequestOtp from "@/validators/auth/validator.request-otp";
 
 /**
- * Fetches a paginated list of apartments from the remote API.
+ * Requests an OTP (One-Time Password) for user authentication.
  *
- * @function getListAppartements
- * @param {Object} input - The input parameters for fetching apartments.
- * @param {number} input.page - The page number to retrieve (must be >= 1).
- * @returns {Promise<(IActionSuccess & { data: ListAppartementsResponse }) | IActionError>}
- *   An object indicating the success or failure of the operation, and the apartments list data if successful.
+ * @function requestOtp
+ * @param {Object} input - The input parameters for requesting OTP.
+ * @param {string} input.username - The username to send OTP to.
+ * @returns {Promise<{ success: boolean; message?: string; error?: string }>}
+ *   An object indicating the success or failure of the operation.
  *
- * - Requires a valid user session (access token).
- * - Returns an error if the session is missing or expired.
- * - On HTTP request failure, returns an appropriate error message.
- * - On success, returns the paginated list of apartments.
+ * - Sends a request to the API to generate and send an OTP.
+ * - Returns an error if the username is invalid or if the API call fails.
+ * - On success, returns a confirmation message.
  *
  * Example usage:
- *   const result = await getListAppartements({ page: 1 });
+ *   const result = await requestOtp({ username: "john_doe" });
  *   if (result.success) {
- *     // Access result.data
+ *     // OTP sent successfully
  *   } else {
  *     // Handle result.error
  *   }
  */
-export const getListAppartements = actionClient
-  .inputSchema(
-    z.object({
-      page: z
-        .number()
-        .min(1, "La page doit être un nombre entier supérieur à 0"),
-    })
-  )
+export const requestOtp = actionClient
+  .inputSchema(shemaRequestOtp)
   .action(
     async ({
-      parsedInput: { page },
-    }): Promise<
-      (IActionSuccess & { data: ListAppartementsResponse }) | IActionError
-    > => {
+      parsedInput: { username },
+    }): Promise<{ success: boolean; message?: string; error?: string }> => {
       try {
-        const response = await axios.get(
-          `${ENV.API_LOCAL_BASE_URL}appartements/all?page=${page}`
+        const response = await axios.post(
+          `${ENV.API_LOCAL_BASE_URL}auth/request-otp`,
+          {
+            username,
+          }
         );
 
         if (response.status !== 200) {
@@ -58,16 +47,20 @@ export const getListAppartements = actionClient
             success: false,
             error:
               errorResponse ||
-              "There seems to be an error with the information you provided.",
+              "Il semble y avoir une erreur avec les informations fournies.",
           };
         }
 
-        const responseData: ListAppartementsResponse = response.data.data;
-        return { success: true, data: responseData };
+        return {
+          success: true,
+          message: "Un code de vérification a été envoyé avec succès.",
+        };
       } catch (error) {
+        const errorResult = handleServerActionError(error);
         return {
           success: false,
-          error: handleServerActionError(error).error,
+          error:
+            errorResult.error[0] || "Une erreur inattendue s'est produite.",
         };
       }
     }
