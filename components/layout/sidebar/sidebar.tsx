@@ -12,9 +12,11 @@ import {
   Moon,
 } from "lucide-react";
 import LinkNav from "./LinkNav";
-import { Avatar } from "@heroui/react";
+import { Avatar, Skeleton } from "@heroui/react";
+import { signOut, useSession } from "next-auth/react";
 
 const Sidebar = () => {
+  const { data: session, status } = useSession();
   return (
     <div className="sidebar flex flex-col h-full fixed top-0 left-0 bg-bgCard md:w-[250px] border-r border-colorBorder">
       <div className="header p-3 border-b border-colorBorder">
@@ -85,40 +87,56 @@ const Sidebar = () => {
             Discuter avec Julia
             <div className="circle absolute w-[70px] h-[70px]  -z-10 bg-white rounded-full opacity-40 blur-[10px] -right-[30px] -bottom-[30px]"></div>
             <div className="w-full h-full absolute top-0 left-0 -z-10 opacity-40">
-            <Image
-              src={"/images/img.png"}
-              layout="responsive"
-              alt="image"
-              width={0}
-              height={0}
-              className="w-full h-[100%!important] object-cover  relative"
-            />
-          </div>
+              <Image
+                src={"/images/img.png"}
+                layout="responsive"
+                alt="image"
+                width={0}
+                height={0}
+                className="w-full h-[100%!important] object-cover  relative"
+              />
+            </div>
           </Link>
-          
         </div>
       </div>
-      <div className="footer p-3">
-        <div className="block-user-login border border-colorBorder px-1 py-2 rounded-xl flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <Avatar
-              src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
-              className="w-[36px] h-[36px] flex-none"
-            />
-            <div className="flex flex-col overflow-hidden w-full gap-1">
-              <div className="truncate break-all text-sm text-colorTitle font-medium leading-none">
-                <h6>Martins kintambala</h6>
-              </div>
-              <div className="text-xs text-colorMuted">
-                <p>martins@gmail.com</p>
+      {status === "authenticated" ? (
+        <div className="footer p-3">
+          <div className="block-user-login border border-colorBorder px-1 py-2 rounded-xl flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              {session?.user?.avatar ? (
+                <Avatar
+                  src={session?.user?.avatar}
+                  className="w-[36px] h-[36px] flex-none"
+                />
+              ) : (
+                <Avatar className="w-[36px] h-[36px] flex-none" />
+              )}
+              <div className="flex flex-col overflow-hidden w-full gap-1">
+                <div className="truncate break-all text-sm text-colorTitle font-medium leading-none">
+                  <h6>{session?.user?.name}</h6>
+                </div>
+                <div className="text-xs text-colorMuted">
+                  <p>{session?.user?.email}</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="btn-logout mr-1 text-colorTitle">
-            <LogOut size={18} />
+            <div
+              className="btn-logout mr-1 text-colorTitle cursor-pointer"
+              onClick={() =>
+                signOut({
+                  callbackUrl: `${window.location.href}`,
+                })
+              }
+            >
+              <LogOut size={18} />
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <>
+          <Skeleton className="w-full h-[50px] rounded-xl" />
+        </>
+      )}
     </div>
   );
 };
