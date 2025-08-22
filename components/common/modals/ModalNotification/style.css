@@ -1,0 +1,15 @@
+.modal-notification-success {
+    @apply bg-green-100;
+}
+
+.modal-notification-error {
+    @apply bg-red-100;
+}
+
+.modal-notification-warning {
+    @apply bg-yellow-100;
+}
+
+.modal-notification-info {
+    @apply bg-blue-100;
+}
