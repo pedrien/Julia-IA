@@ -29,7 +29,7 @@ const FloatingBot = () => {
     <>
       <div
         className={`chatbotSm fixed flex flex-col w-[400px] z-40 rounded-2xl bg-bgCard h-[calc(100vh-320px)] bottom-5 right-5 shadow-[0_5px_24px_rgba(0,0,0,.05)] backdrop-blur-2xl  ${
-          isOpen ? "scale-100 opacity-100" : "scale-80 opacity-0"
+          isOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-80 opacity-0 pointer-events-none"
         }`}
         style={{
           background: "linear-gradient(to bottom,#782efa36,#fff)",

@@ -40,7 +40,7 @@ const BlockDash = () => {
   return (
     <div className="container-fluid lg:px-7 px-2">
       <div
-        className="banner bg-primaryColor lg:p-[30px] rounded-xl relative z-10 overflow-hidden"
+        className="banner bg-primaryColor lg:p-[22px] rounded-xl relative z-10 overflow-hidden"
         // style={{
         //   background: "linear-gradient(to right, var(--primaryColor), #cd2efa)",
         // }}
@@ -175,7 +175,7 @@ const BlockDash = () => {
               <tr>
                 <td>
                   <div className="flex items-center gap-1">
-                    <div className="icon text-colorTitle">
+                    <div className="icon text-colorMuted">
                       <FileText size={18} />
                     </div>
                     <span className="text-colorTitle">
@@ -200,7 +200,7 @@ const BlockDash = () => {
               <tr>
                 <td>
                   <div className="flex items-center gap-1">
-                    <div className="icon text-colorTitle">
+                    <div className="icon text-colorMuted">
                       <FileText size={18} />
                     </div>
                     <span className="text-colorTitle">
@@ -225,7 +225,7 @@ const BlockDash = () => {
               <tr>
                 <td>
                   <div className="flex items-center gap-1">
-                    <div className="icon text-colorTitle">
+                    <div className="icon text-colorMuted">
                       <FileText size={18} />
                     </div>
                     <span className="text-colorTitle">
@@ -250,7 +250,7 @@ const BlockDash = () => {
               <tr>
                 <td>
                   <div className="flex items-center gap-1">
-                    <div className="icon text-colorTitle">
+                    <div className="icon text-colorMuted">
                       <FileText size={18} />
                     </div>
                     <span className="text-colorTitle">
