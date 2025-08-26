@@ -157,6 +157,18 @@ const FormLogin = () => {
   return (
     <div className="card-login backdrop-blur-[34px] rounded-[24px] relative z-10 lg:p-[40px] border border-t-0 border-[#ffffff0f] bg-[#b1aaaa17]">
       <div className="absolute -z-[1] w-full h-full top-0 left-0 rounded-[24px] border-t-[2px] border-[#ffffff2a]"></div>
+      <div className="flex justify-center lg:mt-[-74px] lg:mb-3">
+        <div className="icon flex items-center justify-center bg-[#782efa] rounded-full w-[70px] h-[70px]">
+          <Image
+            src={"/images/logos/icon.png"}
+            className="w-[100px!important] max-w-[max-content]"
+            layout={"responsive"}
+            alt="icon julia"
+            width={0}
+            height={0}
+          />
+        </div>
+      </div>
       <div className="content-form relative overflow-hidden">
         <AnimatePresence mode="wait" initial={false}>
           {currentStep === "login" && (
@@ -173,18 +185,6 @@ const FormLogin = () => {
               }}
               className="w-full"
             >
-              <div className="flex justify-center lg:mt-[-70px] lg:mb-3">
-                <div className="icon flex items-center justify-center bg-[#782efa] rounded-full w-[70px] h-[70px]">
-                  <Image
-                    src={"/images/logos/icon.png"}
-                    className="w-[100px!important] max-w-[max-content]"
-                    layout={"responsive"}
-                    alt="icon julia"
-                    width={0}
-                    height={0}
-                  />
-                </div>
-              </div>
               <div>
                 <h1 className="text-center text-white font-medium lg:text-[36px] mb-1">
                   Bienvenu sur Jul<span className="text-[#782efa]">ia</span>
@@ -205,7 +205,7 @@ const FormLogin = () => {
                         <UserRound size={22} />
                       </div>
                       <input
-                        className="lg:h-[52px] border outline-none w-full rounded-xl bg-[#ffffff12] backdrop-blur-[34px] border-[#ffffff10] focus-visible:ring-[0px] focus-visible:border-[#ffffff10] text-white pl-12"
+                        className="lg:h-[52px] relative z-20 border-0 outline-none w-full rounded-xl bg-[#ffffff00]  border-[#ffffff10] focus-visible:ring-[0px] focus-visible:border-[#ffffff10] text-white pl-12"
                         type="text"
                         placeholder="Entrez votre pseudo"
                         value={username}
@@ -216,7 +216,8 @@ const FormLogin = () => {
                           }
                         }}
                       />
-                      <div className="line -z-[1] bg-white w-[0%] h-[7px] bottom-[-1px] rounded-[100%] blur-[1px] absolute transition-all duration-300"></div>
+                      {/* <div className="line -z-[1] bg-white w-[0%] h-[7px] bottom-[-1px] rounded-[100%] blur-[1px] absolute transition-all duration-300"></div> */}
+                      <div className="fake-input z-10 top-0 absolute left-0 w-full h-full rounded-xl bg-[#ffffff12] backdrop-blur-[34px] border border-[#ffffff10]"></div>
                     </div>
                   </div>
                   <div className="flex justify-center">
@@ -229,7 +230,7 @@ const FormLogin = () => {
                         isSubmitting || isRequestingOtp
                           ? "lg:w-[52px] p-0 lg:h-[52px] rounded-full"
                           : "w-full lg:h-[52px]"
-                      }  placeholder:text-white shadow-none bg-[#782efa] rounded-xl mt-2 cursor-pointer hover:bg-[#782efa] disabled:opacity-70 transition-all duration-300`}
+                      }  placeholder:text-white shadow-none bg-[#782efa] rounded-xl mt-2 cursor-pointer hover:bg-[#782efa] disabled:opacity-70 disabled:pointer-events-none transition-all duration-300`}
                     >
                       {isSubmitting || isRequestingOtp ? (
                         <>
@@ -259,18 +260,6 @@ const FormLogin = () => {
               }}
               className="w-full"
             >
-              <div className="flex justify-center lg:mt-[-70px] lg:mb-3">
-                <div className="icon flex items-center justify-center bg-[#782efa] rounded-full w-[70px] h-[70px]">
-                  <Image
-                    src={"/images/logos/icon.png"}
-                    className="w-[100px!important] max-w-[max-content]"
-                    layout={"responsive"}
-                    alt="icon julia"
-                    width={0}
-                    height={0}
-                  />
-                </div>
-              </div>
               <div>
                 <h1 className="text-center text-white font-medium lg:text-[36px] mb-1">
                   Vérification du code

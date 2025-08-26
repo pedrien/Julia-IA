@@ -8,11 +8,15 @@ import {
   Printer,
 } from "lucide-react";
 import { Button, Input } from "@heroui/react";
+import { useModalContext } from "@/contexts/Modal/ModalContext";
 
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import NewRoom from "@/components/features/room/newRoom";
+import NewUser from "@/components/features/room/newUser";
 
 const BlockDash = () => {
+  const { openModal } = useModalContext();
   const { data: session } = useSession();
   const [greeting, setGreeting] = useState("");
 
@@ -72,9 +76,9 @@ const BlockDash = () => {
         <h2 className="text-colorTitle font-semibold lg:mb-3 mb-4">
           Actions rapides
         </h2>
-        <div className="grid grid-cols-5 gap-3 lg:gap-4">
+        <div className="grid grid-cols-5 gap-3 lg:gap-3">
           <div className="col-span-6 lg:col-span-1">
-            <div className="card flex flex-col gap-2 cursor-pointer group">
+            <div className="card flex flex-col gap-2 cursor-pointer group" onClick={() => openModal("ModalNewRoom")}>
               <div className="content-icon aspect-1/1 bg-[#f7f7f7]  transition-background duration-300 rounded-xl flex flex-col items-center justify-center">
                 <div className="icon w-[60px] h-[60px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ff4949] text-white rounded-full flex justify-center items-center">
                   <Mic size={28}></Mic>
@@ -88,7 +92,7 @@ const BlockDash = () => {
             </div>
           </div>
           <div className="col-span-6 lg:col-span-1">
-            <div className="card flex flex-col gap-2 cursor-pointer group">
+            <div className="card flex flex-col gap-2 cursor-pointer group" >
               <div className="content-icon aspect-1/1 bg-[#f7f7f7]   transition-background duration-300 rounded-xl flex flex-col items-center justify-center">
                 <div className="icon w-[60px] h-[60px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-primaryColor text-white rounded-full flex justify-center items-center">
                   <ArrowUpToLine size={28}></ArrowUpToLine>
@@ -276,6 +280,8 @@ const BlockDash = () => {
           </table>
         </div>
       </div>
+      <NewRoom/>
+      <NewUser/>
     </div>
   );
 };

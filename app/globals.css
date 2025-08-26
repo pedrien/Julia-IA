@@ -14,6 +14,7 @@
   --colorTitle: #121213;
   --colorMuted: #7d7d88;
   --colorBorder: #e9e6ee;
+  --colorBorderTr: #f4f2f9;
 }
 
 @theme inline {
@@ -24,6 +25,7 @@
   --color-primaryColor: var(--primaryColor);
   --color-bgCard: var(--bgCard);
   --color-colorBorder: var(--colorBorder);
+  --color-colorBorderTr: var(--colorBorderTr);
   --color-lightPrimaryColor: var(--lightPrimaryColor);
   --color-colorTitle: var(--colorTitle);
   --color-colorMuted: var(--colorMuted);
