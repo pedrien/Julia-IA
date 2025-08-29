@@ -27,7 +27,7 @@ function AppContainer({
                 <SidebarProvider>
                   <div className="global-div min-h-screen flex flex-col">
                     <Sidebar></Sidebar>
-                    <div className="wrapper flex-grow bg-bgFond lg:pl-[250px] lg:py-5">
+                    <div className="wrapper flex-grow bg-bgFond lg:pl-[250px] bg-[#f5f5f5]">
                       {children}
                     </div>
                   </div>

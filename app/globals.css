@@ -66,18 +66,18 @@ body {
       font-size: 14px;
       color: var(--colorTitle);
       font-weight: 500;
-      padding: 12px 14px;
+      padding: 12px 16px;
       padding-left: 14px;
       white-space: nowrap;
       text-align: start;
     }
   }
   tr {
-    border-top: 1px solid var(--colorBorder);
+    border-top: 1px solid var(--colorBorderTr);
   }
   td {
     font-size: 14px;
-    padding: 12px 14px;
+    padding: 12px 16px;
     padding-left: 14px;
     white-space: nowrap;
     text-align: start;

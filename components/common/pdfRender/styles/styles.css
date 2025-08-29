@@ -1,0 +1,13 @@
+.pdf-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+.pdf-container .pdf-page {
+  width: 100%;
+  max-width: 800px;
+  margin: 10px auto;
+  margin-bottom: 10px;
+  box-shadow: 0 25px 50px 0 rgba(146, 152, 166, 0.08);
+}/*# sourceMappingURL=styles.css.map */

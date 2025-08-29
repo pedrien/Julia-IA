@@ -9,7 +9,8 @@ import {
   Mail,
   Settings,
   Moon,
-  Sparkles
+  Sparkles,
+  UsersRound,
 } from "lucide-react";
 import LinkNav from "./LinkNav";
 import { Avatar, Skeleton } from "@heroui/react";
@@ -18,7 +19,7 @@ import { signOut, useSession } from "next-auth/react";
 const Sidebar = () => {
   const { data: session, status } = useSession();
   return (
-    <div className="sidebar flex flex-col h-full fixed top-0 left-0 bg-bgCard md:w-[250px] border-r border-colorBorder">
+    <div className="sidebar flex flex-col h-full fixed top-0 left-0 bg-bgCard md:w-[250px]">
       <div className="header p-3 border-b border-colorBorder">
         <div className="flex items-center justify-between">
           <Link href={"/"}>
@@ -48,9 +49,9 @@ const Sidebar = () => {
           </li>
           <li>
             <LinkNav
-              href="/compte-rendu"
+              href="/rooms"
               icon={<FileText size={20} />}
-              title="Compte rendu"
+              title="Comptes rendus"
             />
           </li>
           <li>
