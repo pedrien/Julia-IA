@@ -41,37 +41,40 @@ const BlockDash = () => {
 
   return (
     <div>
-      <div
-        className="banner bg-primaryColor lg:p-[30px] lg:pb-[70px] relative z-10 overflow-hidden"
-        // style={{
-        //   background: "linear-gradient(to right, var(--primaryColor), #cd2efa)",
-        // }}
-      >
-        {/* <div className="w-full h-full absolute top-0 left-0 -z-10 opacity-40">
-          <Image
-            src={"/images/img.png"}
-            layout="responsive"
-            alt="image"
-            width={0}
-            height={0}
-            className="w-full h-[100%!important] object-cover scale-[.8] relative -right-40"
-          />
-        </div> */}
-        <div className="circle absolute w-[350px] h-[350px] -z-10 bg-white rounded-full opacity-40 blur-[100px] -left-[100px] -top-[250px]"></div>
-        <div className="circle absolute w-[350px] h-[350px] -z-10 bg-white rounded-full opacity-40 blur-[100px] -right-[100px] -bottom-[250px]"></div>
-        <div className="grid grid-cols-12">
-          <div className="col-span-12 lg:col-span-6">
-            <h1 className="lg:text-[28px] text-white font-bold">
-              {greeting}, {session?.user?.name}
-            </h1>
-            <p className="text-white/80">
-              Bienvenu sur Julia, votre assistante virtuelle
-            </p>
+      <div className="container-fluid lg:px-7 px-2">
+        <div
+          className="banner bg-primaryColor lg:p-[22px] relative z-10 overflow-hidden rounded-xl"
+          // style={{
+          //   background: "linear-gradient(to right, var(--primaryColor), #cd2efa)",
+          // }}
+        >
+          <div className="w-full h-full absolute top-0 left-0 -z-10 opacity-40">
+            <Image
+              src={"/images/img.png"}
+              layout="responsive"
+              alt="image"
+              width={0}
+              height={0}
+              className="w-full h-[100%!important] object-cover scale-[.8] relative -right-40"
+            />
+          </div>
+          <div className="circle absolute w-[350px] h-[350px] -z-10 bg-white rounded-full opacity-40 blur-[100px] -left-[100px] -top-[250px]"></div>
+          <div className="circle absolute w-[350px] h-[350px] -z-10 bg-white rounded-full opacity-40 blur-[100px] -right-[100px] -bottom-[250px]"></div>
+          <div className="grid grid-cols-12">
+            <div className="col-span-12 lg:col-span-6">
+              <h1 className="lg:text-[28px] text-white font-bold">
+                {greeting}, {session?.user?.name}
+              </h1>
+              <p className="text-white/80">
+                Bienvenu sur Julia, votre assistante virtuelle
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="container-fluid lg:px-7 px-2 relative z-20 lg:mt-[-40px]">
-        <div className="block-action-rapide">
+        <div className="block-action-rapide lg:mt-3">
+          <h3 className="text-colorTitle font-semibold text-[18px] mb-3">
+            Actions rapides
+          </h3>
           <div className="grid grid-cols-5 gap-3 lg:gap-3">
             <div className="col-span-6 lg:col-span-1">
               <div

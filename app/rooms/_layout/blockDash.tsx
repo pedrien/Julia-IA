@@ -9,7 +9,7 @@ import NewRoom from "@/components/features/room/newRoom";
 const BlockDash = () => {
   const { openModal } = useModalContext();
   return (
-    <div className='container-fluid lg:px-7 px-2 lg:py-5'>
+    <div className='container-fluid lg:px-7 px-2'>
       <div className="flex items-center justify-between lg:mb-4">
         <h2 className="text-colorTitle font-semibold lg:mb-3 mb-4 text-[18px]">
           Comptes rendus des réunions
