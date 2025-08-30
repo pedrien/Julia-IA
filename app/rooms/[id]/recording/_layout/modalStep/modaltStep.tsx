@@ -11,29 +11,79 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Pause, Play } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useEndMeeting } from "@/hooks/features/meetings/hook.end-meeting";
+import { useRouter } from "next/navigation";
 
 interface ModalStepProps {
   recordedAudio?: string | null;
+  audioFile?: File | null;
+  meetingId?: string;
 }
 
-const ModalStep: React.FC<ModalStepProps> = ({ recordedAudio }) => {
+const ModalStep: React.FC<ModalStepProps> = ({
+  recordedAudio,
+  meetingId,
+  audioFile,
+}) => {
   const { isModalOpen, closeModal } = useModalContext();
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
+  const [audioFileState, setAudioFileState] = useState<File | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const { mutate: endMeeting, isPending } = useEndMeeting({
+    onSuccessCallback: () => {
+      console.log("Meeting ended successfully");
+      // closeModal("ModalStep");
+      // Rediriger vers la page des réunions ou une page de succès
+      // router.push("/rooms");
+    },
+  });
 
   // Debug: Log quand l'audio change
   useEffect(() => {
     console.log("ModalStep - recordedAudio:", recordedAudio);
   }, [recordedAudio]);
 
+  // Convertir l'URL audio en fichier
+  useEffect(() => {
+    if (recordedAudio) {
+      fetch(recordedAudio)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const file = new File([blob], "recording.webm", {
+            type: "audio/webm",
+          });
+          setAudioFileState(file);
+          console.log("Audio file created:", file);
+        })
+        .catch((error) => {
+          console.error("Error converting audio to file:", error);
+        });
+    }
+  }, [recordedAudio]);
+
   const nextStep = () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
+  };
+
+  const handleSubmitRecording = () => {
+    if (!meetingId || !audioFileState) {
+      console.error("Missing meetingId or audioFile");
+      return;
+    }
+
+    console.log("Submitting recording:", { meetingId, audioFile });
+    endMeeting({
+      id_meeting: meetingId,
+      audio_file: audioFileState,
+    });
   };
 
   const formatTime = (seconds: number): string => {
@@ -310,12 +360,19 @@ const ModalStep: React.FC<ModalStepProps> = ({ recordedAudio }) => {
                 {currentStep < 3 ? (
                   <Button
                     className="w-1/2 h-auto py-3 bg-primaryColor text-white"
-                    onPress={nextStep}
+                    onPress={handleSubmitRecording}
+                    isLoading={isPending}
+                    isDisabled={!audioFileState || !meetingId}
                   >
                     Suivant
                   </Button>
                 ) : (
-                  <Button className="w-1/2 h-auto py-3 bg-primaryColor text-white">
+                  <Button
+                    className="w-1/2 h-auto py-3 bg-primaryColor text-white"
+                    onPress={handleSubmitRecording}
+                    isLoading={isPending}
+                    isDisabled={!audioFile || !meetingId}
+                  >
                     Transcrire
                   </Button>
                 )}

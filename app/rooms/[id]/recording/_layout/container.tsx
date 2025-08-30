@@ -18,6 +18,7 @@ const Content = ({ id }: { id: string }) => {
     refetch,
     isRefetching,
   } = useGetMeetingDetailRecording(id);
+  const [audioFileState, setAudioFileState] = useState<File | null>(null);
 
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [chronoResetSignal, setChronoResetSignal] = useState<number>(0);
@@ -33,6 +34,7 @@ const Content = ({ id }: { id: string }) => {
     setIsRecording(false);
     if (audioUrl) {
       setRecordedAudio(audioUrl);
+      setAudioFileState(new File([], "recording.webm", { type: "audio/webm" }));
     }
   };
 
@@ -92,7 +94,11 @@ const Content = ({ id }: { id: string }) => {
       </div>
       <ParticipantRoom participants={meetingDetail.data.participants} />
       <InfoRoom meetingDetail={meetingDetail.data} />
-      <ModalStep recordedAudio={recordedAudio} />
+      <ModalStep
+        recordedAudio={recordedAudio}
+        meetingId={id}
+        audioFile={audioFileState}
+      />
     </>
   );
 };
