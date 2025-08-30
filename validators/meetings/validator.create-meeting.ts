@@ -27,7 +27,7 @@ export const createMeetingSchema = z.object({
   participants_interne: z
     .array(z.string())
     .min(1, "Au moins un participant interne est requis"),
-  participants_externe: z.array(z.string()).optional().default([]),
+  participants_externe: z.array(z.string()).default([]),
 });
 
 /**
