@@ -41,6 +41,9 @@ const ModalStep: React.FC<ModalStepProps> = ({
       // closeModal("ModalStep");
       // Rediriger vers la page des réunions ou une page de succès
       // router.push("/rooms");
+      if (currentStep === 1) {
+        setCurrentStep(2);
+      }
     },
   });
 
