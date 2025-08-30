@@ -8,7 +8,7 @@ import {
 } from "@/validators/meetings/validator.meeting-recording-detail";
 import { NextRequest, NextResponse } from "next/server";
 
-export const POST = async (
+export const GET = async (
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> => {

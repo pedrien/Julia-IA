@@ -6,8 +6,19 @@ import InfoRoom from "./drawers/infoRoom";
 import ParticipantRoom from "./drawers/participantRoom";
 import ModalStep from "./modalStep/modaltStep";
 import WidgetRecording from "./widgetRecording";
+import { useGetMeetingDetailRecording } from "@/hooks/features/meetings/hook.get-meeting-detail";
+import { UiLoadingData } from "@/components/common/UiLoadingData/UiLoadingData";
+import { AnimatedDataLoadError } from "@/components/common/animated-error-states/animated-error-states";
 
-const Content = () => {
+const Content = ({ id }: { id: string }) => {
+  const {
+    data: meetingDetail,
+    isLoading,
+    isError,
+    refetch,
+    isRefetching,
+  } = useGetMeetingDetailRecording(id);
+
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [chronoResetSignal, setChronoResetSignal] = useState<number>(0);
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
@@ -33,6 +44,25 @@ const Content = () => {
       setRecordedAudio(null);
     }
   };
+
+  if (isLoading) {
+    return <UiLoadingData />;
+  }
+  if (isError || !meetingDetail) {
+    return (
+      <AnimatedDataLoadError
+        onRetry={refetch}
+        retryLoading={isLoading}
+        title="Une erreur est survenue"
+        showContactSupport={true}
+        onContactSupport={() => {
+          console.log("contact support");
+        }}
+        isRetryLoading={isRefetching}
+        message="Nous avons rencontré un problème lors du chargement des informations de la réunion. Veuillez réessayer ou contacter le support si le problème persiste."
+      />
+    );
+  }
 
   return (
     <>
@@ -60,16 +90,16 @@ const Content = () => {
           />
         </div>
       </div>
-      <ParticipantRoom />
-      <InfoRoom />
+      <ParticipantRoom participants={meetingDetail.data.participants} />
+      <InfoRoom meetingDetail={meetingDetail.data} />
       <ModalStep recordedAudio={recordedAudio} />
     </>
   );
 };
-const Container = () => {
+const Container = ({ id }: { id: string }) => {
   return (
     <ViewApp>
-      <Content></Content>
+      <Content id={id}></Content>
     </ViewApp>
   );
 };

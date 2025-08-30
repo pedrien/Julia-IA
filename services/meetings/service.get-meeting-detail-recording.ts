@@ -64,7 +64,7 @@ export const getMeetingDetailRecording = actionClient
         }
 
         const response = await axios.get(
-          `${ENV.API_LOCAL_BASE_URL}meetings/recording-detail/${parsedInput.id}`,
+          `${ENV.API_LOCAL_BASE_URL}meetings/${parsedInput.id}/recording-detail`,
           {
             headers: {
               Authorization: `Bearer ${session.token.access_token}`,
@@ -82,7 +82,7 @@ export const getMeetingDetailRecording = actionClient
           };
         }
 
-        const responseData: MeetingRecordingDetail = response.data;
+        const responseData: MeetingRecordingDetail = response.data.data;
         return { success: true, data: responseData };
       } catch (error) {
         return {

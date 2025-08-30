@@ -6,8 +6,13 @@ import {
   Avatar,
 } from "@heroui/react";
 import { useDrawerContext } from "@/contexts/Drawer/DrawerContext";
+import { MeetingParticipant } from "@/validators/meetings/validator.meeting-recording-detail";
 
-const ParticipantRoom = () => {
+const ParticipantRoom = ({
+  participants,
+}: {
+  participants: MeetingParticipant[];
+}) => {
   const { isDrawerOpen, closeDrawer } = useDrawerContext();
   return (
     <Drawer
@@ -24,57 +29,26 @@ const ParticipantRoom = () => {
         </DrawerHeader>
         <DrawerBody>
           <div className="flex flex-col">
-            <div className="py-4 border-b-[1px] border-dashed border-colorBorderTr">
-              <div className="flex gap-2 items-center">
-                <Avatar
-                  alt={"https://d2u8k2ocievbld.cloudfront.net/memojis/male/1.png"}
-                  className="shrink-0"
-                  size="md"
-                  src={"https://d2u8k2ocievbld.cloudfront.net/memojis/male/1.png"}
-                />
-                <div className="flex flex-col">
-                  <span className="text-small text-colorTitle">
-                    Tony Reichert
-                  </span>
-                  <span className="text-tiny text-colorMuted">
-                  tony.reichert@example.com
-                  </span>
+            {participants.map((participant) => (
+              <div
+                key={participant.id}
+                className="py-4 border-b-[1px] border-dashed border-colorBorderTr"
+              >
+                <div className="flex gap-2 items-center">
+                  <div className="w-[32px] h-[32px] rounded-full overflow-hidden flex items-center justify-center text-colorTitle bg-gray-300 ">
+                    {participant.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-small text-colorTitle">
+                      {participant.name}
+                    </span>
+                    <span className="text-tiny text-colorMuted">
+                      {participant.type === "INTERNE" ? "Interne" : "Externe"}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="py-4 border-b-[1px] border-dashed border-colorBorderTr">
-              <div className="flex gap-2 items-center">
-                <Avatar
-                  alt={"https://d2u8k2ocievbld.cloudfront.net/memojis/female/1.png"}
-                  className="shrink-0"
-                  size="md"
-                  src={"https://d2u8k2ocievbld.cloudfront.net/memojis/female/1.png"}
-                />
-                <div className="flex flex-col">
-                  <span className="text-small text-colorTitle">
-                    Zoey Lang
-                  </span>
-                  <span className="text-tiny text-colorMuted">
-                  zoey.lang@example.com
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="py-4 border-b-[1px] border-dashed border-colorBorderTr">
-              <div className="flex gap-2 items-center">
-                <div className="icon-name shrink-0 flex items-center w-[40px] h-[40px] rounded-full bg-bgGray justify-center text-sm font-medium">
-                    Z
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-small text-colorTitle">
-                    Zoey Lang
-                  </span>
-                  <span className="text-tiny text-colorMuted">
-                  zoey.lang@example.com
-                  </span>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </DrawerBody>
       </DrawerContent>
