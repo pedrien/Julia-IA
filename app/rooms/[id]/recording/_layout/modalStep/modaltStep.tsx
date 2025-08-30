@@ -49,6 +49,13 @@ const ModalStep: React.FC<ModalStepProps> = ({
     console.log("ModalStep - recordedAudio:", recordedAudio);
   }, [recordedAudio]);
 
+  // Forcer le chargement des métadonnées audio
+  useEffect(() => {
+    if (audioRef.current && recordedAudio) {
+      audioRef.current.load();
+    }
+  }, [recordedAudio]);
+
   // Convertir l'URL audio en fichier
   useEffect(() => {
     if (recordedAudio) {
@@ -249,16 +256,45 @@ const ModalStep: React.FC<ModalStepProps> = ({
                                         "Audio loaded, duration:",
                                         target.duration
                                       );
-                                      setDuration(target.duration);
+                                      if (
+                                        isFinite(target.duration) &&
+                                        target.duration > 0
+                                      ) {
+                                        setDuration(target.duration);
+                                      } else {
+                                        setDuration(0);
+                                      }
+                                    }}
+                                    onCanPlay={(e) => {
+                                      const target =
+                                        e.target as HTMLAudioElement;
+                                      console.log(
+                                        "Audio can play, duration:",
+                                        target.duration
+                                      );
+                                      if (
+                                        isFinite(target.duration) &&
+                                        target.duration > 0
+                                      ) {
+                                        setDuration(target.duration);
+                                      }
                                     }}
                                     onTimeUpdate={(e) => {
                                       const target =
                                         e.target as HTMLAudioElement;
                                       setCurrentTime(target.currentTime);
-                                      setProgress(
-                                        (target.currentTime / target.duration) *
-                                          100
-                                      );
+                                      if (
+                                        isFinite(target.duration) &&
+                                        target.duration > 0
+                                      ) {
+                                        setProgress(
+                                          (target.currentTime /
+                                            target.duration) *
+                                            100
+                                        );
+                                      } else {
+                                        setProgress(0);
+                                      }
                                     }}
                                     onPlay={() => {
                                       console.log("Audio playing");
@@ -305,7 +341,11 @@ const ModalStep: React.FC<ModalStepProps> = ({
                                   </div>
                                   <div className="flex justify-between text-xs text-colorTitle mt-2">
                                     <span>{formatTime(currentTime)}</span>
-                                    <span>{formatTime(duration || 0)}</span>
+                                    <span>
+                                      {isFinite(duration)
+                                        ? formatTime(duration)
+                                        : "00:00"}
+                                    </span>
                                   </div>
                                 </div>
                               ) : (
