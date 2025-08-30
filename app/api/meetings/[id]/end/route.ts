@@ -68,7 +68,7 @@ export const POST = async (
     apiFormData.append("audio_file", audioFile);
 
     console.log("apiFormData", ...apiFormData);
-    await callApiWithToken(
+    const response = await callApiWithToken(
       tokenOrErrorResponse,
       `meetings/${id}/end`,
       apiFormData,
@@ -77,6 +77,8 @@ export const POST = async (
       { "Content-Type": "multipart/form-data" }
     );
 
+    console.log("response", response);
+
     return NextResponse.json(
       {
         message: "Réunion terminée avec succès.",
@@ -84,6 +86,7 @@ export const POST = async (
       { status: 200 }
     );
   } catch (error) {
+    console.log("error in end meeting", error.response);
     return handleApiServerError(error);
   }
 };

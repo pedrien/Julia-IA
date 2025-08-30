@@ -363,10 +363,13 @@ const NewRoom = () => {
                               }
                             >
                               {(user) => (
-                                <SelectItem key={user.id} textValue={user.name}>
+                                <SelectItem
+                                  key={user.id}
+                                  textValue={user.name || "N/A  "}
+                                >
                                   <div className="flex gap-2 items-center">
                                     <div className="w-[32px] h-[32px] bg-lightPrimaryColor rounded-full flex items-center justify-center">
-                                      {user.name.charAt(0)}
+                                      {user.name?.charAt(0)}
                                     </div>
                                     <div className="flex flex-col">
                                       <span className="text-small text-colorTitle">

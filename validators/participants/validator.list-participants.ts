@@ -6,7 +6,7 @@ import { ENUM_PARTICIPANT_TYPE } from "@/types/enums/participants/enum.type-part
  */
 export const participantSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: z.string().nullable(),
   type: ENUM_PARTICIPANT_TYPE,
 });
 
