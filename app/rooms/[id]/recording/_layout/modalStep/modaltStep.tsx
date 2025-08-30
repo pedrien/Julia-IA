@@ -11,7 +11,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Pause, Play } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { useEndMeeting } from "@/hooks/features/meetings/hook.end-meeting";
 import { useGenerateTranscription } from "@/hooks/features/meetings/hook.generate-transcription";
 import { useGenerateRapport } from "@/hooks/features/meetings/hook.generate-rapport";
 import { useRouter } from "next/navigation";
@@ -36,16 +35,6 @@ const ModalStep: React.FC<ModalStepProps> = ({
   const [duration, setDuration] = useState<number>(0);
   const [audioFileState, setAudioFileState] = useState<File | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const { mutate: endMeeting, isPending: isEndingMeeting } = useEndMeeting({
-    onSuccessCallback: () => {
-      console.log("Meeting ended successfully");
-      // Passer à l'étape 2 après avoir terminé la réunion
-      if (currentStep === 1) {
-        setCurrentStep(2);
-      }
-    },
-  });
 
   const {
     mutate: generateTranscription,
@@ -107,10 +96,6 @@ const ModalStep: React.FC<ModalStepProps> = ({
     }
 
     console.log("Submitting recording:", { meetingId, audioFile });
-    endMeeting({
-      id_meeting: meetingId,
-      audio_file: audioFileState,
-    });
   };
 
   const handleGenerateTranscription = () => {
@@ -440,15 +425,6 @@ const ModalStep: React.FC<ModalStepProps> = ({
                 {currentStep === 1 ? (
                   <Button
                     className="w-1/2 h-auto py-3 bg-primaryColor text-white"
-                    onPress={handleSubmitRecording}
-                    isLoading={isEndingMeeting}
-                    isDisabled={!audioFileState || !meetingId}
-                  >
-                    {isEndingMeeting ? "Traitement..." : "Suivant"}
-                  </Button>
-                ) : currentStep === 2 ? (
-                  <Button
-                    className="w-1/2 h-auto py-3 bg-primaryColor text-white"
                     onPress={handleGenerateTranscription}
                     isLoading={isGeneratingTranscription}
                     isDisabled={!meetingId}
@@ -457,7 +433,7 @@ const ModalStep: React.FC<ModalStepProps> = ({
                       ? "Génération..."
                       : "Générer Transcription"}
                   </Button>
-                ) : (
+                ) : currentStep === 2 ? (
                   <Button
                     className="w-1/2 h-auto py-3 bg-primaryColor text-white"
                     onPress={handleGenerateRapport}
@@ -465,6 +441,10 @@ const ModalStep: React.FC<ModalStepProps> = ({
                     isDisabled={!meetingId}
                   >
                     {isGeneratingRapport ? "Génération..." : "Générer Rapport"}
+                  </Button>
+                ) : (
+                  <Button className="w-1/2 h-auto py-3 bg-primaryColor text-white">
+                    Transférer
                   </Button>
                 )}
               </div>

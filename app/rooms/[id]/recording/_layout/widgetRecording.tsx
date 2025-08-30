@@ -24,7 +24,6 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
   onRecordingDelete,
 }) => {
   const { openDrawer } = useDrawerContext();
-  const { openModal } = useModalContext();
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -238,7 +237,6 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
                 className="w-[50px] h-[50px] min-w-0 p-0 rounded-full bg-bgCard text-colorTitle"
                 onPress={() => {
                   handleStopRecording();
-                  openModal("ModalStep");
                 }}
               >
                 <Square size={22} />

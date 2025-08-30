@@ -9,8 +9,12 @@ import WidgetRecording from "./widgetRecording";
 import { useGetMeetingDetailRecording } from "@/hooks/features/meetings/hook.get-meeting-detail";
 import { UiLoadingData } from "@/components/common/UiLoadingData/UiLoadingData";
 import { AnimatedDataLoadError } from "@/components/common/animated-error-states/animated-error-states";
+import ModalConfirmation from "@/components/common/modals/ModalConfirmation/ModalConfirmation";
+import { useEndMeeting } from "@/hooks/features/meetings/hook.end-meeting";
+import { useModalContext } from "@/contexts/Modal/ModalContext";
 
 const Content = ({ id }: { id: string }) => {
+  const { openModal } = useModalContext();
   const {
     data: meetingDetail,
     isLoading,
@@ -19,10 +23,21 @@ const Content = ({ id }: { id: string }) => {
     isRefetching,
   } = useGetMeetingDetailRecording(id);
   const [audioFileState, setAudioFileState] = useState<File | null>(null);
-
+  const [isModalOpenConfirmation, setIsModalOpenConfirmation] =
+    useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [chronoResetSignal, setChronoResetSignal] = useState<number>(0);
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
+  const { mutate: endMeeting, isPending: isEndingMeeting } = useEndMeeting({
+    onSuccessCallback: () => {
+      console.log("Meeting ended successfully");
+      // Passer à l'étape 2 après avoir terminé la réunion
+      if (isRecording) {
+        setIsRecording(false);
+        openModal("ModalStep");
+      }
+    },
+  });
 
   const handleRecordingStart = () => {
     console.log("Container - Recording started");
@@ -33,8 +48,11 @@ const Content = ({ id }: { id: string }) => {
     console.log("Container - Recording stopped, audioUrl:", audioUrl);
     setIsRecording(false);
     if (audioUrl) {
+      const audioFile = new File([], "recording.webm", { type: "audio/webm" });
+      console.log("Container - Audio file:", audioFile);
       setRecordedAudio(audioUrl);
-      setAudioFileState(new File([], "recording.webm", { type: "audio/webm" }));
+      setAudioFileState(audioFile);
+      setIsModalOpenConfirmation(true);
     }
   };
 
@@ -98,6 +116,21 @@ const Content = ({ id }: { id: string }) => {
         recordedAudio={recordedAudio}
         meetingId={id}
         audioFile={audioFileState}
+      />
+      <ModalConfirmation
+        isOpen={isModalOpenConfirmation}
+        onCancel={() => setIsModalOpenConfirmation(false)}
+        onConfirm={() => {
+          if (audioFileState) {
+            endMeeting({
+              id_meeting: id,
+              audio_file: audioFileState,
+            });
+          }
+          setIsModalOpenConfirmation(false);
+        }}
+        title="Confirmation"
+        message="Voulez-vous vraiment enregistrer cette réunion ?"
       />
     </>
   );
