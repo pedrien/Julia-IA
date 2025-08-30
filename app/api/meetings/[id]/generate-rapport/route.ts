@@ -15,11 +15,19 @@ export const GET = async (
 
     const { id } = await params;
 
+    const body = {
+      meeting_id: id,
+      include_transcription: true,
+      include_summary: true,
+      include_action_items: true,
+      format: "pdf",
+    };
+
     await callApiWithToken(
       tokenOrErrorResponse,
-      `meetings/${id}/generate-rapport`,
-      {},
-      "GET"
+      `ai/generate-meeting-report`,
+      body,
+      "POST"
     );
 
     return NextResponse.json(

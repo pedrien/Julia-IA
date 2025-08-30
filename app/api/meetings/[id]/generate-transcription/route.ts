@@ -15,12 +15,11 @@ export const GET = async (
 
     const { id } = await params;
 
-    await callApiWithToken(
-      tokenOrErrorResponse,
-      `ai/transcribe/${id}`,
-      {},
-      "GET"
-    );
+    const body = {
+      meeting_id: id,
+    };
+
+    await callApiWithToken(tokenOrErrorResponse, `ai/transcribe`, body, "POST");
 
     return NextResponse.json(
       {
