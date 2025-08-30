@@ -117,6 +117,7 @@ const Content = ({ id }: { id: string }) => {
             onRecordingStart={handleRecordingStart}
             onRecordingStop={handleRecordingStop}
             onRecordingDelete={handleRecordingDelete}
+            id={id}
           />
         </div>
       </div>

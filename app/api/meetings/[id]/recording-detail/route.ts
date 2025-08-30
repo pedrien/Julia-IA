@@ -1,7 +1,7 @@
+import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
-import { fakeMeetingDetailRecordingMixed } from "@/mocks/meetings/fake.meeting-details";
 import {
   MeetingRecordingDetail,
   meetingRecordingDetailSchema,
@@ -27,7 +27,12 @@ export const GET = async (
       );
     }
 
-    const requestData = fakeMeetingDetailRecordingMixed;
+    const requestData = await callApiWithToken(
+      tokenOrErrorResponse,
+      `meetings/${id}/preview`,
+      {},
+      "GET"
+    );
 
     const data: MeetingRecordingDetail = validateApiResponse(
       requestData,

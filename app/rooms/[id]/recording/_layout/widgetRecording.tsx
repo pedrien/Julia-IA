@@ -1,5 +1,7 @@
 import { useDrawerContext } from "@/contexts/Drawer/DrawerContext";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
+import { useLoading } from "@/contexts/Overlay/LoadingContext";
+import { useStartMeeting } from "@/hooks/features/meetings/hook.start-meeting";
 import { Button, Tooltip } from "@heroui/react";
 import {
   Info,
@@ -16,12 +18,14 @@ interface WidgetRecordingProps {
   onRecordingStart?: () => void;
   onRecordingStop?: (audioUrl?: string) => void;
   onRecordingDelete?: () => void;
+  id: string;
 }
 
 const WidgetRecording: React.FC<WidgetRecordingProps> = ({
   onRecordingStart,
   onRecordingStop,
   onRecordingDelete,
+  id,
 }) => {
   const { openDrawer } = useDrawerContext();
 
@@ -30,9 +34,54 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
   const chunksRef = useRef<Blob[]>([]);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const { startLoading, stopLoading } = useLoading();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
+  const { mutate: startMeeting } = useStartMeeting({
+    onSuccessCallback: async () => {
+      stopLoading();
+      setIsRecording(true);
+
+      try {
+        const stream = await requestMicPermission();
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+        chunksRef.current = [];
+
+        mediaRecorder.ondataavailable = (e: BlobEvent) => {
+          if (e.data && e.data.size > 0) {
+            chunksRef.current.push(e.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+          const url = URL.createObjectURL(blob);
+          console.log("Audio recorded, URL created:", url);
+          setAudioUrl((prev) => {
+            if (prev) URL.revokeObjectURL(prev);
+            return url;
+          });
+          // Initialiser l'audio pour la lecture
+          initializeAudio(url);
+          // Passer l'URL au container immédiatement
+          if (onRecordingStop) {
+            onRecordingStop(url);
+          }
+          stream.getTracks().forEach((t) => t.stop());
+        };
+
+        mediaRecorder.start();
+        setIsRecording(true);
+        if (onRecordingStart) {
+          onRecordingStart();
+        }
+      } catch (err) {
+        console.error("Erreur accès micro:", err);
+      }
+    },
+  });
 
   useEffect(() => {
     return () => {
@@ -113,43 +162,8 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
 
   const handleStartRecording = async () => {
     if (isRecording) return;
-    try {
-      const stream = await requestMicPermission();
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      chunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (e: BlobEvent) => {
-        if (e.data && e.data.size > 0) {
-          chunksRef.current.push(e.data);
-        }
-      };
-
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
-        const url = URL.createObjectURL(blob);
-        console.log("Audio recorded, URL created:", url);
-        setAudioUrl((prev) => {
-          if (prev) URL.revokeObjectURL(prev);
-          return url;
-        });
-        // Initialiser l'audio pour la lecture
-        initializeAudio(url);
-        // Passer l'URL au container immédiatement
-        if (onRecordingStop) {
-          onRecordingStop(url);
-        }
-        stream.getTracks().forEach((t) => t.stop());
-      };
-
-      mediaRecorder.start();
-      setIsRecording(true);
-      if (onRecordingStart) {
-        onRecordingStart();
-      }
-    } catch (err) {
-      console.error("Erreur accès micro:", err);
-    }
+    startLoading();
+    startMeeting({ id_meeting: id });
   };
 
   const handleStopRecording = () => {

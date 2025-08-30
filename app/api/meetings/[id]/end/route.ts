@@ -68,12 +68,12 @@ export const POST = async (
     apiFormData.append("audio_file", audioFile);
 
     console.log("apiFormData", ...apiFormData);
-    // await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `meetings/${id}/end`,
-    //   apiFormData,
-    //   "POST"
-    // );
+    await callApiWithToken(
+      tokenOrErrorResponse,
+      `meetings/${id}/end`,
+      apiFormData,
+      "POST"
+    );
 
     return NextResponse.json(
       {
