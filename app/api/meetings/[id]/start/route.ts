@@ -33,16 +33,6 @@ export const POST = async (
 
     const { id } = params;
 
-    // Validate UUID format
-    const uuidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(id)) {
-      return NextResponse.json(
-        { message: "L'ID de la réunion doit être un UUID valide." },
-        { status: 400 }
-      );
-    }
-
     await callApiWithToken(
       tokenOrErrorResponse,
       `meetings/${id}/start`,

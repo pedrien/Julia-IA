@@ -31,16 +31,13 @@ export async function GET(
     }
 
     // Appel à l'API externe
-    const response = await fetch(
-      `${ENV.API_LOCAL_BASE_URL}meetings/${meetingId}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${session.token.access_token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${ENV.API_LOCAL_BASE_URL}meetings/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${session.token.access_token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));

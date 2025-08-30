@@ -33,12 +33,9 @@ const Content = ({ id }: { id: string }) => {
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
   const { mutate: endMeeting } = useEndMeeting({
     onSuccessCallback: () => {
-      // Passer à l'étape 2 après avoir terminé la réunion
-      if (isRecording) {
-        setIsRecording(false);
-        stopLoading();
-        openModal("ModalStep");
-      }
+      setIsRecording(false);
+      stopLoading();
+      openModal("ModalStep");
     },
   });
 
@@ -145,6 +142,8 @@ const Content = ({ id }: { id: string }) => {
         }}
         title="Confirmation"
         message="Voulez-vous vraiment enregistrer cette réunion ?"
+        labelConfirm="Enregistrer"
+        labelCancel="Annuler"
       />
     </>
   );
