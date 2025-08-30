@@ -17,7 +17,7 @@ export const GET = async (
 
     await callApiWithToken(
       tokenOrErrorResponse,
-      `meetings/${id}/generate-transcription`,
+      `ai/transcribe/${id}`,
       {},
       "GET"
     );
@@ -29,6 +29,7 @@ export const GET = async (
       { status: 200 }
     );
   } catch (error) {
+    console.log("error", error);
     return handleApiServerError(error);
   }
 };

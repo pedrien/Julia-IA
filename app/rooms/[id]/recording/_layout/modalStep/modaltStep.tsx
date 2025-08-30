@@ -431,7 +431,7 @@ const ModalStep: React.FC<ModalStepProps> = ({
                   >
                     {isGeneratingTranscription
                       ? "Génération..."
-                      : "Générer Transcription"}
+                      : "Générer la Transcription"}
                   </Button>
                 ) : currentStep === 2 ? (
                   <Button
@@ -440,7 +440,9 @@ const ModalStep: React.FC<ModalStepProps> = ({
                     isLoading={isGeneratingRapport}
                     isDisabled={!meetingId}
                   >
-                    {isGeneratingRapport ? "Génération..." : "Générer Rapport"}
+                    {isGeneratingRapport
+                      ? "Génération..."
+                      : "Générer le Rapport"}
                   </Button>
                 ) : (
                   <Button className="w-1/2 h-auto py-3 bg-primaryColor text-white">
