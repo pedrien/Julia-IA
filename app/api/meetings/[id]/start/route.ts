@@ -23,7 +23,7 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export const POST = async (
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> => {
   try {
     const tokenOrErrorResponse = verifyBearerToken(req);
@@ -31,7 +31,7 @@ export const POST = async (
       return tokenOrErrorResponse;
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     await callApiWithToken(
       tokenOrErrorResponse,

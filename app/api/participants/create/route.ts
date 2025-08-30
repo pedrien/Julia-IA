@@ -51,7 +51,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
     console.log(formattedData);
     await callApiWithToken(
       tokenOrErrorResponse,
-      "participants/create",
+      "meetings/participants/external/store",
       formattedData,
       "POST"
     );

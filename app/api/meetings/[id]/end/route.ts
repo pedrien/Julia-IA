@@ -72,7 +72,9 @@ export const POST = async (
       tokenOrErrorResponse,
       `meetings/${id}/end`,
       apiFormData,
-      "POST"
+      "POST",
+      true,
+      { "Content-Type": "multipart/form-data" }
     );
 
     return NextResponse.json(
