@@ -12,6 +12,8 @@ import { Pause, Play } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useEndMeeting } from "@/hooks/features/meetings/hook.end-meeting";
+import { useGenerateTranscription } from "@/hooks/features/meetings/hook.generate-transcription";
+import { useGenerateRapport } from "@/hooks/features/meetings/hook.generate-rapport";
 import { useRouter } from "next/navigation";
 
 interface ModalStepProps {
@@ -35,17 +37,38 @@ const ModalStep: React.FC<ModalStepProps> = ({
   const [audioFileState, setAudioFileState] = useState<File | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const { mutate: endMeeting, isPending } = useEndMeeting({
+  const { mutate: endMeeting, isPending: isEndingMeeting } = useEndMeeting({
     onSuccessCallback: () => {
       console.log("Meeting ended successfully");
-      // closeModal("ModalStep");
-      // Rediriger vers la page des réunions ou une page de succès
-      // router.push("/rooms");
+      // Passer à l'étape 2 après avoir terminé la réunion
       if (currentStep === 1) {
         setCurrentStep(2);
       }
     },
   });
+
+  const {
+    mutate: generateTranscription,
+    isPending: isGeneratingTranscription,
+  } = useGenerateTranscription({
+    onSuccessCallback: () => {
+      console.log("Transcription generated successfully");
+      // Passer à l'étape 3 après avoir généré la transcription
+      if (currentStep === 2) {
+        setCurrentStep(3);
+      }
+    },
+  });
+
+  const { mutate: generateRapport, isPending: isGeneratingRapport } =
+    useGenerateRapport({
+      onSuccessCallback: () => {
+        console.log("Rapport generated successfully");
+        // Fermer le modal et rediriger après avoir généré le rapport
+        closeModal("ModalStep");
+        router.push("/rooms");
+      },
+    });
 
   // Debug: Log quand l'audio change
   useEffect(() => {
@@ -77,12 +100,6 @@ const ModalStep: React.FC<ModalStepProps> = ({
     }
   }, [recordedAudio]);
 
-  const nextStep = () => {
-    if (currentStep < 3) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
   const handleSubmitRecording = () => {
     if (!meetingId || !audioFileState) {
       console.error("Missing meetingId or audioFile");
@@ -94,6 +111,26 @@ const ModalStep: React.FC<ModalStepProps> = ({
       id_meeting: meetingId,
       audio_file: audioFileState,
     });
+  };
+
+  const handleGenerateTranscription = () => {
+    if (!meetingId) {
+      console.error("Missing meetingId");
+      return;
+    }
+
+    console.log("Generating transcription for meeting:", meetingId);
+    generateTranscription({ id: meetingId });
+  };
+
+  const handleGenerateRapport = () => {
+    if (!meetingId) {
+      console.error("Missing meetingId");
+      return;
+    }
+
+    console.log("Generating rapport for meeting:", meetingId);
+    generateRapport({ id: meetingId });
   };
 
   const formatTime = (seconds: number): string => {
@@ -400,23 +437,34 @@ const ModalStep: React.FC<ModalStepProps> = ({
                 >
                   Annuler
                 </Button>
-                {currentStep < 3 ? (
+                {currentStep === 1 ? (
                   <Button
                     className="w-1/2 h-auto py-3 bg-primaryColor text-white"
                     onPress={handleSubmitRecording}
-                    isLoading={isPending}
+                    isLoading={isEndingMeeting}
                     isDisabled={!audioFileState || !meetingId}
                   >
-                    Suivant
+                    {isEndingMeeting ? "Traitement..." : "Suivant"}
+                  </Button>
+                ) : currentStep === 2 ? (
+                  <Button
+                    className="w-1/2 h-auto py-3 bg-primaryColor text-white"
+                    onPress={handleGenerateTranscription}
+                    isLoading={isGeneratingTranscription}
+                    isDisabled={!meetingId}
+                  >
+                    {isGeneratingTranscription
+                      ? "Génération..."
+                      : "Générer Transcription"}
                   </Button>
                 ) : (
                   <Button
                     className="w-1/2 h-auto py-3 bg-primaryColor text-white"
-                    onPress={handleSubmitRecording}
-                    isLoading={isPending}
-                    isDisabled={!audioFile || !meetingId}
+                    onPress={handleGenerateRapport}
+                    isLoading={isGeneratingRapport}
+                    isDisabled={!meetingId}
                   >
-                    Transcrire
+                    {isGeneratingRapport ? "Génération..." : "Générer Rapport"}
                   </Button>
                 )}
               </div>
