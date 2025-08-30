@@ -2,6 +2,7 @@ import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
+import { fakeParticipantsList } from "@/mocks/participants/fake.participants";
 import {
   ListParticipants,
   listParticipantsSchema,
@@ -34,24 +35,25 @@ export const GET = async (req: NextRequest) => {
       return tokenOrErrorResponse;
     }
 
-    const requestData = await callApiWithToken(
-      tokenOrErrorResponse,
-      `participants`,
-      undefined,
-      "GET"
-    );
+    // const requestData = await callApiWithToken(
+    //   tokenOrErrorResponse,
+    //   `participants`,
+    //   undefined,
+    //   "GET"
+    // );
 
-    if (
-      !requestData ||
-      typeof requestData !== "object" ||
-      !("data" in requestData) ||
-      !requestData.data
-    ) {
-      return NextResponse.json(
-        { message: "No participants found." },
-        { status: 400 }
-      );
-    }
+    // if (
+    //   !requestData ||
+    //   typeof requestData !== "object" ||
+    //   !("data" in requestData) ||
+    //   !requestData.data
+    // ) {
+    //   return NextResponse.json(
+    //     { message: "No participants found." },
+    //     { status: 400 }
+    //   );
+    // }
+    const requestData = fakeParticipantsList;
 
     const data: ListParticipants = validateApiResponse(
       requestData.data,

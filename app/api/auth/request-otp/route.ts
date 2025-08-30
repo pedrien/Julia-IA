@@ -33,7 +33,7 @@ export const POST = async (req: NextRequest) => {
       username: data.username,
     };
 
-    await callApiWithToken("", `auth/request-otp`, bodyRequest, "POST", false);
+    // await callApiWithToken("", `auth/request-otp`, bodyRequest, "POST", false);
 
     return NextResponse.json(
       {

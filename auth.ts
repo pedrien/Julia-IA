@@ -14,6 +14,7 @@ import { SessionApp, SessionSchema } from "./validators/auth/validator.session";
 import { convertExpiresInToSeconds } from "./utils/utils.times";
 import { ENV } from "./env";
 import { encryptToken } from "./libs/cryptoToken";
+import { fakeSessionUserForTesting } from "./mocks/session/fake.session-user";
 
 // Constants
 const PROVIDER = "GOOGLE";
@@ -58,13 +59,14 @@ const config = {
         };
 
         try {
-          const requestAuthCredential = await axios.post(LOGIN_URL, body);
+          // const requestAuthCredential = await axios.post(LOGIN_URL, body);
 
-          if (requestAuthCredential.status !== 200) {
-            throw new AuthError("Please provide both username & otp");
-          }
+          // if (requestAuthCredential.status !== 200) {
+          //   throw new AuthError("Please provide both username & otp");
+          // }
 
-          const response = requestAuthCredential.data.data;
+          // const response = requestAuthCredential.data.data;
+          const response = fakeSessionUserForTesting.data;
 
           const session: SessionApp = validateApiResponse(
             response,
@@ -92,6 +94,7 @@ const config = {
             },
           };
         } catch (error: unknown) {
+          console.log(error);
           throw extractAuthError(error);
         }
       },
