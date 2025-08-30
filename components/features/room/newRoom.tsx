@@ -21,9 +21,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createMeetingSchema } from "@/validators/meetings/validator.create-meeting";
 import { useCreateMeeting } from "@/hooks/features/meetings/hook.create-meeting";
 import ModalConfirmation from "@/components/common/modals/ModalConfirmation/ModalConfirmation";
+import { useRouter } from "next/navigation";
 
 const NewRoom = () => {
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
   const { isModalOpen, closeModal, openModal } = useModalContext();
   const [isModalOpenConfirmation, setIsModalOpenConfirmation] =
     useState<boolean>(false);
@@ -33,7 +35,32 @@ const NewRoom = () => {
 
   const [isPendingMeeting, startTransition] = useTransition();
   const { mutate: createMeeting } = useCreateMeeting({
-    onSuccessCallback: () => {
+    onSuccessCallback: (data) => {
+      console.log("Meeting created successfully:", data);
+
+      // Extraire l'ID de la réponse
+      if (
+        data &&
+        typeof data === "object" &&
+        "data" in data &&
+        data.data &&
+        typeof data.data === "object" &&
+        "data" in data.data &&
+        data.data.data &&
+        typeof data.data.data === "object" &&
+        "data" in data.data.data &&
+        data.data.data.data &&
+        typeof data.data.data.data === "object" &&
+        "id" in data.data.data.data
+      ) {
+        const meetingId = data.data.data.data.id;
+        console.log("Meeting ID:", meetingId);
+
+        // Rediriger vers la page d'enregistrement
+        router.push(`/rooms/${meetingId}/recording`);
+      }
+
+      // Reset du formulaire
       reset({
         title: "",
         description: "",
@@ -60,6 +87,7 @@ const NewRoom = () => {
     formState: { errors, isSubmitting, isValid },
     reset,
     setValue,
+    trigger,
   } = useForm({
     resolver: zodResolver(createMeetingSchema),
     defaultValues: {
@@ -83,13 +111,7 @@ const NewRoom = () => {
       participants_externe: string[];
     }) => {
       startTransition(async () => {
-        // Convertir le format datetime-local vers le format attendu par l'API
-        const formattedData = {
-          ...data,
-          scheduled_start_time:
-            data.scheduled_start_time.replace("T", " ") + ":00",
-        };
-        createMeeting(formattedData);
+        createMeeting(data);
       });
     },
     [createMeeting]
@@ -115,6 +137,8 @@ const NewRoom = () => {
 
     setValue("participants_interne", internalParticipants);
     setValue("participants_externe", externalParticipants);
+    trigger("participants_interne");
+    trigger("participants_externe");
   };
 
   return (
@@ -225,7 +249,24 @@ const NewRoom = () => {
                                 input:
                                   "text-colorTitle placeholder:text-colorMuted placeholder:opacity-50",
                               }}
-                              {...register("scheduled_start_time")}
+                              {...register("scheduled_start_time", {
+                                onChange: (e) => {
+                                  const value = e.target.value;
+                                  // value is in format "YYYY-MM-DDTHH:MM"
+                                  if (value) {
+                                    const [date, time] = value.split("T");
+                                    // Pad seconds if not present
+                                    const formatted = `${date} ${
+                                      time.length === 5 ? time + ":00" : time
+                                    }`;
+                                    setValue("scheduled_start_time", formatted);
+                                    trigger("scheduled_start_time");
+                                  } else {
+                                    setValue("scheduled_start_time", "");
+                                    trigger("scheduled_start_time");
+                                  }
+                                },
+                              })}
                               errorMessage={
                                 errors.scheduled_start_time?.message
                               }

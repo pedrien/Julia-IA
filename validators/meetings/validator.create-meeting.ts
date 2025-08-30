@@ -30,7 +30,16 @@ export const createMeetingSchema = z.object({
   participants_externe: z.array(z.string()).default([]),
 });
 
+export const responseCreateMeetingSchema = z.object({
+  data: z.object({
+    id: z.string(),
+  }),
+});
+
 /**
  * TypeScript types inferred from schemas
  */
 export type CreateMeetingSchema = z.infer<typeof createMeetingSchema>;
+export type ResponseCreateMeetingSchema = z.infer<
+  typeof responseCreateMeetingSchema
+>;

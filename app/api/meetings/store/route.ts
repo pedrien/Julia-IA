@@ -1,9 +1,12 @@
 import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
+import { validateApiResponse } from "@/libs/validateApiResponse";
 import { validateRequestBody } from "@/libs/validateRequestBody";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
 import {
   createMeetingSchema,
+  ResponseCreateMeetingSchema,
+  responseCreateMeetingSchema,
   type CreateMeetingSchema,
 } from "@/validators/meetings/validator.create-meeting";
 import { NextRequest, NextResponse } from "next/server";
@@ -46,17 +49,30 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
       participants_interne: validatedData.participants_interne,
       participants_externe: validatedData.participants_externe || [],
     };
+    console.log(formattedData);
 
-    await callApiWithToken(
-      tokenOrErrorResponse,
-      "meetings/store",
-      formattedData,
-      "POST"
+    // await callApiWithToken(
+    //   tokenOrErrorResponse,
+    //   "meetings/store",
+    //   formattedData,
+    //   "POST"
+    // );
+
+    const response = {
+      data: {
+        id: "123",
+      },
+    };
+
+    const data: ResponseCreateMeetingSchema = validateApiResponse(
+      response,
+      responseCreateMeetingSchema
     );
 
     return NextResponse.json(
       {
         message: "Réunion créée avec succès.",
+        data: data,
       },
       { status: 201 }
     );

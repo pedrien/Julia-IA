@@ -9,7 +9,10 @@ import {
 import { handleServerActionError } from "@/libs/handleServerActionError";
 import { actionClient } from "@/libs/safeAction";
 import axios from "axios";
-import { createMeetingSchema } from "@/validators/meetings/validator.create-meeting";
+import {
+  createMeetingSchema,
+  ResponseCreateMeetingSchema,
+} from "@/validators/meetings/validator.create-meeting";
 import { auth } from "@/auth";
 
 /**
@@ -43,39 +46,45 @@ import { auth } from "@/auth";
  */
 export const createMeeting = actionClient
   .inputSchema(createMeetingSchema)
-  .action(async ({ parsedInput }): Promise<IActionSuccess | IActionError> => {
-    try {
-      const session = await auth();
-      if (!session) {
-        return {
-          success: false,
-          error: [APP_CONSTANTS.MESSAGE_AUTH_NO_ACTIVE_SESSION],
-        };
-      }
-
-      const response = await axios.post(
-        `${ENV.API_LOCAL_BASE_URL}meetings/store`,
-        parsedInput,
-        {
-          headers: {
-            Authorization: `Bearer ${session.token.access_token}`,
-          },
+  .action(
+    async ({
+      parsedInput,
+    }): Promise<
+      (IActionSuccess & { data: ResponseCreateMeetingSchema }) | IActionError
+    > => {
+      try {
+        const session = await auth();
+        if (!session) {
+          return {
+            success: false,
+            error: [APP_CONSTANTS.MESSAGE_AUTH_NO_ACTIVE_SESSION],
+          };
         }
-      );
 
-      if (response.status !== 201) {
-        const errorResponse = response.data?.error || "Unknown error";
-        return {
-          success: false,
-          error: [
-            errorResponse ||
-              "There seems to be an error with the information you provided.",
-          ],
-        };
+        const response = await axios.post(
+          `${ENV.API_LOCAL_BASE_URL}meetings/store`,
+          parsedInput,
+          {
+            headers: {
+              Authorization: `Bearer ${session.token.access_token}`,
+            },
+          }
+        );
+
+        if (response.status !== 201) {
+          const errorResponse = response.data?.error || "Unknown error";
+          return {
+            success: false,
+            error: [
+              errorResponse ||
+                "There seems to be an error with the information you provided.",
+            ],
+          };
+        }
+
+        return { success: true, data: response.data.data };
+      } catch (error) {
+        return { success: false, error: handleServerActionError(error).error };
       }
-
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: handleServerActionError(error).error };
     }
-  });
+  );
