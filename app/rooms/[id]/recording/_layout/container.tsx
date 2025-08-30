@@ -23,12 +23,13 @@ const Content = ({ id }: { id: string }) => {
     isRefetching,
   } = useGetMeetingDetailRecording(id);
   const [audioFileState, setAudioFileState] = useState<File | null>(null);
+
   const [isModalOpenConfirmation, setIsModalOpenConfirmation] =
     useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [chronoResetSignal, setChronoResetSignal] = useState<number>(0);
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
-  const { mutate: endMeeting, isPending: isEndingMeeting } = useEndMeeting({
+  const { mutate: endMeeting } = useEndMeeting({
     onSuccessCallback: () => {
       console.log("Meeting ended successfully");
       // Passer à l'étape 2 après avoir terminé la réunion
@@ -48,11 +49,23 @@ const Content = ({ id }: { id: string }) => {
     console.log("Container - Recording stopped, audioUrl:", audioUrl);
     setIsRecording(false);
     if (audioUrl) {
-      const audioFile = new File([], "recording.webm", { type: "audio/webm" });
-      console.log("Container - Audio file:", audioFile);
-      setRecordedAudio(audioUrl);
-      setAudioFileState(audioFile);
-      setIsModalOpenConfirmation(true);
+      // Récupérer le blob depuis l'URL
+      fetch(audioUrl)
+        .then((response) => response.blob())
+        .then((blob) => {
+          // Créer un fichier valide à partir du blob
+          const audioFile = new File([blob], "recording.webm", {
+            type: "audio/webm",
+          });
+          console.log("Container - Audio file:", audioFile);
+          setRecordedAudio(audioUrl);
+          setAudioFileState(audioFile);
+
+          setIsModalOpenConfirmation(true);
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la récupération du blob audio:", error);
+        });
     }
   };
 
@@ -63,6 +76,7 @@ const Content = ({ id }: { id: string }) => {
       URL.revokeObjectURL(recordedAudio);
       setRecordedAudio(null);
     }
+    setAudioFileState(null);
   };
 
   if (isLoading) {
