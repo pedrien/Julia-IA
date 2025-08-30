@@ -56,7 +56,7 @@ export const GET = async (req: NextRequest) => {
     const requestData = fakeParticipantsList;
 
     const data: ListParticipants = validateApiResponse(
-      requestData.data,
+      requestData,
       listParticipantsSchema
     );
 
