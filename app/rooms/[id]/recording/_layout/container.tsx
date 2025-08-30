@@ -12,9 +12,11 @@ import { AnimatedDataLoadError } from "@/components/common/animated-error-states
 import ModalConfirmation from "@/components/common/modals/ModalConfirmation/ModalConfirmation";
 import { useEndMeeting } from "@/hooks/features/meetings/hook.end-meeting";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
+import { useLoading } from "@/contexts/Overlay/LoadingContext";
 
 const Content = ({ id }: { id: string }) => {
   const { openModal } = useModalContext();
+  const { startLoading, stopLoading } = useLoading();
   const {
     data: meetingDetail,
     isLoading,
@@ -31,22 +33,20 @@ const Content = ({ id }: { id: string }) => {
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
   const { mutate: endMeeting } = useEndMeeting({
     onSuccessCallback: () => {
-      console.log("Meeting ended successfully");
       // Passer à l'étape 2 après avoir terminé la réunion
       if (isRecording) {
         setIsRecording(false);
+        stopLoading();
         openModal("ModalStep");
       }
     },
   });
 
   const handleRecordingStart = () => {
-    console.log("Container - Recording started");
     setIsRecording(true);
   };
 
   const handleRecordingStop = (audioUrl?: string) => {
-    console.log("Container - Recording stopped, audioUrl:", audioUrl);
     setIsRecording(false);
     if (audioUrl) {
       // Récupérer le blob depuis l'URL
@@ -70,7 +70,6 @@ const Content = ({ id }: { id: string }) => {
   };
 
   const handleRecordingDelete = () => {
-    console.log("Container - Recording deleted");
     setChronoResetSignal((v) => v + 1);
     if (recordedAudio) {
       URL.revokeObjectURL(recordedAudio);
@@ -136,6 +135,7 @@ const Content = ({ id }: { id: string }) => {
         onCancel={() => setIsModalOpenConfirmation(false)}
         onConfirm={() => {
           if (audioFileState) {
+            startLoading();
             endMeeting({
               id_meeting: id,
               audio_file: audioFileState,
