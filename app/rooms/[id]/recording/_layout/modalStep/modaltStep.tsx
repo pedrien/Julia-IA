@@ -41,10 +41,8 @@ const ModalStep: React.FC<ModalStepProps> = ({
     isPending: isGeneratingTranscription,
   } = useGenerateTranscription({
     onSuccessCallback: () => {
-      console.log("Transcription generated successfully");
-      // Passer à l'étape 3 après avoir généré la transcription
-      if (currentStep === 2) {
-        setCurrentStep(3);
+      if (currentStep === 1) {
+        setCurrentStep(2);
       }
     },
   });
@@ -52,10 +50,9 @@ const ModalStep: React.FC<ModalStepProps> = ({
   const { mutate: generateRapport, isPending: isGeneratingRapport } =
     useGenerateRapport({
       onSuccessCallback: () => {
-        console.log("Rapport generated successfully");
-        // Fermer le modal et rediriger après avoir généré le rapport
-        closeModal("ModalStep");
-        router.push("/rooms");
+        if (currentStep === 2) {
+          setCurrentStep(3);
+        }
       },
     });
 
@@ -160,7 +157,7 @@ const ModalStep: React.FC<ModalStepProps> = ({
           image: "/images/transcribe.png",
           title: "Transcription",
           description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem expedita eos porro.",
+            "Conversion de votre enregistrement audio en texte transcrit pour faciliter l'analyse et la compréhension du contenu de la réunion.",
           stepNumber: 1,
           progressBars: [true, false, false],
           hasAudioPlayer: true,
@@ -170,7 +167,7 @@ const ModalStep: React.FC<ModalStepProps> = ({
           image: "/images/resume.png",
           title: "Génération du compte rendu",
           description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem expedita eos porro.",
+            "Création automatique d'un résumé structuré et détaillé de votre réunion avec les points clés, décisions et actions à retenir.",
           stepNumber: 2,
           progressBars: [true, true, false],
           hasAudioPlayer: false,
@@ -180,7 +177,7 @@ const ModalStep: React.FC<ModalStepProps> = ({
           image: "/images/send.png",
           title: "Transfert du compte rendu",
           description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem expedita eos porro.",
+            "Envoi automatique du compte rendu généré aux participants de la réunion par email pour un suivi optimal des décisions prises.",
           stepNumber: 3,
           progressBars: [true, true, true],
           hasAudioPlayer: false,
@@ -190,7 +187,7 @@ const ModalStep: React.FC<ModalStepProps> = ({
           image: "/images/transcribe.png",
           title: "Transcription",
           description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem expedita eos porro.",
+            "Conversion de votre enregistrement audio en texte transcrit pour faciliter l'analyse et la compréhension du contenu de la réunion.",
           stepNumber: 1,
           progressBars: [true, false, false],
           hasAudioPlayer: true,

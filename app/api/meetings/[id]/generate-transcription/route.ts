@@ -18,6 +18,7 @@ export const GET = async (
     const body = {
       meeting_id: id,
     };
+    console.log("body", body);
 
     await callApiWithToken(tokenOrErrorResponse, `ai/transcribe`, body, "POST");
 

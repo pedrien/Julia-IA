@@ -23,6 +23,7 @@ export const GET = async (
       format: "pdf",
     };
 
+    console.log("body", body);
     await callApiWithToken(
       tokenOrErrorResponse,
       `ai/generate-meeting-report`,
