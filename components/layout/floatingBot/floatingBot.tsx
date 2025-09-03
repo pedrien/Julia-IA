@@ -40,7 +40,7 @@ const FloatingBot = () => {
         <div className="header p-[18px] py-3 border-b border-[#0000000d]">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-1">
-              <div className="content-img rounded-full overflow-hidden w-[36px] h-[36px]">
+              <div className="content-img rounded-full overflow-hidden w-[40px] h-[40px]">
                 <Image
                   src={"/images/julia.jpeg"}
                   alt="julia"
@@ -95,7 +95,7 @@ const FloatingBot = () => {
             </Button>
           </div>
         </div>
-        <div className="footer p-[18px] py-3">
+        <div className="footer p-[18px] py-3 overflow-y-auto">
           <Textarea
             placeholder="Demandez à Julia"
             variant="bordered"

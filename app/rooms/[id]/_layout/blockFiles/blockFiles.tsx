@@ -2,8 +2,10 @@ import React from "react";
 import { Button, Progress } from "@heroui/react";
 import { Play, Undo, Redo, Download, Volume2, Share2 } from "lucide-react";
 import PdfRender from "@/components/common/pdfRender/pdfRender";
+import { useModalContext } from "@/contexts/Modal/ModalContext";
 
 const BlockFiles = () => {
+  const { openModal } = useModalContext();
   return (
     <div className="flex flex-col h-screen">
       <div className="header p-3 flex items-center relative z-10 bg-[#f5f5f5]">
@@ -21,6 +23,9 @@ const BlockFiles = () => {
             size="sm"
             variant="flat"
             className="bg-transparent text-colorTitle hover:bg-bgGray min-w-0 w-8 h-8 flex-col leading-[50%] items-center justify-center"
+            onPress={() => {
+              openModal("ModalShare");
+            }}
           >
             <Share2 size={16} />
           </Button>

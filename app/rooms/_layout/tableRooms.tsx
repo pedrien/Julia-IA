@@ -14,7 +14,7 @@ const TableRooms = () => {
   return (
     <div className="card bg-bgCard rounded-xl shadow-[0_5px_18px_#00000005]">
       <div className="flex items-center justify-between lg:mb-4 mb-6 px-4 pt-4">
-        <h2 className="text-colorTitle font-semibold">Liste des réunions</h2>
+        <h2 className="text-colorTitle font-semibold">Liste des comptes rendus</h2>
         <div>
           <Input
             type="text"
@@ -67,7 +67,7 @@ const TableRooms = () => {
                 className="bg-[#2ac66618]  text-[#2ac667] text-[12px]"
                 size="sm"
               >
-                Terminée
+                Traité
               </Chip>
             </td>
             <td>

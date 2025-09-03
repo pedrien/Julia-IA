@@ -2,6 +2,8 @@ import React from "react";
 import BlockChatIa from "./blockChatIa/blockChatIa";
 import TabsInfoRoom from "./tabsInfoRoom/tabsInfoRoom";
 import BlockFiles from "./blockFiles/blockFiles";
+import AvisParticipants from "./drawers/avisParticipant";
+import ModalShare from "./modalStep/modalShare";
 
 const BlockDash = () => {
   return (
@@ -17,6 +19,8 @@ const BlockDash = () => {
           <BlockChatIa />
         </div>
       </div>
+      <AvisParticipants/>
+      <ModalShare/>
     </div>
   );
 };
