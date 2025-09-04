@@ -4,15 +4,12 @@ import {
   Search,
   EllipsisVertical,
   FileText,
-  Clock,
-  CheckCircle,
-  Hourglass,
 } from "lucide-react";
 import Link from "next/link";
 
 const TableRooms = () => {
   return (
-    <div className="card bg-bgCard rounded-xl shadow-[0_5px_18px_#00000005]">
+    <div className="card bg-bgCard rounded-2xl shadow-[0_5px_18px_#00000005]">
       <div className="flex items-center justify-between lg:mb-4 mb-6 px-4 pt-4">
         <h2 className="text-colorTitle font-semibold">Liste des comptes rendus</h2>
         <div>

@@ -4,6 +4,8 @@ import TabsInfoRoom from "./tabsInfoRoom/tabsInfoRoom";
 import BlockFiles from "./blockFiles/blockFiles";
 import AvisParticipants from "./drawers/avisParticipant";
 import ModalShare from "./modalStep/modalShare";
+import NewInvite from "@/components/features/room/NewInvite";
+import NewObserv from "@/components/features/room/NewObserv";
 
 const BlockDash = () => {
   return (
@@ -21,6 +23,8 @@ const BlockDash = () => {
       </div>
       <AvisParticipants/>
       <ModalShare/>
+      <NewInvite/>
+      <NewObserv/>
     </div>
   );
 };

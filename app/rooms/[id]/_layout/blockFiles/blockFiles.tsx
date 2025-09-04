@@ -8,7 +8,7 @@ const BlockFiles = () => {
   const { openModal } = useModalContext();
   return (
     <div className="flex flex-col h-screen">
-      <div className="header p-3 flex items-center relative z-10 bg-[#f5f5f5]">
+      <div className="header p-3 flex items-center relative z-10 bg-[#f5f7fb]">
         <div className="block-btns p-1 bg-bgCard rounded-xl m-auto flex items-center gap-1">
           <Button
             isIconOnly
@@ -31,11 +31,11 @@ const BlockFiles = () => {
           </Button>
         </div>
       </div>
-      <div className="body flex-grow overflow-auto bg-[#f5f5f5]">
+      <div className="body flex-grow overflow-auto bg-[#f5f7fb]">
         <PdfRender file={"/files/1.pdf"} />
       </div>
-      <div className="footer p-3 bg-[#f5f5f5] relative z-10">
-        <div className="absolute w-full h-[40%] top-[-40px] left-0 -z-10" style={{background:"linear-gradient(to bottom, transparent,#f5f5f5)"}}></div>
+      <div className="footer p-3 bg-[#f5f7fb] relative z-10">
+        <div className="absolute w-full h-[40%] top-[-40px] left-0 -z-10" style={{background:"linear-gradient(to bottom, transparent,#f5f7fb)"}}></div>
         <div className="card p-3 rounded-xl bg-bgCard">
           <div className="flex items-center gap-3">
             <span className="currentTime text-sm text-colorMuted">00:00</span>

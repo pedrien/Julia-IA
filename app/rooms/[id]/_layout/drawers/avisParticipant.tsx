@@ -3,11 +3,15 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerBody,
+  DrawerFooter,
   Avatar,
+  Button
 } from "@heroui/react";
 import { useDrawerContext } from "@/contexts/Drawer/DrawerContext";
+import { useModalContext } from "@/contexts/Modal/ModalContext";
 
 const AvisParticipants = () => {
+  const { openModal } = useModalContext();
   const { isDrawerOpen, closeDrawer } = useDrawerContext();
   return (
     <Drawer
@@ -34,6 +38,20 @@ const AvisParticipants = () => {
           </div>
         </DrawerHeader>
         <DrawerBody>
+          <div className="card p-3 rounded-xl border border-colorBorder border-dashed mt-2">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="col-span-1">
+                <h4 className="text-colorTitle font-medium text-xs mb-1">Lu</h4>
+                <p className="text-colorMuted text-sm">29/08/2025</p>
+              </div>
+              <div>
+                <h4 className="text-colorTitle font-medium text-xs mb-1">
+                  Traité
+                </h4>
+                <p className="text-colorMuted text-sm">29/08/2025</p>
+              </div>
+            </div>
+          </div>
           <h4 className="text-colorTitle font-semibold">Observations</h4>
           <div className="flex flex-col gap-3">
             <div className="card p-3 rounded-xl bg-[#f8f8f8]">
@@ -74,6 +92,11 @@ const AvisParticipants = () => {
             </div>
           </div>
         </DrawerBody>
+        <DrawerFooter>
+        <Button className="bg-primaryColor  text-white w-full font-medium"  onPress={() => openModal("NewObserv")}>
+          Laisser une observation
+        </Button>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

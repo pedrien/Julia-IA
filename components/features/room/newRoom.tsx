@@ -370,7 +370,7 @@ const NewRoom = () => {
                                     <span className="text-small text-colorTitle">
                                       {user.name}
                                     </span>
-                                    <span className="text-tiny text-default-400 text-colorMuted">
+                                    <span className="text-tiny text-colorMuted">
                                       {user.email}
                                     </span>
                                   </div>

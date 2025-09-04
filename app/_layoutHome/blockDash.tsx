@@ -43,10 +43,10 @@ const BlockDash = () => {
     <div>
       <div className="container-fluid lg:px-7 px-2">
         <div
-          className="banner bg-primaryColor lg:p-[22px] relative z-10 overflow-hidden rounded-xl"
-          // style={{
-          //   background: "linear-gradient(to right, var(--primaryColor), #cd2efa)",
-          // }}
+          className="banner bg-primaryColor lg:py-[40px] lg:px-6 relative z-10 overflow-hidden rounded-2xl"
+          style={{
+            background: "linear-gradient(to right, var(--primaryColor), #942efa)",
+          }}
         >
           <div className="w-full h-full absolute top-0 left-0 -z-10 opacity-40">
             <Image
@@ -81,7 +81,7 @@ const BlockDash = () => {
                 className="card flex flex-col gap-2 cursor-pointer group"
                 onClick={() => openModal("ModalNewRoom")}
               >
-                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard transition-background duration-300 rounded-xl flex flex-col items-center justify-center">
+                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard transition-background duration-300 rounded-2xl flex flex-col items-center justify-center">
                   <div className="icon w-[60px] h-[60px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ff4949] text-white rounded-full flex justify-center items-center">
                     <Mic size={28}></Mic>
                   </div>
@@ -95,7 +95,7 @@ const BlockDash = () => {
             </div>
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
-                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard  transition-background duration-300 rounded-xl flex flex-col items-center justify-center">
+                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard  transition-background duration-300 rounded-2xl flex flex-col items-center justify-center">
                   <div className="icon w-[60px] h-[60px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-primaryColor text-white rounded-full flex justify-center items-center">
                     <ArrowUpToLine size={28}></ArrowUpToLine>
                   </div>
@@ -109,7 +109,7 @@ const BlockDash = () => {
             </div>
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
-                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard  transition-background duration-300 rounded-xl flex flex-col items-center justify-center">
+                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard  transition-background duration-300 rounded-2xl flex flex-col items-center justify-center">
                   <div className="icon w-[60px] h-[60px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#494cff] text-white rounded-full flex justify-center items-center">
                     <Printer size={28}></Printer>
                   </div>
@@ -123,7 +123,7 @@ const BlockDash = () => {
             </div>
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
-                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard  transition-background duration-300 rounded-xl flex flex-col items-center justify-center">
+                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard  transition-background duration-300 rounded-2xl flex flex-col items-center justify-center">
                   <div className="icon w-[60px] h-[60px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#39ceb2] text-white rounded-full flex justify-center items-center">
                     <Mic size={28}></Mic>
                   </div>
@@ -137,7 +137,7 @@ const BlockDash = () => {
             </div>
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
-                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard rounded-xl flex flex-col items-center justify-center">
+                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard rounded-2xl flex flex-col items-center justify-center">
                   <div className="icon w-[60px] h-[60px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ffa351] text-white rounded-full flex justify-center items-center">
                     <ArrowUpToLine size={28}></ArrowUpToLine>
                   </div>
@@ -152,7 +152,7 @@ const BlockDash = () => {
           </div>
         </div>
         <div className="block-file-recents lg:mt-8 mt-3">
-          <div className="card bg-bgCard shadow-[0_5px_18px_#00000005]  rounded-xl">
+          <div className="card bg-bgCard shadow-[0_5px_18px_#00000005]  rounded-2xl">
             <div className="flex items-center justify-between lg:mb-4 mb-6 px-4 pt-4">
               <h2 className="text-colorTitle font-semibold">
                 Fichiers recents
