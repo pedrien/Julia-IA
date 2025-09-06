@@ -37,7 +37,6 @@ const ModalShareRapport = ({
     },
   });
 
-  // Séparer les participants par type
   const internalParticipants = participants.filter(
     (person) => person.type === "INTERNE"
   );
