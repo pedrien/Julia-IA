@@ -17,6 +17,7 @@ export default function PdfRender({ file }: PdfRenderProps) {
   const [pageWidth, setPageWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth * 0.8 : 800
   );
+  const [pageHeight, setPageHeight] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1); // État pour la page actuelle
   const [inputValue, setInputValue] = useState<string>("1"); // État pour la valeur de l'Input
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -26,31 +27,13 @@ export default function PdfRender({ file }: PdfRenderProps) {
   console.log(file);
   useEffect(() => {
     const handleResize = () => {
-      const windowWidth = window.innerWidth;
-      let newWidth;
-
-      if (windowWidth < 640) {
-        // Mobile
-        newWidth = windowWidth - 32; // 16px padding de chaque côté
-      } else if (windowWidth < 768) {
-        // Tablet
-        newWidth = windowWidth * 0.9;
-      } else if (windowWidth < 1024) {
-        // Desktop small
-        newWidth = windowWidth * 0.8;
-      } else {
-        // Desktop large
-        newWidth = Math.min(windowWidth * 0.7, 1000);
-      }
-
-      setPageWidth(newWidth);
+      const newWidth = window.innerWidth * 0.8;
+      setPageWidth(newWidth > 800 ? 800 : newWidth);
     };
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("resize", handleResize);
-      handleResize(); // Initial call to set the correct width
-      return () => window.removeEventListener("resize", handleResize);
-    }
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial call to set the correct width
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
@@ -188,29 +171,43 @@ export default function PdfRender({ file }: PdfRenderProps) {
             ref={(el) => {
               pageRefs.current[index] = el; // Associe chaque page à une référence
             }}
+            style={{
+              maxHeight: pageHeight ? `${pageHeight}px` : "none",
+              overflow: "hidden",
+              margin: "0 auto 20px auto",
+              boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+              borderRadius: "8px",
+            }}
           >
-            <Page pageNumber={index + 1} width={pageWidth} />
+            <Page
+              pageNumber={index + 1}
+              width={pageWidth}
+              height={pageHeight || undefined}
+              renderTextLayer={true}
+              renderAnnotationLayer={true}
+            />
           </div>
         ))}
       </Document>
       {numPages && numPages > 0 && (
-        <div className="block-nav-page sticky w-auto min-w-[200px] z-50 mt-2 bottom-2 shadow-md bg-bgCard p-3 rounded-full left-1/2 transform -translate-x-1/2">
-          <div className="content-nav flex justify-center items-center gap-3">
+        <div className="block-nav-page sticky w-auto min-w-[280px] z-50 mt-4 bottom-4 shadow-lg bg-bgCard p-4 rounded-2xl left-1/2 transform -translate-x-1/2 border border-gray-200">
+          <div className="content-nav flex justify-center items-center gap-4">
             <Button
               isIconOnly
-              size="sm"
+              size="md"
               variant="flat"
-              className="bg-transparent text-colorTitle hover:bg-bgGray min-w-0 w-8 h-8"
+              className="bg-transparent text-colorTitle hover:bg-bgGray min-w-0 w-10 h-10 rounded-full"
               onPress={goToPreviousPage}
               isDisabled={currentPage <= 1}
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={20} />
             </Button>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-colorMuted">Page</span>
               <Input
                 type="text"
-                id="nom"
+                id="page-input"
                 labelPlacement="outside"
                 variant="bordered"
                 value={inputValue}
@@ -218,23 +215,24 @@ export default function PdfRender({ file }: PdfRenderProps) {
                 onKeyDown={handlePageJump}
                 classNames={{
                   inputWrapper:
-                    "bg-bgFond h-[24px] px-1 min-h-0 py-0 w-[40px] border-[0px] shadow-none rounded-md",
-                  input:
-                    "text-colorTitle, placeholder:text-colorMuted, text-center",
+                    "bg-bgFond h-[32px] px-3 min-h-0 py-0 w-[50px] border border-gray-300 shadow-none rounded-lg",
+                  input: "text-colorTitle text-center font-medium text-sm",
                 }}
               />
-              <span className="text-sm text-colorMuted">/ {numPages}</span>
+              <span className="text-sm font-medium text-colorMuted">
+                sur {numPages}
+              </span>
             </div>
 
             <Button
               isIconOnly
-              size="sm"
+              size="md"
               variant="flat"
-              className="bg-transparent text-colorTitle hover:bg-bgGray min-w-0 w-8 h-8"
+              className="bg-transparent text-colorTitle hover:bg-bgGray min-w-0 w-10 h-10 rounded-full"
               onPress={goToNextPage}
               isDisabled={currentPage >= numPages}
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={20} />
             </Button>
           </div>
         </div>
