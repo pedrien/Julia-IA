@@ -148,7 +148,7 @@ const TabsParticipants = ({ id }: { id: string }) => {
           >
             <Button
               className="bg-transparent border border-colorBorder  text-colorTitle text-xs p-0 min-w-0 h-[26px] w-[26px]"
-              onPress={() => openModal("NewInvite")}
+              onPress={() => openModal("ModalNewUser")}
             >
               <Plus size={14}></Plus>
             </Button>
