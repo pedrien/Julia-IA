@@ -11,30 +11,13 @@ import { IActionSuccess } from "@/interfaces/interface.result-actions";
 // Type pour les paramètres supplémentaires
 export interface MarkMeetingTraitedOptions {
   onSuccessCallback?: (
-    data: MutationResult<
-      IActionSuccess & {
-        data: {
-          meetingId: string;
-          status: string;
-          treatedAt: string;
-        };
-      }
-    >,
+    data: MutationResult<IActionSuccess>,
     meetingData: MarkMeetingTraited
   ) => void;
 }
 
 export const useMarkMeetingTraited = (options?: MarkMeetingTraitedOptions) => {
-  return useCustomMutation<
-    IActionSuccess & {
-      data: {
-        meetingId: string;
-        status: string;
-        treatedAt: string;
-      };
-    },
-    MarkMeetingTraited
-  >({
+  return useCustomMutation<IActionSuccess, MarkMeetingTraited>({
     mutationFn: markMeetingTraited,
     messages: {
       success: "Réunion marquée comme traitée avec succès",
