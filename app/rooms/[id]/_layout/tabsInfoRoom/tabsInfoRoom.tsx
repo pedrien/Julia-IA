@@ -6,6 +6,7 @@ import { Tabs, Tab } from "@heroui/react";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
 import TabsParticipants from "./TabsParticipants";
 import TabsTranscriptionText from "./TabsTranscriptionText";
+import TabsInfoMeeting from "./TabsInfoMeeting";
 
 const TabsInfoRoom = ({ id }: { id: string }) => {
   const { openModal } = useModalContext();
@@ -49,36 +50,7 @@ const TabsInfoRoom = ({ id }: { id: string }) => {
             <TabsTranscriptionText id={id} />
           </Tab>
           <Tab key="info" title="Infos générales">
-            <h3 className="text-colorTitle font-semibold mb-3 mt-2">
-              Infos générales
-            </h3>
-            <div className="card p-3 rounded-xl border border-colorBorder border-dashed">
-              <div className="flex flex-col gap-3">
-                <div>
-                  <h4 className="text-colorTitle font-medium text-sm mb-1">
-                    Titre
-                  </h4>
-                  <p className="text-colorMuted text-sm">
-                    Lorem ipsum dolor sit amet consectetur adipisicing.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-colorTitle font-medium text-sm mb-1">
-                    Date
-                  </h4>
-                  <p className="text-colorMuted text-sm">29/08/2025</p>
-                </div>
-                <div>
-                  <h4 className="text-colorTitle font-medium text-sm mb-1">
-                    Description
-                  </h4>
-                  <p className="text-colorMuted text-sm">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Fugit vel officia maiores!
-                  </p>
-                </div>
-              </div>
-            </div>
+            <TabsInfoMeeting id={id} />
           </Tab>
         </Tabs>
       </div>
