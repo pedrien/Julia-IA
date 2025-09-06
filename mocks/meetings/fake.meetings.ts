@@ -1,12 +1,12 @@
 import {
-  listMeetingSchema,
+  ListMeetings,
   meetingSchema,
 } from "@/validators/meetings/validator.list-meeting";
 
 /**
  * Données factices pour une liste de meetings
  */
-export const fakeMeetingsList: listMeetingSchema = {
+export const fakeMeetingsList: ListMeetings = {
   data: [
     {
       id: "1",
