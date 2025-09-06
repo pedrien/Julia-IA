@@ -35,7 +35,7 @@ const BlockDash = ({ id }: { id: string }) => {
           });
         }}
       />
-      <NewObserv />
+      <NewObserv idMeeting={id} />
     </>
   );
 };
