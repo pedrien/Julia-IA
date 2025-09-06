@@ -24,7 +24,6 @@ export default function PdfRender({ file }: PdfRenderProps) {
   const [error, setError] = useState<string | null>(null);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]); // Références pour chaque page
 
-  console.log(file);
   useEffect(() => {
     const handleResize = () => {
       const newWidth = window.innerWidth * 0.8;
