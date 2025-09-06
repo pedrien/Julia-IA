@@ -1,13 +1,16 @@
 "use client";
 
 import { useDrawerContext } from "@/contexts/Drawer/DrawerContext";
+import { useCurrentParticipant } from "@/contexts/features/meetings/context.current-participant-meetings-detail";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
 import { useGetMeetingParticipants } from "@/hooks/features/meetings/hook.get-meeting-participants";
+import { getAvatarUrl } from "@/utils/utils";
 import { Avatar, Button, Chip, Spinner, Tooltip } from "@heroui/react";
 import { Plus, RefreshCcw } from "lucide-react";
 
 const TabsParticipants = ({ id }: { id: string }) => {
   const { openDrawer } = useDrawerContext();
+  const { setCurrentParticipant } = useCurrentParticipant();
   const { openModal } = useModalContext();
   const {
     data: participants,
@@ -39,14 +42,6 @@ const TabsParticipants = ({ id }: { id: string }) => {
   // Fonction pour obtenir le texte du statut de traitement
   const getProcessedStatusText = (hasProcessed: boolean) => {
     return hasProcessed ? "Traité" : "Non traité";
-  };
-
-  // Fonction pour générer l'URL de l'avatar
-  const getAvatarUrl = (name: string) => {
-    // Utiliser une URL d'avatar basée sur le nom ou une URL par défaut
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
-      name
-    )}&background=random&color=fff&size=40`;
   };
 
   if (isLoading) {
@@ -84,7 +79,10 @@ const TabsParticipants = ({ id }: { id: string }) => {
               <div
                 key={participant.id}
                 className="flex gap-2 items-center cursor-pointer"
-                onClick={() => openDrawer("AvisParticipants")}
+                onClick={() => {
+                  setCurrentParticipant(participant);
+                  openDrawer("AvisParticipants");
+                }}
               >
                 <Avatar
                   alt={participant.name}
@@ -160,7 +158,10 @@ const TabsParticipants = ({ id }: { id: string }) => {
               <div
                 key={participant.id}
                 className="flex gap-2 items-center cursor-pointer"
-                onClick={() => openDrawer("AvisParticipants")}
+                onClick={() => {
+                  setCurrentParticipant(participant);
+                  openDrawer("AvisParticipants");
+                }}
               >
                 <Avatar
                   alt={participant.name}
