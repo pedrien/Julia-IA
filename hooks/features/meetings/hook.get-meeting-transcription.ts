@@ -1,15 +1,15 @@
 "use client";
 
 import { handleClientAuthError } from "@/libs/handleClientAuthError";
-import { getMeetingDetail } from "@/services/meetings/service.get-meeting-detail";
-import { DetailMeeting } from "@/validators/meetings/validator.detail-meetings";
+import { getMeetingTranscription } from "@/services/meetings/service.get-meeting-transcription";
+import { MeetingTranscriptText } from "@/validators/meetings/validator.detail-meetings";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
-const getMeetingDetails = async (
+const getTranscriptionText = async (
   meetingId: string
-): Promise<DetailMeeting | null> => {
+): Promise<MeetingTranscriptText | null> => {
   try {
-    const response = await getMeetingDetail({ meetingId });
+    const response = await getMeetingTranscription({ meetingId });
     if (response?.data?.success === false) {
       handleClientAuthError(response.data.error, false);
       throw new Error(response.data.error.join(", "));
@@ -24,11 +24,11 @@ const getMeetingDetails = async (
 };
 
 /**
- * Hook to fetch and manage the details for a specific meeting
+ * Hook to fetch and manage the transcription text for a specific meeting
  *
  * @param {string} meetingId - The ID of the meeting
- * @returns {UseQueryResult<DetailMeeting | null, Error>} Query result containing:
- * - data: The meeting details if successful, null otherwise
+ * @returns {UseQueryResult<MeetingTranscriptText | null, Error>} Query result containing:
+ * - data: The transcription text if successful, null otherwise
  * - error: Error object if the query failed
  * - isLoading: Boolean indicating if the query is in progress (only for initial load)
  * - isFetching: Boolean indicating if any fetch is in progress
@@ -41,12 +41,12 @@ const getMeetingDetails = async (
  * - Refetch on window focus
  * - Only run when meetingId is provided
  */
-export const useGetMeetingDetail = (
+export const useGetMeetingTranscription = (
   meetingId: string
-): UseQueryResult<DetailMeeting | null, Error> => {
-  return useQuery<DetailMeeting | null, Error>({
-    queryKey: ["meeting-detail", meetingId],
-    queryFn: () => getMeetingDetails(meetingId),
+): UseQueryResult<MeetingTranscriptText | null, Error> => {
+  return useQuery<MeetingTranscriptText | null, Error>({
+    queryKey: ["meeting-transcription", meetingId],
+    queryFn: () => getTranscriptionText(meetingId),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
     retry: 2,

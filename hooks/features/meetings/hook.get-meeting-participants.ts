@@ -1,15 +1,15 @@
 "use client";
 
 import { handleClientAuthError } from "@/libs/handleClientAuthError";
-import { getMeetingDetail } from "@/services/meetings/service.get-meeting-detail";
-import { DetailMeeting } from "@/validators/meetings/validator.detail-meetings";
+import { getMeetingParticipants } from "@/services/meetings/service.get-meeting-participants";
+import { MeetingParticipantList } from "@/validators/meetings/validator.detail-meetings";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
-const getMeetingDetails = async (
+const getParticipantsList = async (
   meetingId: string
-): Promise<DetailMeeting | null> => {
+): Promise<MeetingParticipantList | null> => {
   try {
-    const response = await getMeetingDetail({ meetingId });
+    const response = await getMeetingParticipants({ meetingId });
     if (response?.data?.success === false) {
       handleClientAuthError(response.data.error, false);
       throw new Error(response.data.error.join(", "));
@@ -24,11 +24,11 @@ const getMeetingDetails = async (
 };
 
 /**
- * Hook to fetch and manage the details for a specific meeting
+ * Hook to fetch and manage the list of participants for a specific meeting
  *
  * @param {string} meetingId - The ID of the meeting
- * @returns {UseQueryResult<DetailMeeting | null, Error>} Query result containing:
- * - data: The meeting details if successful, null otherwise
+ * @returns {UseQueryResult<MeetingParticipantList | null, Error>} Query result containing:
+ * - data: The participants list if successful, null otherwise
  * - error: Error object if the query failed
  * - isLoading: Boolean indicating if the query is in progress (only for initial load)
  * - isFetching: Boolean indicating if any fetch is in progress
@@ -41,12 +41,12 @@ const getMeetingDetails = async (
  * - Refetch on window focus
  * - Only run when meetingId is provided
  */
-export const useGetMeetingDetail = (
+export const useGetMeetingParticipants = (
   meetingId: string
-): UseQueryResult<DetailMeeting | null, Error> => {
-  return useQuery<DetailMeeting | null, Error>({
-    queryKey: ["meeting-detail", meetingId],
-    queryFn: () => getMeetingDetails(meetingId),
+): UseQueryResult<MeetingParticipantList | null, Error> => {
+  return useQuery<MeetingParticipantList | null, Error>({
+    queryKey: ["meeting-participants", meetingId],
+    queryFn: () => getParticipantsList(meetingId),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
     retry: 2,
