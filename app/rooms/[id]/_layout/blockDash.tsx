@@ -26,7 +26,7 @@ const BlockDash = ({ id }: { id: string }) => {
         </div>
       </div>
       <AvisParticipants />
-      <ModalShare />
+      <ModalShare idMeeting={id} />
       <NewUser
         isForGuest={true}
         onSuccess={() => {
