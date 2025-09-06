@@ -4,7 +4,7 @@ import { Play, Undo, Redo, Download, Volume2, Share2 } from "lucide-react";
 import PdfRender from "@/components/common/pdfRender/pdfRender";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
 
-const BlockFiles = () => {
+const BlockFiles = ({ id }: { id: string }) => {
   const { openModal } = useModalContext();
   return (
     <div className="flex flex-col h-screen">
@@ -35,7 +35,12 @@ const BlockFiles = () => {
         <PdfRender file={"/files/1.pdf"} />
       </div>
       <div className="footer p-3 bg-[#f5f7fb] relative z-10">
-        <div className="absolute w-full h-[40%] top-[-40px] left-0 -z-10" style={{background:"linear-gradient(to bottom, transparent,#f5f7fb)"}}></div>
+        <div
+          className="absolute w-full h-[40%] top-[-40px] left-0 -z-10"
+          style={{
+            background: "linear-gradient(to bottom, transparent,#f5f7fb)",
+          }}
+        ></div>
         <div className="card p-3 rounded-xl bg-bgCard">
           <div className="flex items-center gap-3">
             <span className="currentTime text-sm text-colorMuted">00:00</span>

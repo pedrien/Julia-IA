@@ -6,7 +6,7 @@ import { Avatar, Chip, Tabs, Tab } from "@heroui/react";
 import { useDrawerContext } from "@/contexts/Drawer/DrawerContext";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
 
-const TabsInfoRoom = () => {
+const TabsInfoRoom = ({ id }: { id: string }) => {
   const { openDrawer } = useDrawerContext();
   const { openModal } = useModalContext();
   return (
@@ -279,7 +279,10 @@ const TabsInfoRoom = () => {
         </Tabs>
       </div>
       <div className="footer px-5 p-4">
-        <Button className="bg-primaryColor  text-white w-full font-medium"  onPress={() => openModal("NewObserv")}>
+        <Button
+          className="bg-primaryColor  text-white w-full font-medium"
+          onPress={() => openModal("NewObserv")}
+        >
           Laisser une observation
         </Button>
       </div>
