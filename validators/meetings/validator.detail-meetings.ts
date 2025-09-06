@@ -9,6 +9,22 @@ export const meetingParticipantSchema = z.object({
   phone: z.string(),
   has_processed_report: z.boolean().optional(),
   has_read_report: z.boolean().optional(),
+  processed_date: z
+    .string()
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      "Invalid date format, expected YYYY-MM-DD HH:MM:SS"
+    )
+    .nullable()
+    .optional(),
+  read_date: z
+    .string()
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      "Invalid date format, expected YYYY-MM-DD HH:MM:SS"
+    )
+    .nullable()
+    .optional(),
   type: ENUM_PARTICIPANT_TYPE,
 });
 export type MeetingParticipant = z.infer<typeof meetingParticipantSchema>;
