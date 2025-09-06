@@ -11,7 +11,15 @@ import React, { JSX } from "react";
  * @returns {JSX.Element} A span element with the class "loader__box".
  */
 function Loader(): JSX.Element {
-  return <Spinner color="primary" size="lg" />;
+  return (
+    <Spinner
+      color="primary"
+      size="lg"
+      classNames={{
+        spinnerBars: "bg-[#782efa] text-[#782efa] spinnerBars",
+      }}
+    />
+  );
 }
 
 export default Loader;

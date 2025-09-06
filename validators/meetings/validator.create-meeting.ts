@@ -27,10 +27,19 @@ export const createMeetingSchema = z.object({
   participants_interne: z
     .array(z.string())
     .min(1, "Au moins un participant interne est requis"),
-  participants_externe: z.array(z.string()).optional().default([]),
+  participants_externe: z.array(z.string()).default([]),
+});
+
+export const responseCreateMeetingSchema = z.object({
+  data: z.object({
+    id: z.string(),
+  }),
 });
 
 /**
  * TypeScript types inferred from schemas
  */
 export type CreateMeetingSchema = z.infer<typeof createMeetingSchema>;
+export type ResponseCreateMeetingSchema = z.infer<
+  typeof responseCreateMeetingSchema
+>;

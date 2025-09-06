@@ -4,7 +4,7 @@ import { z } from "zod";
  * Schema for ending a meeting with audio file
  */
 export const endMeetingSchema = z.object({
-  id_meeting: z.uuid("L'ID de la réunion doit être un UUID valide"),
+  id_meeting: z.string(),
   audio_file: z
     .instanceof(File)
     .refine((file) => file.size > 0)

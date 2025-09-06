@@ -18,10 +18,7 @@ export const createParticipantSchema = z.object({
     .string()
     .min(1, "Le téléphone est requis")
     .max(20, "Le téléphone ne peut pas dépasser 20 caractères"),
-  external_company: z
-    .string()
-    .min(1, "L'entreprise est requise")
-    .max(100, "Le nom de l'entreprise ne peut pas dépasser 100 caractères"),
+  external_company: z.string().optional(),
 });
 
 /**

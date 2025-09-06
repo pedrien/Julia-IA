@@ -26,7 +26,7 @@ import { NextRequest, NextResponse } from "next/server";
  */
 export const POST = async (
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> => {
   try {
     const tokenOrErrorResponse = verifyBearerToken(req);
@@ -34,17 +34,7 @@ export const POST = async (
       return tokenOrErrorResponse;
     }
 
-    const { id } = params;
-
-    // Validate UUID format
-    const uuidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(id)) {
-      return NextResponse.json(
-        { message: "L'ID de la réunion doit être un UUID valide." },
-        { status: 400 }
-      );
-    }
+    const { id } = await params;
 
     // Parse form data
     const formData = await req.formData();
@@ -77,12 +67,17 @@ export const POST = async (
     const apiFormData = new FormData();
     apiFormData.append("audio_file", audioFile);
 
-    await callApiWithToken(
+    console.log("apiFormData", ...apiFormData);
+    const response = await callApiWithToken(
       tokenOrErrorResponse,
       `meetings/${id}/end`,
       apiFormData,
-      "POST"
+      "POST",
+      true,
+      { "Content-Type": "multipart/form-data" }
     );
+
+    console.log("response", response);
 
     return NextResponse.json(
       {
@@ -91,6 +86,7 @@ export const POST = async (
       { status: 200 }
     );
   } catch (error) {
+    console.log("error in end meeting", error.response);
     return handleApiServerError(error);
   }
 };

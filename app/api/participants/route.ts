@@ -2,6 +2,7 @@ import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
+import { fakeParticipantsList } from "@/mocks/participants/fake.participants";
 import {
   ListParticipants,
   listParticipantsSchema,
@@ -36,7 +37,7 @@ export const GET = async (req: NextRequest) => {
 
     const requestData = await callApiWithToken(
       tokenOrErrorResponse,
-      `participants`,
+      `meetings/participants`,
       undefined,
       "GET"
     );
@@ -52,9 +53,10 @@ export const GET = async (req: NextRequest) => {
         { status: 400 }
       );
     }
+    // const requestData = fakeParticipantsList;
 
     const data: ListParticipants = validateApiResponse(
-      requestData.data,
+      requestData,
       listParticipantsSchema
     );
 

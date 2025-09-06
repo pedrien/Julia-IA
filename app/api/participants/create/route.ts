@@ -48,10 +48,10 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
       external_phone: validatedData.external_phone,
       external_company: validatedData.external_company,
     };
-
+    console.log(formattedData);
     await callApiWithToken(
       tokenOrErrorResponse,
-      "participants/create",
+      "meetings/participants/external/store",
       formattedData,
       "POST"
     );

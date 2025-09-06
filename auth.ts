@@ -14,6 +14,7 @@ import { SessionApp, SessionSchema } from "./validators/auth/validator.session";
 import { convertExpiresInToSeconds } from "./utils/utils.times";
 import { ENV } from "./env";
 import { encryptToken } from "./libs/cryptoToken";
+import { fakeSessionUserForTesting } from "./mocks/session/fake.session-user";
 
 // Constants
 const PROVIDER = "GOOGLE";
@@ -65,6 +66,7 @@ const config = {
           }
 
           const response = requestAuthCredential.data.data;
+          // const response = fakeSessionUserForTesting.data;
 
           const session: SessionApp = validateApiResponse(
             response,
@@ -92,6 +94,7 @@ const config = {
             },
           };
         } catch (error: unknown) {
+          console.log(error);
           throw extractAuthError(error);
         }
       },

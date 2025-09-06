@@ -11,29 +11,108 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Pause, Play } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useGenerateTranscription } from "@/hooks/features/meetings/hook.generate-transcription";
+import { useGenerateRapport } from "@/hooks/features/meetings/hook.generate-rapport";
+import { useRouter } from "next/navigation";
 
 interface ModalStepProps {
   recordedAudio?: string | null;
+  audioFile?: File | null;
+  meetingId?: string;
 }
 
-const ModalStep: React.FC<ModalStepProps> = ({ recordedAudio }) => {
+const ModalStep: React.FC<ModalStepProps> = ({
+  recordedAudio,
+  meetingId,
+  audioFile,
+}) => {
   const { isModalOpen, closeModal } = useModalContext();
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
+  const [audioFileState, setAudioFileState] = useState<File | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const {
+    mutate: generateTranscription,
+    isPending: isGeneratingTranscription,
+  } = useGenerateTranscription({
+    onSuccessCallback: () => {
+      if (currentStep === 1) {
+        setCurrentStep(2);
+      }
+    },
+  });
+
+  const { mutate: generateRapport, isPending: isGeneratingRapport } =
+    useGenerateRapport({
+      onSuccessCallback: () => {
+        if (currentStep === 2) {
+          setCurrentStep(3);
+        }
+      },
+    });
 
   // Debug: Log quand l'audio change
   useEffect(() => {
     console.log("ModalStep - recordedAudio:", recordedAudio);
   }, [recordedAudio]);
 
-  const nextStep = () => {
-    if (currentStep < 3) {
-      setCurrentStep(currentStep + 1);
+  // Forcer le chargement des métadonnées audio
+  useEffect(() => {
+    if (audioRef.current && recordedAudio) {
+      audioRef.current.load();
     }
+  }, [recordedAudio]);
+
+  // Convertir l'URL audio en fichier
+  useEffect(() => {
+    if (recordedAudio) {
+      fetch(recordedAudio)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const file = new File([blob], "recording.webm", {
+            type: "audio/webm",
+          });
+          setAudioFileState(file);
+          console.log("Audio file created:", file);
+        })
+        .catch((error) => {
+          console.error("Error converting audio to file:", error);
+        });
+    }
+  }, [recordedAudio]);
+
+  const handleSubmitRecording = () => {
+    if (!meetingId || !audioFileState) {
+      console.error("Missing meetingId or audioFile");
+      return;
+    }
+
+    console.log("Submitting recording:", { meetingId, audioFile });
+  };
+
+  const handleGenerateTranscription = () => {
+    if (!meetingId) {
+      console.error("Missing meetingId");
+      return;
+    }
+
+    console.log("Generating transcription for meeting:", meetingId);
+    generateTranscription({ id: meetingId });
+  };
+
+  const handleGenerateRapport = () => {
+    if (!meetingId) {
+      console.error("Missing meetingId");
+      return;
+    }
+
+    console.log("Generating rapport for meeting:", meetingId);
+    generateRapport({ id: meetingId });
   };
 
   const formatTime = (seconds: number): string => {
@@ -78,7 +157,7 @@ const ModalStep: React.FC<ModalStepProps> = ({ recordedAudio }) => {
           image: "/images/transcribe.png",
           title: "Transcription",
           description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem expedita eos porro.",
+            "Conversion de votre enregistrement audio en texte transcrit pour faciliter l'analyse et la compréhension du contenu de la réunion.",
           stepNumber: 1,
           progressBars: [true, false, false],
           hasAudioPlayer: true,
@@ -88,7 +167,7 @@ const ModalStep: React.FC<ModalStepProps> = ({ recordedAudio }) => {
           image: "/images/resume.png",
           title: "Génération du compte rendu",
           description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem expedita eos porro.",
+            "Création automatique d'un résumé structuré et détaillé de votre réunion avec les points clés, décisions et actions à retenir.",
           stepNumber: 2,
           progressBars: [true, true, false],
           hasAudioPlayer: false,
@@ -98,7 +177,7 @@ const ModalStep: React.FC<ModalStepProps> = ({ recordedAudio }) => {
           image: "/images/send.png",
           title: "Transfert du compte rendu",
           description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem expedita eos porro.",
+            "Envoi automatique du compte rendu généré aux participants de la réunion par email pour un suivi optimal des décisions prises.",
           stepNumber: 3,
           progressBars: [true, true, true],
           hasAudioPlayer: false,
@@ -108,7 +187,7 @@ const ModalStep: React.FC<ModalStepProps> = ({ recordedAudio }) => {
           image: "/images/transcribe.png",
           title: "Transcription",
           description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem expedita eos porro.",
+            "Conversion de votre enregistrement audio en texte transcrit pour faciliter l'analyse et la compréhension du contenu de la réunion.",
           stepNumber: 1,
           progressBars: [true, false, false],
           hasAudioPlayer: true,
@@ -199,16 +278,45 @@ const ModalStep: React.FC<ModalStepProps> = ({ recordedAudio }) => {
                                         "Audio loaded, duration:",
                                         target.duration
                                       );
-                                      setDuration(target.duration);
+                                      if (
+                                        isFinite(target.duration) &&
+                                        target.duration > 0
+                                      ) {
+                                        setDuration(target.duration);
+                                      } else {
+                                        setDuration(0);
+                                      }
+                                    }}
+                                    onCanPlay={(e) => {
+                                      const target =
+                                        e.target as HTMLAudioElement;
+                                      console.log(
+                                        "Audio can play, duration:",
+                                        target.duration
+                                      );
+                                      if (
+                                        isFinite(target.duration) &&
+                                        target.duration > 0
+                                      ) {
+                                        setDuration(target.duration);
+                                      }
                                     }}
                                     onTimeUpdate={(e) => {
                                       const target =
                                         e.target as HTMLAudioElement;
                                       setCurrentTime(target.currentTime);
-                                      setProgress(
-                                        (target.currentTime / target.duration) *
-                                          100
-                                      );
+                                      if (
+                                        isFinite(target.duration) &&
+                                        target.duration > 0
+                                      ) {
+                                        setProgress(
+                                          (target.currentTime /
+                                            target.duration) *
+                                            100
+                                        );
+                                      } else {
+                                        setProgress(0);
+                                      }
                                     }}
                                     onPlay={() => {
                                       console.log("Audio playing");
@@ -255,7 +363,11 @@ const ModalStep: React.FC<ModalStepProps> = ({ recordedAudio }) => {
                                   </div>
                                   <div className="flex justify-between text-xs text-colorTitle mt-2">
                                     <span>{formatTime(currentTime)}</span>
-                                    <span>{formatTime(duration || 0)}</span>
+                                    <span>
+                                      {isFinite(duration)
+                                        ? formatTime(duration)
+                                        : "00:00"}
+                                    </span>
                                   </div>
                                 </div>
                               ) : (
@@ -307,16 +419,31 @@ const ModalStep: React.FC<ModalStepProps> = ({ recordedAudio }) => {
                 >
                   Annuler
                 </Button>
-                {currentStep < 3 ? (
+                {currentStep === 1 ? (
                   <Button
                     className="w-1/2 h-auto py-3 bg-primaryColor text-white"
-                    onPress={nextStep}
+                    onPress={handleGenerateTranscription}
+                    isLoading={isGeneratingTranscription}
+                    isDisabled={!meetingId}
                   >
-                    Suivant
+                    {isGeneratingTranscription
+                      ? "Génération..."
+                      : "Générer la Transcription"}
+                  </Button>
+                ) : currentStep === 2 ? (
+                  <Button
+                    className="w-1/2 h-auto py-3 bg-primaryColor text-white"
+                    onPress={handleGenerateRapport}
+                    isLoading={isGeneratingRapport}
+                    isDisabled={!meetingId}
+                  >
+                    {isGeneratingRapport
+                      ? "Génération..."
+                      : "Générer le Rapport"}
                   </Button>
                 ) : (
                   <Button className="w-1/2 h-auto py-3 bg-primaryColor text-white">
-                    Transcrire
+                    Transférer
                   </Button>
                 )}
               </div>

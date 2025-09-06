@@ -1,7 +1,8 @@
 import { Drawer, DrawerContent, DrawerHeader, DrawerBody } from "@heroui/react";
 import { useDrawerContext } from "@/contexts/Drawer/DrawerContext";
+import { MeetingDetail } from "@/validators/meetings/validator.meeting-recording-detail";
 
-const InfoRoom = () => {
+const InfoRoom = ({ meetingDetail }: { meetingDetail: MeetingDetail }) => {
   const { isDrawerOpen, closeDrawer } = useDrawerContext();
   return (
     <Drawer
@@ -20,19 +21,19 @@ const InfoRoom = () => {
           <div className="flex flex-col">
             <div className="py-4 border-b-[1px] border-dashed border-colorBorderTr">
               <h6 className="text-sm text-colorTitle mb-2">Titre</h6>
-              <p className="text-sm text-colorMuted">
-                Lorem ipsum dolor sit amet.
-              </p>
+              <p className="text-sm text-colorMuted">{meetingDetail.title}</p>
             </div>
             <div className="py-4 border-b-[1px] border-dashed border-colorBorderTr">
               <h6 className="text-sm text-colorTitle mb-2">Description</h6>
               <p className="text-sm text-colorMuted">
-                Lorem ipsum dolor sit amet.
+                {meetingDetail.description}
               </p>
             </div>
             <div className="py-4 border-b-[1px] border-dashed border-colorBorderTr">
               <h6 className="text-sm text-colorTitle mb-2">Date</h6>
-              <p className="text-sm text-colorMuted">23/08/2025</p>
+              <p className="text-sm text-colorMuted">
+                {meetingDetail.scheduled_start_time}
+              </p>
             </div>
           </div>
         </DrawerBody>

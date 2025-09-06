@@ -9,10 +9,18 @@ const axiosServer = axios.create({
 
 axiosServer.interceptors.request.use(
   (config) => {
-    if (config.method === "post" || config.method === "put") {
-      config.headers["Content-Type"] = "application/json";
+    // Headers par défaut pour toutes les requêtes
+    if (!config.headers["Accept"]) {
       config.headers["Accept"] = "application/json";
     }
+
+    // Content-Type pour les requêtes avec body
+    if (["post", "put", "patch"].includes(config.method || "")) {
+      if (!config.headers["Content-Type"]) {
+        config.headers["Content-Type"] = "application/json";
+      }
+    }
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -33,18 +41,22 @@ const DEFAULT_METHOD: Method = "GET";
  * @param data - Data to send in the request body (for POST/PUT/PATCH)
  * @param method - HTTP method (GET, POST, PUT, DELETE, PATCH)
  * @param withAuth - Whether to include the token in the headers
+ * @param customHeaders - Custom headers to include in the request
  */
 export const callApiWithToken = async <T = unknown>(
   token: string,
   endpoint: string,
   data?: unknown,
   method: Method = DEFAULT_METHOD,
-  withAuth: boolean = true
+  withAuth: boolean = true,
+  customHeaders?: Record<string, string>
 ): Promise<T> => {
   const config: AxiosRequestConfig = {
     url: endpoint,
     method,
-    headers: {},
+    headers: {
+      ...customHeaders, // Headers personnalisés
+    },
   };
 
   if (withAuth) {
