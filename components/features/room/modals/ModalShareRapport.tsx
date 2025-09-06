@@ -16,8 +16,12 @@ import { useState } from "react";
 
 const ModalShareRapport = ({
   participants,
+  meetingId,
+  onSuccessShare,
 }: {
   participants: Participant[];
+  meetingId: string;
+  onSuccessShare: () => void;
 }) => {
   const { isModalOpen, closeModal } = useModalContext();
   const [searchTerm, setSearchTerm] = useState("");
@@ -142,8 +146,8 @@ const ModalShareRapport = ({
                               base: "text-primaryColor",
                             }}
                           />
-                          <div className="flex items-center rounded-full p-200">
-                            {person.name?.charAt(0)}
+                          <div className="flex items-center rounded-full flex-none  justify-center h-10 w-10 bg-lightPrimaryColor">
+                            {person.name?.charAt(0) || "N/A"}
                           </div>
                           <div className="flex flex-col flex-grow">
                             <span className="text-small text-colorTitle font-medium">

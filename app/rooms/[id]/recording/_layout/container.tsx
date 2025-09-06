@@ -13,9 +13,12 @@ import ModalConfirmation from "@/components/common/modals/ModalConfirmation/Moda
 import { useEndMeeting } from "@/hooks/features/meetings/hook.end-meeting";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
 import { useLoading } from "@/contexts/Overlay/LoadingContext";
+import ModalShareRapport from "@/components/features/room/modals/ModalShareRapport";
+import { useRouter } from "next/navigation";
 
 const Content = ({ id }: { id: string }) => {
-  const { openModal } = useModalContext();
+  const { openModal, closeModal } = useModalContext();
+  const router = useRouter();
   const { startLoading, stopLoading } = useLoading();
   const {
     data: meetingDetail,
@@ -145,6 +148,13 @@ const Content = ({ id }: { id: string }) => {
         message="Voulez-vous vraiment enregistrer cette réunion ?"
         labelConfirm="Enregistrer"
         labelCancel="Annuler"
+      />
+      <ModalShareRapport
+        participants={meetingDetail.data.participants}
+        meetingId={id}
+        onSuccessShare={() => {
+          router.push(`/rooms/${id}`);
+        }}
       />
     </>
   );
