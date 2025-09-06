@@ -47,7 +47,7 @@ export const useGetMeetingDocuments = (
   return useQuery<MeetingDocument | null, Error>({
     queryKey: ["meeting-documents", meetingId],
     queryFn: () => getDocumentsList(meetingId),
-    staleTime: 5 * 60 * 1000,
+    // staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
     retry: 2,
     enabled: !!meetingId,

@@ -3,9 +3,46 @@ import { Button, Progress } from "@heroui/react";
 import { Play, Undo, Redo, Download, Volume2, Share2 } from "lucide-react";
 import PdfRender from "@/components/common/pdfRender/pdfRender";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
+import { useGetMeetingDocuments } from "@/hooks/features/meetings/hook.get-meeting-documents";
+import { AnimatedDataLoadError } from "@/components/common/animated-error-states/animated-error-states";
+import { UiLoadingData } from "@/components/common/UiLoadingData/UiLoadingData";
 
 const BlockFiles = ({ id }: { id: string }) => {
   const { openModal } = useModalContext();
+  const {
+    data: meetingDocument,
+    isLoading,
+    isError,
+    refetch,
+    isRefetching,
+  } = useGetMeetingDocuments(id);
+  console.log(meetingDocument);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col h-screen">
+        <UiLoadingData />
+      </div>
+    );
+  }
+  if (isError || !meetingDocument) {
+    return (
+      <div className="flex flex-col h-screen">
+        <AnimatedDataLoadError
+          onRetry={refetch}
+          retryLoading={isLoading}
+          title="Une erreur est survenue"
+          showContactSupport={true}
+          onContactSupport={() => {
+            console.log("contact support");
+          }}
+          isRetryLoading={isRefetching}
+          message="Nous avons rencontré un problème lors du chargement des informations de la réunion. Veuillez réessayer ou contacter le support si le problème persiste."
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-screen">
       <div className="header p-3 flex items-center relative z-10 bg-[#f5f7fb]">
@@ -32,7 +69,7 @@ const BlockFiles = ({ id }: { id: string }) => {
         </div>
       </div>
       <div className="body flex-grow overflow-auto bg-[#f5f7fb]">
-        <PdfRender file={"/files/1.pdf"} />
+        <PdfRender file={meetingDocument.url_report} />
       </div>
       <div className="footer p-3 bg-[#f5f7fb] relative z-10">
         <div
