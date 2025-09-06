@@ -6,7 +6,7 @@ import InfoRoom from "./drawers/infoRoom";
 import ParticipantRoom from "./drawers/participantRoom";
 import ModalStep from "./modalStep/modaltStep";
 import WidgetRecording from "./widgetRecording";
-import { useGetMeetingDetailRecording } from "@/hooks/features/meetings/hook.get-meeting-detail";
+import { useGetMeetingDetailRecording } from "@/hooks/features/meetings/hook.get-meeting-detail-recording";
 import { UiLoadingData } from "@/components/common/UiLoadingData/UiLoadingData";
 import { AnimatedDataLoadError } from "@/components/common/animated-error-states/animated-error-states";
 import ModalConfirmation from "@/components/common/modals/ModalConfirmation/ModalConfirmation";

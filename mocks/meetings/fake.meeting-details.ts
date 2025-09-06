@@ -4,6 +4,7 @@ import {
   MeetingTranscriptText,
   MeetingDocument,
 } from "@/validators/meetings/validator.detail-meetings";
+import { MeetingRecordingDetail } from "@/validators/meetings/validator.meeting-recording-detail";
 
 /**
  * Données factices pour les participants d'une réunion
@@ -185,4 +186,45 @@ Chef de Projet : Merci d'être présents. Nous avons fait des progrès significa
 export const fakeInProgressMeetingDocument: MeetingDocument = {
   url_recording: "https://example.com/recordings/meeting-2-live.mp4",
   url_report: "", // Pas encore généré
+};
+
+/**
+ * Données factices pour les détails de réunion d'enregistrement
+ */
+export const fakeMeetingDetailRecording: MeetingRecordingDetail = {
+  data: {
+    id: "1",
+    title: "Réunion de planification Q1",
+    description:
+      "Réunion de planification pour le premier trimestre 2024. Nous allons discuter des objectifs, des projets prioritaires et de l'allocation des ressources.",
+    scheduled_start_time: "2024-01-15 10:00:00",
+    location: "Salle de conférence A - Bâtiment principal",
+    participants: [
+      {
+        id: "1",
+        name: "Jean-Louis Dikasa",
+        type: "INTERNE",
+      },
+      {
+        id: "2",
+        name: "Marie Dubois",
+        type: "INTERNE",
+      },
+      {
+        id: "3",
+        name: "Pierre Martin",
+        type: "INTERNE",
+      },
+      {
+        id: "4",
+        name: "Sophie Laurent",
+        type: "EXTERNE",
+      },
+      {
+        id: "5",
+        name: "Alexandre Moreau",
+        type: "EXTERNE",
+      },
+    ],
+  },
 };

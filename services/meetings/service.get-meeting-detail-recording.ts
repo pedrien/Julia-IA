@@ -12,25 +12,22 @@ import axios from "axios";
 import { MeetingRecordingDetail } from "@/validators/meetings/validator.meeting-recording-detail";
 import { auth } from "@/auth";
 import { z } from "zod";
-const inputSchema = z.object({
-  id: z.string(),
-});
 
 /**
- * Fetches meeting details from the remote API.
+ * Fetches the meeting detail recording data for a specific meeting from the remote API.
  *
- * @function getMeetingDetail
- * @param {string} meetingId - The ID of the meeting to fetch
+ * @function getMeetingDetailRecording
+ * @param {string} meetingId - The ID of the meeting
  * @returns {Promise<(IActionSuccess & { data: MeetingRecordingDetail }) | IActionError>}
- *   An object indicating the success or failure of the operation, and the meeting details if successful.
+ *   An object indicating the success or failure of the operation, and the meeting detail recording data if successful.
  *
  * - Requires a valid user session (access token).
  * - Returns an error if the session is missing or expired.
  * - On HTTP request failure, returns an appropriate error message.
- * - On success, returns the meeting details with participants.
+ * - On success, returns the meeting detail recording data.
  *
  * Example usage:
- *   const result = await getMeetingDetail("123");
+ *   const result = await getMeetingDetailRecording("meeting-123");
  *   if (result.success) {
  *     // Access result.data
  *   } else {
@@ -38,12 +35,14 @@ const inputSchema = z.object({
  *   }
  */
 export const getMeetingDetailRecording = actionClient
-  .inputSchema(inputSchema)
+  .inputSchema(
+    z.object({
+      meetingId: z.string(),
+    })
+  )
   .action(
     async ({
       parsedInput,
-    }: {
-      parsedInput: { id: string };
     }): Promise<
       (IActionSuccess & { data: MeetingRecordingDetail }) | IActionError
     > => {
@@ -56,15 +55,8 @@ export const getMeetingDetailRecording = actionClient
           };
         }
 
-        if (!parsedInput.id) {
-          return {
-            success: false,
-            error: ["ID de réunion requis"],
-          };
-        }
-
         const response = await axios.get(
-          `${ENV.API_LOCAL_BASE_URL}meetings/${parsedInput.id}/recording-detail`,
+          `${ENV.API_LOCAL_BASE_URL}meetings/${parsedInput.meetingId}/detail-recording`,
           {
             headers: {
               Authorization: `Bearer ${session.token.access_token}`,
