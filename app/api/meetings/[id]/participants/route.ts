@@ -42,25 +42,25 @@ export const GET = async (
 
     const { id } = await params;
 
-    // const requestData = await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `meetings/${meetingId}/participants`,
-    //   undefined,
-    //   "GET"
-    // );
+    const requestData = await callApiWithToken(
+      tokenOrErrorResponse,
+      `meetings/${id}/participants`,
+      undefined,
+      "GET"
+    );
 
-    // if (
-    //   !requestData ||
-    //   typeof requestData !== "object" ||
-    //   !("data" in requestData) ||
-    //   !requestData.data
-    // ) {
-    //   return NextResponse.json(
-    //     { message: "No participants found for this meeting." },
-    //     { status: 400 }
-    //   );
-    // }
-    const requestData = fakeMeetingParticipants;
+    if (
+      !requestData ||
+      typeof requestData !== "object" ||
+      !("data" in requestData) ||
+      !requestData.data
+    ) {
+      return NextResponse.json(
+        { message: "No participants found for this meeting." },
+        { status: 400 }
+      );
+    }
+    // const requestData = fakeMeetingParticipants;
 
     const data: MeetingParticipantList = validateApiResponse(
       requestData,
@@ -75,7 +75,7 @@ export const GET = async (
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
     return handleApiServerError(error);
   }
 };

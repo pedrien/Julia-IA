@@ -68,16 +68,16 @@ export const POST = async (
     apiFormData.append("audio_file", audioFile);
 
     console.log("apiFormData", ...apiFormData);
-    // const response = await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `meetings/${id}/end`,
-    //   apiFormData,
-    //   "POST",
-    //   true,
-    //   { "Content-Type": "multipart/form-data" }
-    // );
+    const response = await callApiWithToken(
+      tokenOrErrorResponse,
+      `meetings/${id}/end`,
+      apiFormData,
+      "POST",
+      true,
+      { "Content-Type": "multipart/form-data" }
+    );
 
-    // console.log("response", response);
+    console.log("response", response);
 
     return NextResponse.json(
       {

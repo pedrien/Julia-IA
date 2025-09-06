@@ -42,25 +42,25 @@ export const GET = async (
 
     const { id } = await params;
 
-    // const requestData = await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `meetings/${id}/detail-recording`,
-    //   undefined,
-    //   "GET"
-    // );
+    const requestData = await callApiWithToken(
+      tokenOrErrorResponse,
+      `meetings/${id}/preview`,
+      undefined,
+      "GET"
+    );
 
-    // if (
-    //   !requestData ||
-    //   typeof requestData !== "object" ||
-    //   !("data" in requestData) ||
-    //   !requestData.data
-    // ) {
-    //   return NextResponse.json(
-    //     { message: "No meeting detail recording found with this ID." },
-    //     { status: 400 }
-    //   );
-    // }
-    const requestData = fakeMeetingDetailRecording;
+    if (
+      !requestData ||
+      typeof requestData !== "object" ||
+      !("data" in requestData) ||
+      !requestData.data
+    ) {
+      return NextResponse.json(
+        { message: "No meeting detail recording found with this ID." },
+        { status: 400 }
+      );
+    }
+    //const requestData = fakeMeetingDetailRecording;
 
     const data: MeetingRecordingDetail = validateApiResponse(
       requestData,
