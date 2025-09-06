@@ -19,10 +19,11 @@ export default function PdfRender({ file }: PdfRenderProps) {
   );
   const [currentPage, setCurrentPage] = useState<number>(1); // État pour la page actuelle
   const [inputValue, setInputValue] = useState<string>("1"); // État pour la valeur de l'Input
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]); // Références pour chaque page
 
+  console.log(file);
   useEffect(() => {
     const handleResize = () => {
       const windowWidth = window.innerWidth;
