@@ -18,4 +18,4 @@ export const listMeetingSchema = z.object({
   data: z.array(meetingSchema),
 });
 
-export type listMeetingSchema = z.infer<typeof listMeetingSchema>;
+export type ListMeetings = z.infer<typeof listMeetingSchema>;
