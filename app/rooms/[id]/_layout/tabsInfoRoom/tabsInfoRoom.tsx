@@ -5,6 +5,7 @@ import { Button, Tooltip } from "@heroui/react";
 import { Tabs, Tab } from "@heroui/react";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
 import TabsParticipants from "./TabsParticipants";
+import TabsTranscriptionText from "./TabsTranscriptionText";
 
 const TabsInfoRoom = ({ id }: { id: string }) => {
   const { openModal } = useModalContext();
@@ -45,19 +46,7 @@ const TabsInfoRoom = ({ id }: { id: string }) => {
             <TabsParticipants id={id} />
           </Tab>
           <Tab key="transcrip" title="Transcription">
-            <div className="flex items-center gap-2 mb-3 mt-2">
-              <h3 className="text-colorTitle font-semibold">Transcription</h3>
-              <Tooltip
-                content={"Copier les textes"}
-                classNames={{
-                  content: ["bg-colorTitle border-0 text-white text-xs"],
-                }}
-              >
-                <Button className="bg-transparent border border-colorBorder  text-colorTitle text-xs p-0 min-w-0 h-[26px] w-[26px]">
-                  <Copy size={14}></Copy>
-                </Button>
-              </Tooltip>
-            </div>
+            <TabsTranscriptionText id={id} />
           </Tab>
           <Tab key="info" title="Infos générales">
             <h3 className="text-colorTitle font-semibold mb-3 mt-2">
