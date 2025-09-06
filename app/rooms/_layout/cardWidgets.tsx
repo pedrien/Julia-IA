@@ -1,7 +1,15 @@
 import React from "react";
 import { Clock, CheckCircle, FileText } from "lucide-react";
 
-const CardWidgets = () => {
+const CardWidgets = ({
+  totalMeetings,
+  readMeetings,
+  completedMeetings,
+}: {
+  totalMeetings: number;
+  readMeetings: number;
+  completedMeetings: number;
+}) => {
   return (
     <div className="grid grid-cols-12 gap-3 lg:gap-4">
       <div className="col-span-12 lg:col-span-6 2xl:col-span-4">
@@ -13,7 +21,7 @@ const CardWidgets = () => {
             <div>
               <p className="text-colorMuted">Total</p>
               <h4 className="text-colorTitle font-semibold lg:text-[22px]">
-                20
+                {totalMeetings}
               </h4>
             </div>
           </div>
@@ -28,7 +36,7 @@ const CardWidgets = () => {
             <div>
               <p className="text-colorMuted">Lus</p>
               <h4 className="text-colorTitle font-semibold lg:text-[22px]">
-                4
+                {readMeetings}
               </h4>
             </div>
             <p className="text-colorMuted"></p>
@@ -44,7 +52,7 @@ const CardWidgets = () => {
             <div>
               <p className="text-colorMuted">Traités</p>
               <h4 className="text-colorTitle font-semibold lg:text-[22px]">
-                10
+                {completedMeetings}
               </h4>
             </div>
           </div>

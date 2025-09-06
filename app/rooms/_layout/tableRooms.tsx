@@ -1,17 +1,16 @@
 import React from "react";
 import { Input, Button, Chip } from "@heroui/react";
-import {
-  Search,
-  EllipsisVertical,
-  FileText,
-} from "lucide-react";
+import { Search, EllipsisVertical, FileText } from "lucide-react";
 import Link from "next/link";
+import { ListMeetings } from "@/validators/meetings/validator.list-meeting";
 
-const TableRooms = () => {
+const TableRooms = ({ meetings }: { meetings: ListMeetings }) => {
   return (
     <div className="card bg-bgCard rounded-2xl shadow-[0_5px_18px_#00000005]">
       <div className="flex items-center justify-between lg:mb-4 mb-6 px-4 pt-4">
-        <h2 className="text-colorTitle font-semibold">Liste des comptes rendus</h2>
+        <h2 className="text-colorTitle font-semibold">
+          Liste des comptes rendus
+        </h2>
         <div>
           <Input
             type="text"
