@@ -5,6 +5,7 @@ import {
   MeetingDocument,
 } from "@/validators/meetings/validator.detail-meetings";
 import { MeetingRecordingDetail } from "@/validators/meetings/validator.meeting-recording-detail";
+import { ListOberservationParticipants } from "@/validators/participants/validator.list-oberservation-participants";
 
 /**
  * Données factices pour les participants d'une réunion
@@ -243,4 +244,142 @@ export const fakeMeetingDetailRecording: MeetingRecordingDetail = {
       },
     ],
   },
+};
+
+/**
+ * Données factices pour les observations des participants d'une réunion
+ */
+export const fakeMeetingParticipantObservations: ListOberservationParticipants =
+  {
+    data: [
+      {
+        id: "obs-1",
+        content:
+          "Jean-Louis a été très proactif dans la discussion sur l'architecture du système. Il a proposé des solutions innovantes pour optimiser les performances.",
+        date_time: "2024-01-15 10:15:30",
+      },
+      {
+        id: "obs-2",
+        content:
+          "Marie a posé des questions pertinentes sur la sécurité des données. Elle a montré une excellente compréhension des enjeux techniques.",
+        date_time: "2024-01-15 10:32:45",
+      },
+      {
+        id: "obs-3",
+        content:
+          "Pierre a partagé son expérience sur un projet similaire. Ses retours d'expérience ont été très utiles pour l'équipe.",
+        date_time: "2024-01-15 10:45:12",
+      },
+      {
+        id: "obs-4",
+        content:
+          "Sophie (Client) a exprimé ses préoccupations concernant les délais de livraison. Elle a demandé des clarifications sur le planning.",
+        date_time: "2024-01-15 11:02:18",
+      },
+      {
+        id: "obs-5",
+        content:
+          "Alexandre (Partenaire) a proposé des ressources supplémentaires pour accélérer le développement. Engagement très positif.",
+        date_time: "2024-01-15 11:18:33",
+      },
+      {
+        id: "obs-6",
+        content:
+          "Jean-Louis a pris l'initiative de planifier une réunion de suivi pour la semaine prochaine. Leadership naturel.",
+        date_time: "2024-01-15 11:35:27",
+      },
+      {
+        id: "obs-7",
+        content:
+          "Marie a créé un document de synthèse des décisions prises. Très organisée et méthodique.",
+        date_time: "2024-01-15 11:42:15",
+      },
+      {
+        id: "obs-8",
+        content:
+          "Pierre a identifié un risque potentiel sur la compatibilité des APIs. Excellente analyse technique.",
+        date_time: "2024-01-15 11:55:41",
+      },
+    ],
+  };
+
+/**
+ * Fonction pour filtrer les observations par participant
+ */
+export const getParticipantObservations = (
+  participantId: string
+): ListOberservationParticipants => {
+  // Simulation de filtrage par participant
+  const participantObservations = {
+    "1": [
+      // Jean-Louis
+      {
+        id: "obs-1",
+        content:
+          "Jean-Louis a été très proactif dans la discussion sur l'architecture du système. Il a proposé des solutions innovantes pour optimiser les performances.",
+        date_time: "2024-01-15 10:15:30",
+      },
+      {
+        id: "obs-6",
+        content:
+          "Jean-Louis a pris l'initiative de planifier une réunion de suivi pour la semaine prochaine. Leadership naturel.",
+        date_time: "2024-01-15 11:35:27",
+      },
+    ],
+    "2": [
+      // Marie
+      {
+        id: "obs-2",
+        content:
+          "Marie a posé des questions pertinentes sur la sécurité des données. Elle a montré une excellente compréhension des enjeux techniques.",
+        date_time: "2024-01-15 10:32:45",
+      },
+      {
+        id: "obs-7",
+        content:
+          "Marie a créé un document de synthèse des décisions prises. Très organisée et méthodique.",
+        date_time: "2024-01-15 11:42:15",
+      },
+    ],
+    "3": [
+      // Pierre
+      {
+        id: "obs-3",
+        content:
+          "Pierre a partagé son expérience sur un projet similaire. Ses retours d'expérience ont été très utiles pour l'équipe.",
+        date_time: "2024-01-15 10:45:12",
+      },
+      {
+        id: "obs-8",
+        content:
+          "Pierre a identifié un risque potentiel sur la compatibilité des APIs. Excellente analyse technique.",
+        date_time: "2024-01-15 11:55:41",
+      },
+    ],
+    "4": [
+      // Sophie (Client)
+      {
+        id: "obs-4",
+        content:
+          "Sophie (Client) a exprimé ses préoccupations concernant les délais de livraison. Elle a demandé des clarifications sur le planning.",
+        date_time: "2024-01-15 11:02:18",
+      },
+    ],
+    "5": [
+      // Alexandre (Partenaire)
+      {
+        id: "obs-5",
+        content:
+          "Alexandre (Partenaire) a proposé des ressources supplémentaires pour accélérer le développement. Engagement très positif.",
+        date_time: "2024-01-15 11:18:33",
+      },
+    ],
+  };
+
+  return {
+    data:
+      participantObservations[
+        participantId as keyof typeof participantObservations
+      ] || [],
+  };
 };

@@ -19,3 +19,11 @@ export const listOberservationParticipantsSchema = z.object({
 export type ListOberservationParticipants = z.infer<
   typeof listOberservationParticipantsSchema
 >;
+
+export const getParticipantObservationsSchema = z.object({
+  meetingId: z.string(),
+  participantId: z.string(),
+});
+export type GetParticipantObservations = z.infer<
+  typeof getParticipantObservationsSchema
+>;
