@@ -3,15 +3,44 @@
 import { useDrawerContext } from "@/contexts/Drawer/DrawerContext";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
 import { useGetMeetingParticipants } from "@/hooks/features/meetings/hook.get-meeting-participants";
-import { Avatar, Button, Chip, Tooltip } from "@heroui/react";
-import { Plus } from "lucide-react";
+import { Avatar, Button, Chip, Spinner, Tooltip } from "@heroui/react";
+import { Plus, RefreshCcw } from "lucide-react";
 
 const TabsParticipants = ({ id }: { id: string }) => {
   const { openDrawer } = useDrawerContext();
   const { openModal } = useModalContext();
-  const { data: participants } = useGetMeetingParticipants(id);
+  const {
+    data: participants,
+    isLoading,
+    isError,
+    isRefetching,
+    refetch,
+  } = useGetMeetingParticipants(id);
 
   console.log(participants);
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[300px]">
+        <Spinner />
+      </div>
+    );
+  }
+  if (isError || !participants) {
+    return (
+      <div className="flex items-center flex-col justify-center gap-5 h-[300px]">
+        <span className="text-colorTitle text-center">
+          Une erreur est survenue lors de la récupération des participants
+        </span>
+        <Button
+          className="bg-transparent border border-colorBorder  text-colorTitle text-xs p-0 min-w-0 h-[26px] w-[26px]"
+          onPress={() => refetch()}
+          isLoading={isRefetching}
+        >
+          <RefreshCcw size={14}></RefreshCcw>
+        </Button>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col gap-5">
       <div>
