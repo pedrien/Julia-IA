@@ -1,4 +1,5 @@
 import { useModalContext } from "@/contexts/Modal/ModalContext";
+import { useShareMeeting } from "@/hooks/features/meetings/hook.share-meeting";
 import { helpEnumParticipantType } from "@/types/enums/participants/enum.type-participants";
 import { Participant } from "@/validators/participants/validator.list-participants";
 import {
@@ -25,47 +26,99 @@ const ModalShareRapport = ({
 }) => {
   const { isModalOpen, closeModal } = useModalContext();
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPeople, setSelectedPeople] = useState<string[]>([]);
+  const [selectedInternalParticipants, setSelectedInternalParticipants] =
+    useState<string[]>([]);
+  const [selectedExternalParticipants, setSelectedExternalParticipants] =
+    useState<string[]>([]);
+  const { mutate: shareMeeting, isPending } = useShareMeeting({
+    onSuccessCallback: () => {
+      onSuccessShare();
+      handleClose();
+    },
+  });
 
-  // Filtrer les personnes selon la recherche
-  const filteredPeople = participants.filter((person) =>
+  // Séparer les participants par type
+  const internalParticipants = participants.filter(
+    (person) => person.type === "INTERNE"
+  );
+  const externalParticipants = participants.filter(
+    (person) => person.type === "EXTERNE"
+  );
+
+  // Filtrer les participants selon la recherche
+  const filteredInternalParticipants = internalParticipants.filter((person) =>
+    person.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const filteredExternalParticipants = externalParticipants.filter((person) =>
     person.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Gérer la sélection d'une personne
-  const handlePersonSelect = (personId: string) => {
-    setSelectedPeople((prev) =>
+  // Gérer la sélection d'un participant interne
+  const handleInternalParticipantSelect = (personId: string) => {
+    setSelectedInternalParticipants((prev) =>
       prev.includes(personId)
         ? prev.filter((id) => id !== personId)
         : [...prev, personId]
     );
   };
 
-  // Gérer la sélection/désélection de tous
-  const handleSelectAll = () => {
-    if (selectedPeople.length === filteredPeople.length) {
-      setSelectedPeople([]);
+  // Gérer la sélection d'un participant externe
+  const handleExternalParticipantSelect = (personId: string) => {
+    setSelectedExternalParticipants((prev) =>
+      prev.includes(personId)
+        ? prev.filter((id) => id !== personId)
+        : [...prev, personId]
+    );
+  };
+
+  // Gérer la sélection/désélection de tous les participants internes
+  const handleSelectAllInternal = () => {
+    if (
+      selectedInternalParticipants.length ===
+      filteredInternalParticipants.length
+    ) {
+      setSelectedInternalParticipants([]);
     } else {
-      setSelectedPeople(filteredPeople.map((person) => person.id));
+      setSelectedInternalParticipants(
+        filteredInternalParticipants.map((person) => person.id)
+      );
+    }
+  };
+
+  // Gérer la sélection/désélection de tous les participants externes
+  const handleSelectAllExternal = () => {
+    if (
+      selectedExternalParticipants.length ===
+      filteredExternalParticipants.length
+    ) {
+      setSelectedExternalParticipants([]);
+    } else {
+      setSelectedExternalParticipants(
+        filteredExternalParticipants.map((person) => person.id)
+      );
     }
   };
 
   // Gérer le partage
   const handleShare = () => {
-    const selectedPeopleData = participants.filter((person) =>
-      selectedPeople.includes(person.id)
-    );
-    console.log("Partage avec:", selectedPeopleData);
-    // Ici vous pouvez ajouter la logique de partage
-    closeModal("ModalShareRapport");
+    shareMeeting({
+      meeting_id: meetingId,
+      internal_participant: selectedInternalParticipants,
+      external_participant: selectedExternalParticipants,
+    });
   };
 
   // Réinitialiser lors de la fermeture
   const handleClose = () => {
-    setSelectedPeople([]);
+    setSelectedInternalParticipants([]);
+    setSelectedExternalParticipants([]);
     setSearchTerm("");
     closeModal("ModalShareRapport");
   };
+
+  // Calculer le total des participants sélectionnés
+  const totalSelectedParticipants =
+    selectedInternalParticipants.length + selectedExternalParticipants.length;
 
   return (
     <Modal
@@ -95,92 +148,197 @@ const ModalShareRapport = ({
                 startContent={<Search size={20} className="text-colorMuted" />}
               />
 
-              {/* Sélectionner tout */}
-              {filteredPeople.length > 0 && (
-                <div className="flex items-center gap-2 mt-2 mb-2">
-                  <Checkbox
-                    isSelected={
-                      selectedPeople.length === filteredPeople.length &&
-                      filteredPeople.length > 0
-                    }
-                    isIndeterminate={
-                      selectedPeople.length > 0 &&
-                      selectedPeople.length < filteredPeople.length
-                    }
-                    onValueChange={handleSelectAll}
-                    classNames={{
-                      wrapper:
-                        "text-primaryColor data-[selected=true]:bg-primaryColor after:bg-primaryColor",
-                      icon: "text-white",
-                      base: "text-primaryColor",
-                    }}
-                  />
-                  <span className="text-sm text-colorTitle">
-                    {selectedPeople.length === filteredPeople.length
-                      ? "Désélectionner tout"
-                      : "Sélectionner tout"}
-                  </span>
-                </div>
-              )}
-
-              <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
-                {filteredPeople.length > 0 ? (
-                  filteredPeople.map((person) => (
-                    <div key={person.id} className="card relative">
-                      <div
-                        className={`content-card border p-3 rounded-xl transition-colors cursor-pointer ${
-                          selectedPeople.includes(person.id)
-                            ? "border-primaryColor"
-                            : "border-colorBorderTr hover:border-colorBorder"
-                        }`}
-                        onClick={() => handlePersonSelect(person.id)}
-                      >
-                        <div className="flex gap-3 items-center">
-                          <Checkbox
-                            isSelected={selectedPeople.includes(person.id)}
-                            onValueChange={() => handlePersonSelect(person.id)}
-                            classNames={{
-                              wrapper:
-                                "text-primaryColor data-[selected=true]:bg-primaryColor after:bg-primaryColor",
-                              icon: "text-white",
-                              base: "text-primaryColor",
-                            }}
-                          />
-                          <div className="flex items-center rounded-full flex-none  justify-center h-10 w-10 bg-lightPrimaryColor">
-                            {person.name?.charAt(0) || "N/A"}
-                          </div>
-                          <div className="flex flex-col flex-grow">
-                            <span className="text-small text-colorTitle font-medium">
-                              {person.name}
-                            </span>
-                            <span className="text-tiny text-colorMuted">
-                              {helpEnumParticipantType(person.type)}
-                            </span>
+              <div className="flex flex-col gap-4 max-h-[300px] overflow-y-auto">
+                {/* Participants Internes */}
+                {filteredInternalParticipants.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Checkbox
+                        isSelected={
+                          selectedInternalParticipants.length ===
+                            filteredInternalParticipants.length &&
+                          filteredInternalParticipants.length > 0
+                        }
+                        isIndeterminate={
+                          selectedInternalParticipants.length > 0 &&
+                          selectedInternalParticipants.length <
+                            filteredInternalParticipants.length
+                        }
+                        onValueChange={handleSelectAllInternal}
+                        classNames={{
+                          wrapper:
+                            "text-primaryColor data-[selected=true]:bg-primaryColor after:bg-primaryColor",
+                          icon: "text-white",
+                          base: "text-primaryColor",
+                        }}
+                      />
+                      <span className="text-sm text-colorTitle font-medium">
+                        Participants Internes (
+                        {filteredInternalParticipants.length})
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {filteredInternalParticipants.map((person) => (
+                        <div key={person.id} className="card relative">
+                          <div
+                            className={`content-card border p-3 rounded-xl transition-colors cursor-pointer ${
+                              selectedInternalParticipants.includes(person.id)
+                                ? "border-primaryColor"
+                                : "border-colorBorderTr hover:border-colorBorder"
+                            }`}
+                            onClick={() =>
+                              handleInternalParticipantSelect(person.id)
+                            }
+                          >
+                            <div className="flex gap-3 items-center">
+                              <Checkbox
+                                isSelected={selectedInternalParticipants.includes(
+                                  person.id
+                                )}
+                                onValueChange={() =>
+                                  handleInternalParticipantSelect(person.id)
+                                }
+                                classNames={{
+                                  wrapper:
+                                    "text-primaryColor data-[selected=true]:bg-primaryColor after:bg-primaryColor",
+                                  icon: "text-white",
+                                  base: "text-primaryColor",
+                                }}
+                              />
+                              <div className="flex items-center rounded-full flex-none justify-center h-10 w-10 bg-lightPrimaryColor">
+                                {person.name?.charAt(0) || "N/A"}
+                              </div>
+                              <div className="flex flex-col flex-grow">
+                                <span className="text-small text-colorTitle font-medium">
+                                  {person.name}
+                                </span>
+                                <span className="text-tiny text-colorMuted">
+                                  {helpEnumParticipantType(person.type)}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  ))
-                ) : (
-                  <div className="text-center py-8">
-                    <p className="text-colorMuted text-sm">
-                      {searchTerm
-                        ? "Aucune personne trouvée"
-                        : "Aucune personne disponible"}
-                    </p>
                   </div>
                 )}
+
+                {/* Participants Externes */}
+                {filteredExternalParticipants.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Checkbox
+                        isSelected={
+                          selectedExternalParticipants.length ===
+                            filteredExternalParticipants.length &&
+                          filteredExternalParticipants.length > 0
+                        }
+                        isIndeterminate={
+                          selectedExternalParticipants.length > 0 &&
+                          selectedExternalParticipants.length <
+                            filteredExternalParticipants.length
+                        }
+                        onValueChange={handleSelectAllExternal}
+                        classNames={{
+                          wrapper:
+                            "text-primaryColor data-[selected=true]:bg-primaryColor after:bg-primaryColor",
+                          icon: "text-white",
+                          base: "text-primaryColor",
+                        }}
+                      />
+                      <span className="text-sm text-colorTitle font-medium">
+                        Participants Externes (
+                        {filteredExternalParticipants.length})
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {filteredExternalParticipants.map((person) => (
+                        <div key={person.id} className="card relative">
+                          <div
+                            className={`content-card border p-3 rounded-xl transition-colors cursor-pointer ${
+                              selectedExternalParticipants.includes(person.id)
+                                ? "border-primaryColor"
+                                : "border-colorBorderTr hover:border-colorBorder"
+                            }`}
+                            onClick={() =>
+                              handleExternalParticipantSelect(person.id)
+                            }
+                          >
+                            <div className="flex gap-3 items-center">
+                              <Checkbox
+                                isSelected={selectedExternalParticipants.includes(
+                                  person.id
+                                )}
+                                onValueChange={() =>
+                                  handleExternalParticipantSelect(person.id)
+                                }
+                                classNames={{
+                                  wrapper:
+                                    "text-primaryColor data-[selected=true]:bg-primaryColor after:bg-primaryColor",
+                                  icon: "text-white",
+                                  base: "text-primaryColor",
+                                }}
+                              />
+                              <div className="flex items-center rounded-full flex-none justify-center h-10 w-10 bg-lightPrimaryColor">
+                                {person.name?.charAt(0) || "N/A"}
+                              </div>
+                              <div className="flex flex-col flex-grow">
+                                <span className="text-small text-colorTitle font-medium">
+                                  {person.name}
+                                </span>
+                                <span className="text-tiny text-colorMuted">
+                                  {helpEnumParticipantType(person.type)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Message si aucun participant trouvé */}
+                {filteredInternalParticipants.length === 0 &&
+                  filteredExternalParticipants.length === 0 && (
+                    <div className="text-center py-8">
+                      <p className="text-colorMuted text-sm">
+                        {searchTerm
+                          ? "Aucune personne trouvée"
+                          : "Aucune personne disponible"}
+                      </p>
+                    </div>
+                  )}
               </div>
 
               {/* Résumé de la sélection */}
-              {selectedPeople.length > 0 && (
+              {totalSelectedParticipants > 0 && (
                 <div className="mt-2 p-2 bg-primaryColor/10 rounded-lg border border-primaryColor/20">
                   <p className="text-xs text-colorTitle">
                     <span className="font-medium">
-                      {selectedPeople.length} personne
-                      {selectedPeople.length > 1 ? "s" : ""}
+                      {totalSelectedParticipants} personne
+                      {totalSelectedParticipants > 1 ? "s" : ""}
                     </span>{" "}
-                    sélectionnée{selectedPeople.length > 1 ? "s" : ""}
+                    sélectionnée{totalSelectedParticipants > 1 ? "s" : ""}
+                    {selectedInternalParticipants.length > 0 && (
+                      <span className="ml-2 text-colorMuted">
+                        ({selectedInternalParticipants.length} interne
+                        {selectedInternalParticipants.length > 1 ? "s" : ""}
+                        {selectedExternalParticipants.length > 0 &&
+                          `, ${selectedExternalParticipants.length} externe${
+                            selectedExternalParticipants.length > 1 ? "s" : ""
+                          }`}
+                        )
+                      </span>
+                    )}
+                    {selectedInternalParticipants.length === 0 &&
+                      selectedExternalParticipants.length > 0 && (
+                        <span className="ml-2 text-colorMuted">
+                          ({selectedExternalParticipants.length} externe
+                          {selectedExternalParticipants.length > 1 ? "s" : ""})
+                        </span>
+                      )}
                   </p>
                 </div>
               )}
@@ -197,9 +355,12 @@ const ModalShareRapport = ({
                 <Button
                   className="w-1/2 h-auto py-3 bg-primaryColor text-white"
                   onPress={handleShare}
-                  isDisabled={selectedPeople.length === 0}
+                  isDisabled={totalSelectedParticipants === 0 || isPending}
+                  isLoading={isPending}
                 >
-                  Partager ({selectedPeople.length})
+                  {isPending
+                    ? "Partage en cours..."
+                    : `Partager (${totalSelectedParticipants})`}
                 </Button>
               </div>
             </ModalFooter>
