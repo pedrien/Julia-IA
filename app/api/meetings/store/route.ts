@@ -51,12 +51,18 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
     };
     console.log(formattedData);
 
-    const requestData = await callApiWithToken(
-      tokenOrErrorResponse,
-      "meetings/store",
-      formattedData,
-      "POST"
-    );
+    // const requestData = await callApiWithToken(
+    //   tokenOrErrorResponse,
+    //   "meetings/store",
+    //   formattedData,
+    //   "POST"
+    // );
+
+    const requestData = {
+      data: {
+        id: "2",
+      },
+    };
 
     const data: ResponseCreateMeetingSchema = validateApiResponse(
       requestData,

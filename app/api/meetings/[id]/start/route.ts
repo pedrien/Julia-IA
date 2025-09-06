@@ -33,12 +33,12 @@ export const POST = async (
 
     const { id } = await params;
 
-    await callApiWithToken(
-      tokenOrErrorResponse,
-      `meetings/${id}/start`,
-      {},
-      "POST"
-    );
+    // await callApiWithToken(
+    //   tokenOrErrorResponse,
+    //   `meetings/${id}/start`,
+    //   {},
+    //   "POST"
+    // );
 
     return NextResponse.json(
       {

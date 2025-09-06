@@ -20,7 +20,7 @@ export const GET = async (
     };
     console.log("body", body);
 
-    await callApiWithToken(tokenOrErrorResponse, `ai/transcribe`, body, "POST");
+    // await callApiWithToken(tokenOrErrorResponse, `ai/transcribe`, body, "POST");
 
     return NextResponse.json(
       {
