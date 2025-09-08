@@ -35,25 +35,25 @@ export const GET = async (req: NextRequest) => {
       return tokenOrErrorResponse;
     }
 
-    // const requestData = await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `meetings`,
-    //   undefined,
-    //   "GET"
-    // );
+    const requestData = await callApiWithToken(
+      tokenOrErrorResponse,
+      `meetings`,
+      undefined,
+      "GET"
+    );
 
-    // if (
-    //   !requestData ||
-    //   typeof requestData !== "object" ||
-    //   !("data" in requestData) ||
-    //   !requestData.data
-    // ) {
-    //   return NextResponse.json(
-    //     { message: "No meetings found." },
-    //     { status: 400 }
-    //   );
-    // }
-    const requestData = fakeMeetingsList;
+    if (
+      !requestData ||
+      typeof requestData !== "object" ||
+      !("data" in requestData) ||
+      !requestData.data
+    ) {
+      return NextResponse.json(
+        { message: "No meetings found." },
+        { status: 400 }
+      );
+    }
+    // const requestData = fakeMeetingsList;
 
     const data: ListMeetings = validateApiResponse(
       requestData,

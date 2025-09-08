@@ -49,6 +49,7 @@ export const GET = async (
       "GET"
     );
 
+    console.log(requestData.data.participants);
     if (
       !requestData ||
       typeof requestData !== "object" ||

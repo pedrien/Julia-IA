@@ -4,10 +4,10 @@ import { z } from "zod";
  * Enum pour le statut d'un meeting : EN_ATTENTE, EN_COURS, TRAITE, LU
  */
 export const ENUM_MEETING_STATUS = z.enum([
-  "EN_ATTENTE", // en attente
-  "EN_COURS", // en cours
-  "TRAITE", // traité
-  "LU", // lu
+  "SCHEDULED", // scheduled
+  "IN_PROGRESS", // in progress
+  "COMPLETED", // completed
+  "CANCELLED", // cancelled
 ]);
 export type ENUM_MEETING_STATUS = z.infer<typeof ENUM_MEETING_STATUS>;
 
@@ -30,13 +30,13 @@ export type ENUM_PARTICIPANT_REPORT_STATUS = z.infer<
  */
 export const helpEnumMeetingStatus = (status: ENUM_MEETING_STATUS) => {
   switch (status) {
-    case "EN_ATTENTE":
+    case "SCHEDULED":
       return "En attente";
-    case "EN_COURS":
+    case "IN_PROGRESS":
       return "En cours";
-    case "TRAITE":
+    case "COMPLETED":
       return "Traité";
-    case "LU":
+    case "CANCELLED":
       return "Lu";
     default:
       return "Statut inconnu";
