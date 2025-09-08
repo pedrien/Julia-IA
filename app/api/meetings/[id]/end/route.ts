@@ -39,7 +39,7 @@ export const POST = async (
     // Parse form data
     const formData = await req.formData();
     const audioFile = formData.get("audio_file") as File;
-
+    const duration = formData.get("duration") as string;
     if (!audioFile) {
       return NextResponse.json(
         { message: "Le fichier audio est requis." },
@@ -66,6 +66,7 @@ export const POST = async (
     // Create new FormData for API call
     const apiFormData = new FormData();
     apiFormData.append("audio_file", audioFile);
+    apiFormData.append("duration", duration.toString());
 
     console.log("apiFormData", ...apiFormData);
     const response = await callApiWithToken(
