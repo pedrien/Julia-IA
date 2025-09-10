@@ -20,13 +20,13 @@ const TableRooms = () => {
   // Fonction pour obtenir la couleur du statut
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "TRAITE":
+      case "COMPLETED":
         return "bg-[#2ac66618] text-[#2ac667]";
-      case "EN_COURS":
+      case "IN_PROGRESS":
         return "bg-[#f08d501b] text-[#f08c50]";
-      case "EN_ATTENTE":
+      case "SCHEDULED":
         return "bg-[#ecb4321d] text-[#ecb532]";
-      case "LU":
+      case "CANCELLED":
         return "bg-[#6366f118] text-[#6366f1]";
       default:
         return "bg-[#6b728018] text-[#6b7280]";

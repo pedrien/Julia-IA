@@ -1,4 +1,7 @@
 import { useModalContext } from "@/contexts/Modal/ModalContext";
+import { useGetMeetingParticipants } from "@/hooks/features/meetings/hook.get-meeting-participants";
+import { useShareMeeting } from "@/hooks/features/meetings/hook.share-meeting";
+import { getAvatarUrl } from "@/utils/utils";
 import {
   Avatar,
   Button,
@@ -9,97 +12,125 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Spinner,
 } from "@heroui/react";
-import { Search } from "lucide-react";
+import { Search, RefreshCcw } from "lucide-react";
 import { useState } from "react";
 
-interface Person {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string;
-}
-
-const ModalShare = () => {
+const ModalShare = ({
+  idMeeting,
+  onSuccessShare,
+}: {
+  idMeeting: string;
+  onSuccessShare?: () => void;
+}) => {
   const { isModalOpen, closeModal } = useModalContext();
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPeople, setSelectedPeople] = useState<string[]>([]);
+  const [selectedInternalParticipants, setSelectedInternalParticipants] =
+    useState<string[]>([]);
+  const [selectedExternalParticipants, setSelectedExternalParticipants] =
+    useState<string[]>([]);
 
-  // Données fictives des personnes
-  const people: Person[] = [
-    {
-      id: "1",
-      name: "Tony Reichert",
-      email: "tony.reichert@example.com",
-      avatar: "https://d2u8k2ocievbld.cloudfront.net/memojis/male/1.png",
-    },
-    {
-      id: "2",
-      name: "Sarah Johnson",
-      email: "sarah.johnson@example.com",
-      avatar: "https://d2u8k2ocievbld.cloudfront.net/memojis/female/1.png",
-    },
-    {
-      id: "3",
-      name: "Michael Chen",
-      email: "michael.chen@example.com",
-      avatar: "https://d2u8k2ocievbld.cloudfront.net/memojis/male/2.png",
-    },
-    {
-      id: "4",
-      name: "Emma Wilson",
-      email: "emma.wilson@example.com",
-      avatar: "https://d2u8k2ocievbld.cloudfront.net/memojis/female/2.png",
-    },
-    {
-      id: "5",
-      name: "David Brown",
-      email: "david.brown@example.com",
-      avatar: "https://d2u8k2ocievbld.cloudfront.net/memojis/male/3.png",
-    },
-  ];
+  // Récupérer les participants de la réunion
+  const {
+    data: participants,
+    isLoading,
+    isError,
+    isRefetching,
+    refetch,
+  } = useGetMeetingParticipants(idMeeting);
 
-  // Filtrer les personnes selon la recherche
-  const filteredPeople = people.filter(
+  // Hook pour le partage
+  const { mutate: shareMeeting, isPending } = useShareMeeting({
+    onSuccessCallback: () => {
+      onSuccessShare?.();
+      handleClose();
+    },
+  });
+
+  // Séparer les participants internes et externes
+  const internalParticipants = participants?.participants || [];
+  const externalParticipants = participants?.guest_participants || [];
+
+  // Filtrer les participants selon la recherche
+  const filteredInternalParticipants = internalParticipants.filter(
     (person) =>
       person.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       person.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Gérer la sélection d'une personne
-  const handlePersonSelect = (personId: string) => {
-    setSelectedPeople((prev) =>
+  const filteredExternalParticipants = externalParticipants.filter(
+    (person) =>
+      person.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      person.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Gérer la sélection d'un participant interne
+  const handleInternalParticipantSelect = (personId: string) => {
+    setSelectedInternalParticipants((prev) =>
       prev.includes(personId)
         ? prev.filter((id) => id !== personId)
         : [...prev, personId]
     );
   };
 
-  // Gérer la sélection/désélection de tous
-  const handleSelectAll = () => {
-    if (selectedPeople.length === filteredPeople.length) {
-      setSelectedPeople([]);
+  // Gérer la sélection d'un participant externe
+  const handleExternalParticipantSelect = (personId: string) => {
+    setSelectedExternalParticipants((prev) =>
+      prev.includes(personId)
+        ? prev.filter((id) => id !== personId)
+        : [...prev, personId]
+    );
+  };
+
+  // Gérer la sélection/désélection de tous les participants internes
+  const handleSelectAllInternal = () => {
+    if (
+      selectedInternalParticipants.length ===
+      filteredInternalParticipants.length
+    ) {
+      setSelectedInternalParticipants([]);
     } else {
-      setSelectedPeople(filteredPeople.map((person) => person.id));
+      setSelectedInternalParticipants(
+        filteredInternalParticipants.map((person) => person.id)
+      );
+    }
+  };
+
+  // Gérer la sélection/désélection de tous les participants externes
+  const handleSelectAllExternal = () => {
+    if (
+      selectedExternalParticipants.length ===
+      filteredExternalParticipants.length
+    ) {
+      setSelectedExternalParticipants([]);
+    } else {
+      setSelectedExternalParticipants(
+        filteredExternalParticipants.map((person) => person.id)
+      );
     }
   };
 
   // Gérer le partage
   const handleShare = () => {
-    const selectedPeopleData = people.filter((person) =>
-      selectedPeople.includes(person.id)
-    );
-    console.log("Partage avec:", selectedPeopleData);
-    // Ici vous pouvez ajouter la logique de partage
-    closeModal("ModalShare");
+    shareMeeting({
+      meeting_id: idMeeting,
+      internal_participant: selectedInternalParticipants,
+      external_participant: selectedExternalParticipants,
+    });
   };
 
   // Réinitialiser lors de la fermeture
   const handleClose = () => {
-    setSelectedPeople([]);
+    setSelectedInternalParticipants([]);
+    setSelectedExternalParticipants([]);
     setSearchTerm("");
     closeModal("ModalShare");
   };
+
+  // Calculer le total des participants sélectionnés
+  const totalSelectedParticipants =
+    selectedInternalParticipants.length + selectedExternalParticipants.length;
 
   return (
     <Modal
@@ -129,95 +160,242 @@ const ModalShare = () => {
                 startContent={<Search size={20} className="text-colorMuted" />}
               />
 
-              {/* Sélectionner tout */}
-              {filteredPeople.length > 0 && (
-                <div className="flex items-center gap-2 mt-2 mb-2">
-                  <Checkbox
-                    isSelected={
-                      selectedPeople.length === filteredPeople.length &&
-                      filteredPeople.length > 0
-                    }
-                    isIndeterminate={
-                      selectedPeople.length > 0 &&
-                      selectedPeople.length < filteredPeople.length
-                    }
-                    onValueChange={handleSelectAll}
-                    classNames={{
-                      wrapper: "text-primaryColor data-[selected=true]:bg-primaryColor after:bg-primaryColor",
-                      icon: "text-white",
-                      base: "text-primaryColor",
-                    }}
-                  />
-                  <span className="text-sm text-colorTitle">
-                    {selectedPeople.length === filteredPeople.length
-                      ? "Désélectionner tout"
-                      : "Sélectionner tout"}
+              {/* Gestion des états de chargement et d'erreur */}
+              {isLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Spinner size="sm" />
+                  <span className="ml-2 text-colorMuted text-sm">
+                    Chargement des participants...
                   </span>
                 </div>
-              )}
-
-              <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
-                {filteredPeople.length > 0 ? (
-                  filteredPeople.map((person) => (
-                    <div key={person.id} className="card relative">
-                      <div
-                        className={`content-card border p-3 rounded-xl transition-colors cursor-pointer ${
-                          selectedPeople.includes(person.id)
-                            ? "border-primaryColor"
-                            : "border-colorBorderTr hover:border-colorBorder"
-                        }`}
-                        onClick={() => handlePersonSelect(person.id)}
-                      >
-                        <div className="flex gap-3 items-center">
+              ) : isError ? (
+                <div className="flex items-center flex-col justify-center gap-3 py-8">
+                  <span className="text-colorTitle text-center text-sm">
+                    Une erreur est survenue lors de la récupération des
+                    participants
+                  </span>
+                  <Button
+                    className="bg-transparent border border-colorBorder text-colorTitle text-xs p-0 min-w-0 h-[26px] w-[26px]"
+                    onPress={() => refetch()}
+                    isLoading={isRefetching}
+                  >
+                    <RefreshCcw size={14} />
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-4 max-h-[300px] overflow-y-auto">
+                    {/* Participants Internes */}
+                    {filteredInternalParticipants.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
                           <Checkbox
-                            isSelected={selectedPeople.includes(person.id)}
-                            onValueChange={() => handlePersonSelect(person.id)}
+                            isSelected={
+                              selectedInternalParticipants.length ===
+                                filteredInternalParticipants.length &&
+                              filteredInternalParticipants.length > 0
+                            }
+                            isIndeterminate={
+                              selectedInternalParticipants.length > 0 &&
+                              selectedInternalParticipants.length <
+                                filteredInternalParticipants.length
+                            }
+                            onValueChange={handleSelectAllInternal}
                             classNames={{
-                              wrapper: "text-primaryColor data-[selected=true]:bg-primaryColor after:bg-primaryColor",
+                              wrapper:
+                                "text-primaryColor data-[selected=true]:bg-primaryColor after:bg-primaryColor",
                               icon: "text-white",
                               base: "text-primaryColor",
                             }}
                           />
-                          <Avatar
-                            alt={person.name}
-                            className="shrink-0"
-                            size="md"
-                            src={person.avatar}
-                          />
-                          <div className="flex flex-col flex-grow">
-                            <span className="text-small text-colorTitle font-medium">
-                              {person.name}
-                            </span>
-                            <span className="text-tiny text-colorMuted">
-                              {person.email}
-                            </span>
-                          </div>
+                          <span className="text-sm text-colorTitle font-medium">
+                            Participants Internes (
+                            {filteredInternalParticipants.length})
+                          </span>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          {filteredInternalParticipants.map((person) => (
+                            <div key={person.id} className="card relative">
+                              <div
+                                className={`content-card border p-3 rounded-xl transition-colors cursor-pointer ${
+                                  selectedInternalParticipants.includes(
+                                    person.id
+                                  )
+                                    ? "border-primaryColor"
+                                    : "border-colorBorderTr hover:border-colorBorder"
+                                }`}
+                                onClick={() =>
+                                  handleInternalParticipantSelect(person.id)
+                                }
+                              >
+                                <div className="flex gap-3 items-center">
+                                  <Checkbox
+                                    isSelected={selectedInternalParticipants.includes(
+                                      person.id
+                                    )}
+                                    onValueChange={() =>
+                                      handleInternalParticipantSelect(person.id)
+                                    }
+                                    classNames={{
+                                      wrapper:
+                                        "text-primaryColor data-[selected=true]:bg-primaryColor after:bg-primaryColor",
+                                      icon: "text-white",
+                                      base: "text-primaryColor",
+                                    }}
+                                  />
+                                  <Avatar
+                                    alt={person.name}
+                                    className="shrink-0"
+                                    size="md"
+                                    src={getAvatarUrl(person.name)}
+                                  />
+                                  <div className="flex flex-col flex-grow">
+                                    <span className="text-small text-colorTitle font-medium">
+                                      {person.name}
+                                    </span>
+                                    <span className="text-tiny text-colorMuted">
+                                      {person.email}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center py-8">
-                    <p className="text-colorMuted text-sm">
-                      {searchTerm
-                        ? "Aucune personne trouvée"
-                        : "Aucune personne disponible"}
-                    </p>
-                  </div>
-                )}
-              </div>
+                    )}
 
-              {/* Résumé de la sélection */}
-              {selectedPeople.length > 0 && (
-                <div className="mt-2 p-2 bg-primaryColor/10 rounded-lg border border-primaryColor/20">
-                  <p className="text-xs text-colorTitle">
-                    <span className="font-medium">
-                      {selectedPeople.length} personne
-                      {selectedPeople.length > 1 ? "s" : ""}
-                    </span>{" "}
-                    sélectionnée{selectedPeople.length > 1 ? "s" : ""}
-                  </p>
-                </div>
+                    {/* Participants Externes */}
+                    {filteredExternalParticipants.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Checkbox
+                            isSelected={
+                              selectedExternalParticipants.length ===
+                                filteredExternalParticipants.length &&
+                              filteredExternalParticipants.length > 0
+                            }
+                            isIndeterminate={
+                              selectedExternalParticipants.length > 0 &&
+                              selectedExternalParticipants.length <
+                                filteredExternalParticipants.length
+                            }
+                            onValueChange={handleSelectAllExternal}
+                            classNames={{
+                              wrapper:
+                                "text-primaryColor data-[selected=true]:bg-primaryColor after:bg-primaryColor",
+                              icon: "text-white",
+                              base: "text-primaryColor",
+                            }}
+                          />
+                          <span className="text-sm text-colorTitle font-medium">
+                            Participants Externes (
+                            {filteredExternalParticipants.length})
+                          </span>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          {filteredExternalParticipants.map((person) => (
+                            <div key={person.id} className="card relative">
+                              <div
+                                className={`content-card border p-3 rounded-xl transition-colors cursor-pointer ${
+                                  selectedExternalParticipants.includes(
+                                    person.id
+                                  )
+                                    ? "border-primaryColor"
+                                    : "border-colorBorderTr hover:border-colorBorder"
+                                }`}
+                                onClick={() =>
+                                  handleExternalParticipantSelect(person.id)
+                                }
+                              >
+                                <div className="flex gap-3 items-center">
+                                  <Checkbox
+                                    isSelected={selectedExternalParticipants.includes(
+                                      person.id
+                                    )}
+                                    onValueChange={() =>
+                                      handleExternalParticipantSelect(person.id)
+                                    }
+                                    classNames={{
+                                      wrapper:
+                                        "text-primaryColor data-[selected=true]:bg-primaryColor after:bg-primaryColor",
+                                      icon: "text-white",
+                                      base: "text-primaryColor",
+                                    }}
+                                  />
+                                  <Avatar
+                                    alt={person.name}
+                                    className="shrink-0"
+                                    size="md"
+                                    src={getAvatarUrl(person.name)}
+                                  />
+                                  <div className="flex flex-col flex-grow">
+                                    <span className="text-small text-colorTitle font-medium">
+                                      {person.name}
+                                    </span>
+                                    <span className="text-tiny text-colorMuted">
+                                      {person.email}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Message si aucun participant trouvé */}
+                    {filteredInternalParticipants.length === 0 &&
+                      filteredExternalParticipants.length === 0 && (
+                        <div className="text-center py-8">
+                          <p className="text-colorMuted text-sm">
+                            {searchTerm
+                              ? "Aucune personne trouvée"
+                              : "Aucune personne disponible"}
+                          </p>
+                        </div>
+                      )}
+                  </div>
+
+                  {/* Résumé de la sélection */}
+                  {totalSelectedParticipants > 0 && (
+                    <div className="mt-2 p-2 bg-primaryColor/10 rounded-lg border border-primaryColor/20">
+                      <p className="text-xs text-colorTitle">
+                        <span className="font-medium">
+                          {totalSelectedParticipants} personne
+                          {totalSelectedParticipants > 1 ? "s" : ""}
+                        </span>{" "}
+                        sélectionnée{totalSelectedParticipants > 1 ? "s" : ""}
+                        {selectedInternalParticipants.length > 0 && (
+                          <span className="ml-2 text-colorMuted">
+                            ({selectedInternalParticipants.length} interne
+                            {selectedInternalParticipants.length > 1 ? "s" : ""}
+                            {selectedExternalParticipants.length > 0 &&
+                              `, ${
+                                selectedExternalParticipants.length
+                              } externe${
+                                selectedExternalParticipants.length > 1
+                                  ? "s"
+                                  : ""
+                              }`}
+                            )
+                          </span>
+                        )}
+                        {selectedInternalParticipants.length === 0 &&
+                          selectedExternalParticipants.length > 0 && (
+                            <span className="ml-2 text-colorMuted">
+                              ({selectedExternalParticipants.length} externe
+                              {selectedExternalParticipants.length > 1
+                                ? "s"
+                                : ""}
+                              )
+                            </span>
+                          )}
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
             </ModalBody>
             <ModalFooter>
@@ -232,9 +410,12 @@ const ModalShare = () => {
                 <Button
                   className="w-1/2 h-auto py-3 bg-primaryColor text-white"
                   onPress={handleShare}
-                  isDisabled={selectedPeople.length === 0}
+                  isDisabled={totalSelectedParticipants === 0 || isPending}
+                  isLoading={isPending}
                 >
-                  Partager ({selectedPeople.length})
+                  {isPending
+                    ? "Partage en cours..."
+                    : `Partager (${totalSelectedParticipants})`}
                 </Button>
               </div>
             </ModalFooter>

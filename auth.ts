@@ -59,14 +59,14 @@ const config = {
         };
 
         try {
-          // const requestAuthCredential = await axios.post(LOGIN_URL, body);
+          const requestAuthCredential = await axios.post(LOGIN_URL, body);
 
-          // if (requestAuthCredential.status !== 200) {
-          //   throw new AuthError("Please provide both username & otp");
-          // }
+          if (requestAuthCredential.status !== 200) {
+            throw new AuthError("Please provide both username & otp");
+          }
 
-          //const response = requestAuthCredential.data.data;
-          const response = fakeSessionUserForTesting.data;
+          const response = requestAuthCredential.data.data;
+          //const response = fakeSessionUserForTesting.data;
 
           const session: SessionApp = validateApiResponse(
             response,

@@ -24,12 +24,12 @@ export const GET = async (
     };
 
     console.log("body", body);
-    // await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `ai/generate-meeting-report`,
-    //   body,
-    //   "POST"
-    // );
+    await callApiWithToken(
+      tokenOrErrorResponse,
+      `ai/generate-meeting-report`,
+      body,
+      "POST"
+    );
 
     return NextResponse.json(
       {

@@ -10,7 +10,7 @@ interface Message {
   timestamp: Date;
 }
 
-const BlockChatIa = () => {
+const BlockChatIa = ({ id }: { id: string }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [hasStartedConversation, setHasStartedConversation] = useState(false);
   const [inputValue, setInputValue] = useState("");

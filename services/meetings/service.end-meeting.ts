@@ -51,7 +51,7 @@ export const endMeeting = actionClient
       // Create FormData for file upload
       const formData = new FormData();
       formData.append("audio_file", parsedInput.audio_file);
-
+      formData.append("duration", parsedInput.duration.toString());
       const response = await axios.post(
         `${ENV.API_LOCAL_BASE_URL}meetings/${parsedInput.id_meeting}/end`,
         formData,
