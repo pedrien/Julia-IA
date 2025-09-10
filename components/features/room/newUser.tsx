@@ -20,7 +20,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import ModalConfirmation from "@/components/common/modals/ModalConfirmation/ModalConfirmation";
 import { useCreateParticipant } from "@/hooks/features/participants/hook.create-participant";
 
-const NewUser = () => {
+const NewUser = ({
+  isForGuest,
+  onSuccess,
+}: {
+  isForGuest?: boolean;
+  onSuccess?: () => void;
+}) => {
   const formRef = useRef<HTMLFormElement>(null);
   const { isModalOpen, closeModal } = useModalContext();
   const [isModalOpenConfirmation, setIsModalOpenConfirmation] =
@@ -30,12 +36,13 @@ const NewUser = () => {
   const { mutate: createParticipant } = useCreateParticipant({
     onSuccessCallback: () => {
       reset({
-        type: "EXTERNE",
+        type: isForGuest ? "EXTERNE" : "INTERNE",
         external_name: "",
         external_email: "",
         external_phone: "",
         external_company: "",
       });
+      onSuccess?.();
       closeModal("ModalNewUser");
     },
   });
@@ -47,7 +54,7 @@ const NewUser = () => {
   } = useForm<CreateParticipantSchema>({
     resolver: zodResolver(createParticipantSchema),
     defaultValues: {
-      type: "EXTERNE",
+      type: isForGuest ? "EXTERNE" : "INTERNE",
       external_name: "",
       external_email: "",
       external_phone: "",
@@ -88,7 +95,7 @@ const NewUser = () => {
               <ModalHeader className="flex flex-col gap-1">
                 <div>
                   <h5 className="text md font-medium mb-2">
-                    {"Nouveau participant"}
+                    {isForGuest ? "Nouvel invité" : "Nouveau participant"}
                   </h5>
                 </div>
               </ModalHeader>
@@ -215,7 +222,9 @@ const NewUser = () => {
           setIsModalOpenConfirmation(false);
         }}
         title="Confirmation"
-        message="Voulez-vous vraiment créer ce participant ?"
+        message={`Voulez-vous vraiment ajouter ${
+          isForGuest ? "cet invité" : "ce participant"
+        } ?`}
       />
     </>
   );

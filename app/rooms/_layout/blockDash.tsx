@@ -58,10 +58,11 @@ const BlockDash = () => {
           <CardWidgets
             totalMeetings={meetings.data.length}
             readMeetings={
-              meetings.data.filter((meeting) => meeting.status === "LU").length
+              meetings.data.filter((meeting) => meeting.status === "CANCELLED")
+                .length
             }
             completedMeetings={
-              meetings.data.filter((meeting) => meeting.status === "TRAITE")
+              meetings.data.filter((meeting) => meeting.status === "COMPLETED")
                 .length
             }
           />

@@ -15,6 +15,7 @@ export const endMeetingSchema = z.object({
       (file) => file.type.startsWith("audio/"),
       "Le fichier doit être un fichier audio"
     ),
+  duration: z.number(),
 });
 
 /**

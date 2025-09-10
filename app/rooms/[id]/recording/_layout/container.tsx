@@ -6,7 +6,7 @@ import InfoRoom from "./drawers/infoRoom";
 import ParticipantRoom from "./drawers/participantRoom";
 import ModalStep from "./modalStep/modaltStep";
 import WidgetRecording from "./widgetRecording";
-import { useGetMeetingDetailRecording } from "@/hooks/features/meetings/hook.get-meeting-detail";
+import { useGetMeetingDetailRecording } from "@/hooks/features/meetings/hook.get-meeting-detail-recording";
 import { UiLoadingData } from "@/components/common/UiLoadingData/UiLoadingData";
 import { AnimatedDataLoadError } from "@/components/common/animated-error-states/animated-error-states";
 import ModalConfirmation from "@/components/common/modals/ModalConfirmation/ModalConfirmation";
@@ -17,7 +17,7 @@ import ModalShareRapport from "@/components/features/room/modals/ModalShareRappo
 import { useRouter } from "next/navigation";
 
 const Content = ({ id }: { id: string }) => {
-  const { openModal, closeModal } = useModalContext();
+  const { openModal } = useModalContext();
   const router = useRouter();
   const { startLoading, stopLoading } = useLoading();
   const {
@@ -28,12 +28,13 @@ const Content = ({ id }: { id: string }) => {
     isRefetching,
   } = useGetMeetingDetailRecording(id);
   const [audioFileState, setAudioFileState] = useState<File | null>(null);
-
+  const [duration, setDuration] = useState<number>(0);
   const [isModalOpenConfirmation, setIsModalOpenConfirmation] =
     useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [chronoResetSignal, setChronoResetSignal] = useState<number>(0);
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
+  const [audioDuration, setAudioDuration] = useState<number>(0);
   const { mutate: endMeeting } = useEndMeeting({
     onSuccessCallback: () => {
       setIsRecording(false);
@@ -61,6 +62,27 @@ const Content = ({ id }: { id: string }) => {
           setRecordedAudio(audioUrl);
           setAudioFileState(audioFile);
 
+          // Créer un élément audio temporaire pour obtenir la durée
+          const audio = new Audio(audioUrl);
+          audio.addEventListener("loadedmetadata", () => {
+            const durationInSeconds = Math.round(audio.duration);
+            console.log(
+              "Container - Audio duration:",
+              durationInSeconds,
+              "seconds"
+            );
+            setAudioDuration(durationInSeconds);
+            setDuration(durationInSeconds); // Mettre à jour la durée pour l'API
+          });
+
+          audio.addEventListener("error", () => {
+            console.warn(
+              "Impossible de charger les métadonnées audio, utilisation de la durée du chrono"
+            );
+            // Fallback: utiliser la durée du chrono si disponible
+            setAudioDuration(duration);
+          });
+
           setIsModalOpenConfirmation(true);
         })
         .catch((error) => {
@@ -76,6 +98,8 @@ const Content = ({ id }: { id: string }) => {
       setRecordedAudio(null);
     }
     setAudioFileState(null);
+    setAudioDuration(0);
+    setDuration(0);
   };
 
   if (isLoading) {
@@ -140,6 +164,7 @@ const Content = ({ id }: { id: string }) => {
             endMeeting({
               id_meeting: id,
               audio_file: audioFileState,
+              duration: audioDuration || duration, // Utiliser la durée audio si disponible, sinon la durée du chrono
             });
           }
           setIsModalOpenConfirmation(false);

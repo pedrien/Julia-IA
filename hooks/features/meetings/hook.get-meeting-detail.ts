@@ -1,20 +1,15 @@
 "use client";
 
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { MeetingRecordingDetail } from "@/validators/meetings/validator.meeting-recording-detail";
-import { getMeetingDetailRecording } from "@/services/meetings/service.get-meeting-detail-recording";
 import { handleClientAuthError } from "@/libs/handleClientAuthError";
+import { getMeetingDetail } from "@/services/meetings/service.get-meeting-detail";
+import { DetailMeeting } from "@/validators/meetings/validator.detail-meetings";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
-/**
- * Hook pour récupérer les détails d'une réunion
- * @param meetingId - L'ID de la réunion à récupérer
- * @returns Les détails de la réunion avec les participants
- */
-const fetchMeetingDetail = async (
+const getMeetingDetails = async (
   meetingId: string
-): Promise<MeetingRecordingDetail | null> => {
+): Promise<DetailMeeting | null> => {
   try {
-    const response = await getMeetingDetailRecording({ id: meetingId });
+    const response = await getMeetingDetail({ meetingId });
     if (response?.data?.success === false) {
       handleClientAuthError(response.data.error, false);
       throw new Error(response.data.error.join(", "));
@@ -28,16 +23,33 @@ const fetchMeetingDetail = async (
   }
 };
 
-export const useGetMeetingDetailRecording = (
+/**
+ * Hook to fetch and manage the details for a specific meeting
+ *
+ * @param {string} meetingId - The ID of the meeting
+ * @returns {UseQueryResult<DetailMeeting | null, Error>} Query result containing:
+ * - data: The meeting details if successful, null otherwise
+ * - error: Error object if the query failed
+ * - isLoading: Boolean indicating if the query is in progress (only for initial load)
+ * - isFetching: Boolean indicating if any fetch is in progress
+ * - isError: Boolean indicating if the query resulted in an error
+ * - refetch: Function to manually refetch the data
+ *
+ * The query will:
+ * - Cache results for 5 minutes (staleTime)
+ * - Retry failed requests twice
+ * - Refetch on window focus
+ * - Only run when meetingId is provided
+ */
+export const useGetMeetingDetail = (
   meetingId: string
-): UseQueryResult<MeetingRecordingDetail | null, Error> => {
-  return useQuery<MeetingRecordingDetail | null, Error>({
-    queryKey: ["meeting-detail-recording", meetingId],
-    queryFn: () => fetchMeetingDetail(meetingId),
-    enabled: !!meetingId,
+): UseQueryResult<DetailMeeting | null, Error> => {
+  return useQuery<DetailMeeting | null, Error>({
+    queryKey: ["meeting-detail", meetingId],
+    queryFn: () => getMeetingDetails(meetingId),
     staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: true,
     retry: 2,
-    refetchOnWindowFocus: false,
+    enabled: !!meetingId,
   });
 };
