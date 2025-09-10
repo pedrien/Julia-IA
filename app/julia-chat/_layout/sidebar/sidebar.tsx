@@ -1,11 +1,30 @@
-import Link from "next/link";
-import Image from "next/image";
-import { PanelLeft, LogOut, MessageCirclePlus } from "lucide-react";
-import { Avatar, Skeleton, Input } from "@heroui/react";
+import { Avatar, Skeleton } from "@heroui/react";
+import { LogOut, MessageCirclePlus, PanelLeft } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
 import ItemDiscussion from "./itemDiscussion";
 
-const Sidebar = () => {
+interface Discussion {
+  id: string;
+  title: string;
+  lastMessage: Date;
+  messageCount: number;
+}
+
+interface SidebarProps {
+  onNewDiscussion: () => void;
+  discussions: Discussion[];
+  currentDiscussionId: string | null;
+  onSelectDiscussion: (discussionId: string) => void;
+}
+
+const Sidebar = ({
+  onNewDiscussion,
+  discussions,
+  currentDiscussionId,
+  onSelectDiscussion,
+}: SidebarProps) => {
   const { data: session, status } = useSession();
   return (
     <div className="w-[250px] h-full fixed bg-bgCard flex flex-col top-0 left-0 z-50">
@@ -13,9 +32,9 @@ const Sidebar = () => {
         <div className="flex items-center justify-between">
           <Link href={"/"}>
             <Image
-              src={"/images/logos/logoJulia.png"}
+              src={"/images/logos/iconColor.png"}
               alt="logo de julia"
-              className="w-[70px!important]"
+              className="w-[26px!important]"
               width={0}
               height={0}
               layout="responsive"
@@ -27,9 +46,9 @@ const Sidebar = () => {
         </div>
       </div>
       <div className="block-new-discussion p-3">
-        <Link
-          href={"#"}
-          className="flex items-center justify-center gap-2 duration-300 relative overflow-hidden z-10 transition-all    text-white p-3 px-3 rounded-xl text-sm font-medium bg-primaryColor hover:text-white"
+        <button
+          onClick={onNewDiscussion}
+          className="flex items-center justify-center gap-2 duration-300 relative overflow-hidden z-10 transition-all text-white p-3 px-3 rounded-xl text-sm font-medium bg-primaryColor hover:text-white w-full cursor-pointer"
         >
           <div className="circle absolute w-[70px] h-[70px]  -z-10 bg-white rounded-full opacity-40 blur-[10px] -left-[30px] -top-[30px]"></div>
           <MessageCirclePlus size={20} />
@@ -45,16 +64,27 @@ const Sidebar = () => {
               className="w-full h-[100%!important] object-cover  relative"
             />
           </div>
-        </Link>
+        </button>
       </div>
       <div className="body flex flex-col flex-grow p-3">
-        <h2 className="text-colorMuted uppercase text-xs mb-2">
-            Discussions
-        </h2>
-        <div className="flex flex-col">
-            <ItemDiscussion title="Documentation ARAKA Pay Integration Guide" />
-            <ItemDiscussion title="Discussion 2" />
-            <ItemDiscussion title="Discussion 3" />
+        <h2 className="text-colorMuted uppercase text-xs mb-2">Discussions</h2>
+        <div className="flex flex-col space-y-1">
+          {discussions.length === 0 ? (
+            <div className="text-center py-4">
+              <p className="text-colorMuted text-xs">Aucune discussion</p>
+            </div>
+          ) : (
+            discussions.map((discussion) => (
+              <ItemDiscussion
+                key={discussion.id}
+                title={discussion.title}
+                isActive={currentDiscussionId === discussion.id}
+                // lastMessage={discussion.lastMessage}
+                // messageCount={discussion.messageCount}
+                onClick={() => onSelectDiscussion(discussion.id)}
+              />
+            ))
+          )}
         </div>
       </div>
       {status === "authenticated" ? (

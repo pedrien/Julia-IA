@@ -5,7 +5,7 @@ import {
   FileText,
   EllipsisVertical,
   Search,
-  Printer,
+  Folder,
 } from "lucide-react";
 import { Button, Input } from "@heroui/react";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
@@ -14,6 +14,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import NewRoom from "@/components/features/room/newRoom";
 import NewUser from "@/components/features/room/newUser";
+import BlockRecentFoldes from "./blockRecentFoldes";
 
 const BlockDash = () => {
   const { openModal } = useModalContext();
@@ -43,12 +44,13 @@ const BlockDash = () => {
     <div>
       <div className="container-fluid lg:px-7 px-2">
         <div
-          className="banner bg-primaryColor lg:py-[40px] lg:px-6 relative z-10 overflow-hidden rounded-2xl"
+          className="banner bg-primaryColor lg:py-[30px] lg:px-6 relative z-10 overflow-hidden rounded-2xl"
           style={{
-            background: "linear-gradient(to right, var(--primaryColor), #942efa)",
+            background:
+              "linear-gradient(to right, var(--primaryColor), #942efa)",
           }}
         >
-          <div className="w-full h-full absolute top-0 left-0 -z-10 opacity-40">
+          {/* <div className="w-full h-full absolute top-0 left-0 -z-10 opacity-40">
             <Image
               src={"/images/img.png"}
               layout="responsive"
@@ -57,7 +59,7 @@ const BlockDash = () => {
               height={0}
               className="w-full h-[100%!important] object-cover scale-[.8] relative -right-40"
             />
-          </div>
+          </div> */}
           <div className="circle absolute w-[350px] h-[350px] -z-10 bg-white rounded-full opacity-40 blur-[100px] -left-[100px] -top-[250px]"></div>
           <div className="circle absolute w-[350px] h-[350px] -z-10 bg-white rounded-full opacity-40 blur-[100px] -right-[100px] -bottom-[250px]"></div>
           <div className="grid grid-cols-12">
@@ -81,12 +83,10 @@ const BlockDash = () => {
                 className="card flex flex-col gap-2 cursor-pointer group"
                 onClick={() => openModal("ModalNewRoom")}
               >
-                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard transition-background duration-300 rounded-2xl flex flex-col items-center justify-center">
-                  <div className="icon w-[60px] h-[60px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ff4949] text-white rounded-full flex justify-center items-center">
-                    <Mic size={28}></Mic>
+                <div className="content-icon gap-3 shadow-[0_5px_18px_#00000005] bg-bgCard transition-background duration-300 rounded-3xl flex items-center p-3">
+                  <div className="icon w-[50px] h-[50px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ff4949] text-white rounded-full flex justify-center items-center">
+                    <Mic size={24}></Mic>
                   </div>
-                </div>
-                <div className="text-center">
                   <h4 className="text-colorTitle font-semibold text-sm">
                     Enregistrer une réunion
                   </h4>
@@ -95,12 +95,10 @@ const BlockDash = () => {
             </div>
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
-                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard  transition-background duration-300 rounded-2xl flex flex-col items-center justify-center">
-                  <div className="icon w-[60px] h-[60px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-primaryColor text-white rounded-full flex justify-center items-center">
-                    <ArrowUpToLine size={28}></ArrowUpToLine>
+                <div className="content-icon shadow-[0_5px_18px_#00000005]  bg-bgCard  transition-background duration-300 rounded-3xl flex items-center gap-3 p-3">
+                  <div className="icon  w-[50px] h-[50px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-primaryColor text-white rounded-full flex justify-center items-center">
+                    <ArrowUpToLine size={24}></ArrowUpToLine>
                   </div>
-                </div>
-                <div className="text-center">
                   <h4 className="text-colorTitle font-semibold text-sm">
                     Uploader et transcrire
                   </h4>
@@ -109,40 +107,35 @@ const BlockDash = () => {
             </div>
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
-                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard  transition-background duration-300 rounded-2xl flex flex-col items-center justify-center">
-                  <div className="icon w-[60px] h-[60px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#494cff] text-white rounded-full flex justify-center items-center">
-                    <Printer size={28}></Printer>
+                <div className="content-icon shadow-[0_5px_18px_#00000005] p-3 gap-3 bg-bgCard  transition-background duration-300 rounded-2xl flex  items-center">
+                  <div className="icon w-[50px] h-[50px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#494cff] text-white rounded-full flex justify-center items-center">
+                    <Folder size={24}></Folder>
                   </div>
-                </div>
-                <div className="text-center">
                   <h4 className="text-colorTitle font-semibold text-sm">
-                    Numériser un document
+                    Créer un dossier
                   </h4>
                 </div>
               </div>
             </div>
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
-                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard  transition-background duration-300 rounded-2xl flex flex-col items-center justify-center">
-                  <div className="icon w-[60px] h-[60px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#39ceb2] text-white rounded-full flex justify-center items-center">
-                    <Mic size={28}></Mic>
+                <div className="content-icon shadow-[0_5px_18px_#00000005]  bg-bgCard  transition-background duration-300 rounded-3xl flex  items-center p-3 gap-3">
+                  <div className="icon w-[50px] h-[50px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#27c683] text-white rounded-full flex justify-center items-center">
+                    <Mic size={24}></Mic>
                   </div>
-                </div>
-                <div className="text-center">
                   <h4 className="text-colorTitle font-semibold text-sm">
                     Demarrer un réunion
                   </h4>
                 </div>
+                <div className="text-center"></div>
               </div>
             </div>
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
-                <div className="content-icon shadow-[0_5px_18px_#00000005] aspect-1/1 bg-bgCard rounded-2xl flex flex-col items-center justify-center">
-                  <div className="icon w-[60px] h-[60px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ffa351] text-white rounded-full flex justify-center items-center">
-                    <ArrowUpToLine size={28}></ArrowUpToLine>
+                <div className="content-icon shadow-[0_5px_18px_#00000005]  bg-bgCard rounded-3xl flex items-center gap-3 p-3">
+                  <div className="icon w-[50px] h-[50px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ffa351] text-white rounded-full flex justify-center items-center">
+                    <ArrowUpToLine size={24}></ArrowUpToLine>
                   </div>
-                </div>
-                <div className="text-center">
                   <h4 className="text-colorTitle font-semibold text-sm">
                     Uploader et transcrire
                   </h4>
@@ -151,7 +144,13 @@ const BlockDash = () => {
             </div>
           </div>
         </div>
-        <div className="block-file-recents lg:mt-8 mt-3">
+        <div className="block-recent-folder lg:mt-3">
+          <h3 className="text-colorTitle font-semibold text-[18px] mb-3">
+            Dossiers recents
+          </h3>
+          <BlockRecentFoldes />
+        </div>
+        <div className="block-file-recents lg:mt-6 mt-3">
           <div className="card bg-bgCard shadow-[0_5px_18px_#00000005]  rounded-2xl">
             <div className="flex items-center justify-between lg:mb-4 mb-6 px-4 pt-4">
               <h2 className="text-colorTitle font-semibold">

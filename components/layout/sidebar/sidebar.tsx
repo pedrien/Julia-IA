@@ -10,6 +10,7 @@ import {
   Settings,
   Moon,
   Sparkles,
+  Folder
 } from "lucide-react";
 import LinkNav from "./LinkNav";
 import { Avatar, Skeleton } from "@heroui/react";
@@ -55,9 +56,9 @@ const Sidebar = () => {
           </li>
           <li>
             <LinkNav
-              href="/gestion-courriers"
-              icon={<Mail size={20} />}
-              title="Gestion des courriers"
+              href="/gestion-dossiers"
+              icon={<Folder size={20} />}
+              title="Gestion des dossiers"
             />
           </li>
         </ul>
@@ -79,7 +80,7 @@ const Sidebar = () => {
         </ul>
         <div className="block-new-discussion">
           <Link
-            href={"#"}
+            href={"/julia-chat"}
             className="flex items-center justify-center gap-2 duration-300 relative overflow-hidden z-10 transition-all    text-white p-3 px-3 rounded-xl text-sm font-medium bg-primaryColor hover:text-white"
           >
             <div className="circle absolute w-[70px] h-[70px]  -z-10 bg-white rounded-full opacity-40 blur-[10px] -left-[30px] -top-[30px]"></div>

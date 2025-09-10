@@ -1,58 +1,49 @@
+import { Folder, CircleCheck, Hourglass } from "lucide-react";
 import React from "react";
-import { Clock, CheckCircle, FileText } from "lucide-react";
 
-const CardWidgets = ({
-  totalMeetings,
-  readMeetings,
-  completedMeetings,
-}: {
-  totalMeetings: number;
-  readMeetings: number;
-  completedMeetings: number;
-}) => {
+const CardWidgets = () => {
   return (
     <div className="grid grid-cols-12 gap-3 lg:gap-4">
-      <div className="col-span-12 lg:col-span-4 2xl:col-span-4">
+      <div className="col-span-12 lg:col-span-4">
         <div className="card bg-bgCard shadow-[0_5px_18px_#00000005]  p-4 rounded-2xl overflow-hidden">
           <div className="flex items-center gap-4">
             <div className="icon text-primaryColor flex items-center justify-center w-[50px] h-[50px] bg-lightPrimaryColor  rounded-lg ">
-              <FileText className="lg:w-7 lg:h-7"></FileText>
+              <Folder className="lg:w-7 lg:h-7"></Folder>
             </div>
             <div>
-              <p className="text-colorMuted">Total</p>
+              <p className="text-colorMuted text-sm">Total</p>
               <h4 className="text-colorTitle font-semibold lg:text-[22px]">
-                {totalMeetings}
+                40
               </h4>
             </div>
           </div>
         </div>
       </div>
-      <div className="col-span-12 lg:col-span-4 2xl:col-span-4">
+      <div className="col-span-12 lg:col-span-4">
         <div className="card bg-bgCard shadow-[0_5px_18px_#00000005]  p-4 rounded-2xl overflow-hidden">
           <div className="flex items-center gap-4">
-            <div className="icon text-[#5078f0] bg-[#f5f7fd]  flex items-center justify-center w-[50px] h-[50px] rounded-lg">
-              <Clock className="lg:w-7 lg:h-7"></Clock>
+            <div className="icon text-[#ee863a] flex items-center justify-center w-[50px] h-[50px] bg-[#ee863a26]  rounded-lg ">
+              <Hourglass className="lg:w-7 lg:h-7"></Hourglass>
             </div>
             <div>
-              <p className="text-colorMuted">Lus</p>
+              <p className="text-colorMuted text-sm">En cours</p>
               <h4 className="text-colorTitle font-semibold lg:text-[22px]">
-                {readMeetings}
+                40
               </h4>
             </div>
-            <p className="text-colorMuted"></p>
           </div>
         </div>
       </div>
-      <div className="col-span-12 lg:col-span-4 2xl:col-span-4">
+      <div className="col-span-12 lg:col-span-4">
         <div className="card bg-bgCard shadow-[0_5px_18px_#00000005]  p-4 rounded-2xl overflow-hidden">
           <div className="flex items-center gap-4">
-            <div className="icon text-[#2ac693] bg-[#e6f5f0]  flex items-center justify-center w-[50px] h-[50px] rounded-lg">
-              <CheckCircle className="lg:w-7 lg:h-7"></CheckCircle>
+            <div className="icon text-[#22c66a] flex items-center justify-center w-[50px] h-[50px] bg-[#22c6691e]  rounded-lg ">
+              <CircleCheck className="lg:w-7 lg:h-7"></CircleCheck>
             </div>
             <div>
-              <p className="text-colorMuted">Traités</p>
+              <p className="text-colorMuted text-sm">Traités</p>
               <h4 className="text-colorTitle font-semibold lg:text-[22px]">
-                {completedMeetings}
+                40
               </h4>
             </div>
           </div>

@@ -31,7 +31,7 @@ const BlockFiles = () => {
           </Button>
         </div>
       </div>
-      <div className="body flex-grow overflow-auto bg-[#f5f7fb]">
+      <div className="body flex-grow overflow-y-auto overflow-hidden bg-[#f5f7fb] px-3">
         <PdfRender file={"/files/1.pdf"} />
       </div>
       <div className="footer p-3 bg-[#f5f7fb] relative z-10">
