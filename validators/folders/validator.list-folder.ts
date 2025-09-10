@@ -6,7 +6,6 @@ export const folderSchema = z.object({
   status: ENUM_FOLDER_STATUS,
   name: z.string(),
   total_files: z.number(),
-  total_folders: z.number(),
 });
 
 export const listFolderSchema = z.object({
