@@ -180,7 +180,7 @@ const BlockChatIa = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-bgCard">
       <div className="header p-3 border-b border-colorBorder">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-1">
@@ -231,7 +231,7 @@ const BlockChatIa = () => {
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.isUser
                       ? "bg-primaryColor text-white"
-                      : "bg-[#f5f7fb] text-colorTitle"
+                      : "bg-bgGray text-colorTitle"
                   }`}
                 >
                   <div className="whitespace-pre-wrap text-sm">
@@ -250,7 +250,7 @@ const BlockChatIa = () => {
 
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-[#f8f8f8] text-gray-800 rounded-lg p-3">
+                <div className="bg-bgGray text-gray-800 rounded-lg p-3">
                   <div className="flex items-center space-x-1">
                     <div className="flex space-x-1">
                       <div className="w-1 h-1 bg-colorTitle rounded-full animate-bounce"></div>
@@ -282,7 +282,7 @@ const BlockChatIa = () => {
           onKeyPress={handleKeyPress}
           classNames={{
             inputWrapper:
-              "bg-[#f5f7fb] border-0 shadow-none ",
+              "bg-bgGray border-0 shadow-none ",
             input:
               "text-colorTitle placeholder:text-colorMuted placeholder:opacity-70",
           }}

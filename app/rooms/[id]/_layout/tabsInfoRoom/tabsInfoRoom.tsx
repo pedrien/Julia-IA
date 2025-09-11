@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, Copy } from "lucide-react";
-import { Button, Tooltip } from "@heroui/react";
+import { ArrowLeft,} from "lucide-react";
+import { Button, } from "@heroui/react";
 import { Tabs, Tab } from "@heroui/react";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
 import TabsParticipants from "./TabsParticipants";
@@ -11,7 +11,7 @@ import TabsInfoMeeting from "./TabsInfoMeeting";
 const TabsInfoRoom = ({ id }: { id: string }) => {
   const { openModal } = useModalContext();
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-bgCard">
       <div className="header p-3 border-b border-colorBorder">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-1">

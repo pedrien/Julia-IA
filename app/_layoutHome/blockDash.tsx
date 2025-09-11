@@ -47,19 +47,68 @@ const BlockDash = () => {
           className="banner bg-primaryColor lg:py-[30px] lg:px-6 relative z-10 overflow-hidden rounded-2xl"
           style={{
             background:
-              "linear-gradient(to right, var(--primaryColor), #942efa)",
+              "linear-gradient(to right, var(--primaryColor), #d72efa)",
           }}
         >
-          {/* <div className="w-full h-full absolute top-0 left-0 -z-10 opacity-40">
+          <div className="w-full h-full absolute top-0 left-0 -z-10 overflow-hidden">
             <Image
-              src={"/images/img.png"}
+              src={"/images/star.png"}
               layout="responsive"
               alt="image"
               width={0}
               height={0}
-              className="w-full h-[100%!important] object-cover scale-[.8] relative -right-40"
+              className="w-[120px!important] absolute top-[-86px] right-[-5px] opacity-20"
             />
-          </div> */}
+            <Image
+              src={"/images/star.png"}
+              layout="responsive"
+              alt="image"
+              width={0}
+              height={0}
+              className="w-[100px!important] absolute bottom-[-10px] right-[130px] opacity-50"
+            />
+            <Image
+              src={"/images/star.png"}
+              layout="responsive"
+              alt="image"
+              width={0}
+              height={0}
+              className="w-[60px!important] absolute bottom-[-40px] right-[350px] opacity-10"
+            />
+            <Image
+              src={"/images/star.png"}
+              layout="responsive"
+              alt="image"
+              width={0}
+              height={0}
+              className="w-[60px!important] absolute top-[-40px] right-[420px] opacity-20"
+            />
+             <Image
+              src={"/images/star.png"}
+              layout="responsive"
+              alt="image"
+              width={0}
+              height={0}
+              className="w-[60px!important] absolute top-[20px] right-[520px] opacity-10"
+            />
+            <Image
+              src={"/images/star.png"}
+              layout="responsive"
+              alt="image"
+              width={0}
+              height={0}
+              className="w-[60px!important] absolute top-[0px] right-[270px] opacity-20"
+            />
+            <Image
+              src={"/images/star.png"}
+              layout="responsive"
+              alt="image"
+              width={0}
+              height={0}
+              className="w-[80px!important] absolute bottom-[-50px] right-[-5px] opacity-10"
+            />
+            
+          </div>
           <div className="circle absolute w-[350px] h-[350px] -z-10 bg-white rounded-full opacity-40 blur-[100px] -left-[100px] -top-[250px]"></div>
           <div className="circle absolute w-[350px] h-[350px] -z-10 bg-white rounded-full opacity-40 blur-[100px] -right-[100px] -bottom-[250px]"></div>
           <div className="grid grid-cols-12">
@@ -84,7 +133,7 @@ const BlockDash = () => {
                 onClick={() => openModal("ModalNewRoom")}
               >
                 <div className="content-icon gap-3 shadow-[0_5px_18px_#00000005] bg-bgCard transition-background duration-300 rounded-3xl flex items-center p-3">
-                  <div className="icon w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ff4949] text-white rounded-full flex justify-center items-center">
+                  <div className="icon w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ff4949] text-white dark:bg-[#ff494930] dark:text-[#ff4949] rounded-full flex justify-center items-center">
                     <Mic size={24}></Mic>
                   </div>
                   <h4 className="text-colorTitle font-semibold text-sm">
@@ -96,7 +145,7 @@ const BlockDash = () => {
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
                 <div className="content-icon shadow-[0_5px_18px_#00000005]  bg-bgCard  transition-background duration-300 rounded-3xl flex items-center gap-3 p-3">
-                  <div className="icon  w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-primaryColor text-white rounded-full flex justify-center items-center">
+                  <div className="icon  w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-primaryColor text-white dark:bg-[#8b5cf645] dark:text-[#8b5cf6] rounded-full flex justify-center items-center">
                     <ArrowUpToLine size={24}></ArrowUpToLine>
                   </div>
                   <h4 className="text-colorTitle font-semibold text-sm">
@@ -108,7 +157,7 @@ const BlockDash = () => {
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
                 <div className="content-icon shadow-[0_5px_18px_#00000005] p-3 gap-3 bg-bgCard  transition-background duration-300 rounded-2xl flex  items-center">
-                  <div className="icon w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#494cff] text-white rounded-full flex justify-center items-center">
+                  <div className="icon w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#494cff] text-white dark:bg-[#494cff47] dark:text-[#494cff] rounded-full flex justify-center items-center">
                     <Folder size={24}></Folder>
                   </div>
                   <h4 className="text-colorTitle font-semibold text-sm">
@@ -120,7 +169,7 @@ const BlockDash = () => {
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
                 <div className="content-icon shadow-[0_5px_18px_#00000005]  bg-bgCard  transition-background duration-300 rounded-3xl flex  items-center p-3 gap-3">
-                  <div className="icon w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#27c683] text-white rounded-full flex justify-center items-center">
+                  <div className="icon w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#27c683] text-white dark:bg-[#27c6832e] dark:text-[#27c683] rounded-full flex justify-center items-center">
                     <Mic size={24}></Mic>
                   </div>
                   <h4 className="text-colorTitle font-semibold text-sm">
@@ -133,7 +182,7 @@ const BlockDash = () => {
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
                 <div className="content-icon shadow-[0_5px_18px_#00000005]  bg-bgCard rounded-3xl flex items-center gap-3 p-3">
-                  <div className="icon w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ffa351] text-white rounded-full flex justify-center items-center">
+                  <div className="icon w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ffa351] text-white dark:bg-[#ffa3513b] dark:text-[#ffa351] rounded-full flex justify-center items-center">
                     <ArrowUpToLine size={24}></ArrowUpToLine>
                   </div>
                   <h4 className="text-colorTitle font-semibold text-sm">

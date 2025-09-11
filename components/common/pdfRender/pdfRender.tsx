@@ -215,8 +215,8 @@ export default function PdfRender({ file }: PdfRenderProps) {
         ))}
       </Document>
       {numPages && numPages > 0 && (
-        <div className="block-nav-page sticky w-auto min-w-[280px] z-50 mt-4 bottom-4 shadow-lg bg-bgCard p-4 rounded-2xl left-1/2 transform -translate-x-1/2 border border-gray-200">
-          <div className="content-nav flex justify-center items-center gap-4">
+        <div className="block-nav-page sticky w-auto min-w-[240px] z-50 mt-4 bottom-4 shadow-lg bg-bgCard p-2 rounded-2xl left-1/2 transform -translate-x-1/2">
+          <div className="content-nav flex items-center gap-4">
             <Button
               isIconOnly
               size="md"
@@ -229,7 +229,7 @@ export default function PdfRender({ file }: PdfRenderProps) {
             </Button>
 
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-colorMuted">Page</span>
+              <span className="text-xs font-medium text-colorMuted">Page</span>
               <Input
                 type="text"
                 id="page-input"
@@ -244,9 +244,9 @@ export default function PdfRender({ file }: PdfRenderProps) {
                   input: "text-colorTitle text-center font-medium text-sm",
                 }}
               />
-              <span className="text-sm font-medium text-colorMuted">
-                sur {numPages}
-              </span>
+              <div className="text-xs font-medium text-colorMuted flex gap-1">
+                <span>/</span><span>{numPages}</span>
+              </div>
             </div>
 
             <Button

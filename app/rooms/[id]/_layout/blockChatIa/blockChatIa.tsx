@@ -180,11 +180,11 @@ const BlockChatIa = ({ id }: { id: string }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-bgCard">
       <div className="header p-3 border-b border-colorBorder">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-1">
-            <div className="content-img rounded-full overflow-hidden w-[36px] h-[36px]">
+          <div className="flex items-center gap-2">
+            <div className="content-img rounded-full overflow-hidden w-[44px] h-[44px]">
               <Image
                 src={"/images/julia.jpeg"}
                 alt="julia"
@@ -197,7 +197,15 @@ const BlockChatIa = ({ id }: { id: string }) => {
             <Image
               src={"/images/logos/logoJulia.png"}
               alt="logo de julia"
-              className="w-[40px!important]"
+              className="w-[44px!important] dark:hidden"
+              width={0}
+              height={0}
+              layout="responsive"
+            />
+             <Image
+              src={"/images/logos/logoJuliaWhite.png"}
+              alt="logo de julia"
+              className="w-[44px!important] hidden dark:block"
               width={0}
               height={0}
               layout="responsive"
@@ -231,7 +239,7 @@ const BlockChatIa = ({ id }: { id: string }) => {
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.isUser
                       ? "bg-primaryColor text-white"
-                      : "bg-[#f8f8f8] text-colorTitle"
+                      : "bg-bgGray text-colorTitle"
                   }`}
                 >
                   <div className="whitespace-pre-wrap text-sm">
@@ -250,7 +258,7 @@ const BlockChatIa = ({ id }: { id: string }) => {
 
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-[#f8f8f8] text-gray-800 rounded-lg p-3">
+                <div className="bg-bgGray text-gray-800 rounded-lg p-3">
                   <div className="flex items-center space-x-1">
                     <div className="flex space-x-1">
                       <div className="w-1 h-1 bg-colorTitle rounded-full animate-bounce"></div>
@@ -281,8 +289,7 @@ const BlockChatIa = ({ id }: { id: string }) => {
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
           classNames={{
-            inputWrapper:
-              "bg-transparent border-colorBorder border-[1px] shadow-none ",
+            inputWrapper: "bg-bgGray border-colorBorder border-0 shadow-none ",
             input:
               "text-colorTitle placeholder:text-colorMuted placeholder:opacity-70",
           }}

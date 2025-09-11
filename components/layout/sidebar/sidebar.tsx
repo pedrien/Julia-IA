@@ -1,23 +1,27 @@
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
+import { Avatar, Skeleton, Switch } from "@heroui/react";
 import {
-  PanelLeft,
+  FileText,
+  Folder,
   LayoutDashboard,
   LogOut,
-  FileText,
-  Mail,
-  Settings,
   Moon,
+  PanelLeft,
+  Settings,
   Sparkles,
-  Folder
 } from "lucide-react";
-import LinkNav from "./LinkNav";
-import { Avatar, Skeleton } from "@heroui/react";
 import { signOut, useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
+import Image from "next/image";
+import Link from "next/link";
+import LinkNav from "./LinkNav";
 
 const Sidebar = () => {
   const { data: session, status } = useSession();
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
   return (
     <div className="sidebar shadow-[0_5px_18px_#00000005] flex flex-col h-full fixed top-0 left-0 bg-bgCard md:w-[250px]">
       <div className="header p-3 border-b border-colorBorder">
@@ -26,7 +30,15 @@ const Sidebar = () => {
             <Image
               src={"/images/logos/logoJulia.png"}
               alt="logo de julia"
-              className="w-[70px!important]"
+              className="w-[70px!important] dark:hidden"
+              width={0}
+              height={0}
+              layout="responsive"
+            />
+            <Image
+              src={"/images/logos/logoJuliaWhite.png"}
+              alt="logo de julia"
+              className="w-[70px!important] hidden dark:block"
               width={0}
               height={0}
               layout="responsive"
@@ -38,7 +50,9 @@ const Sidebar = () => {
         </div>
       </div>
       <div className="body flex flex-col flex-grow p-3">
-        <h2 className="text-colorMuted uppercase text-xs mb-2">Menu</h2>
+        <h2 className="text-colorMuted dark:text-colorTitle uppercase text-xs mb-2">
+          Menu
+        </h2>
         <ul className="flex flex-col gap-1">
           <li>
             <LinkNav
@@ -64,11 +78,27 @@ const Sidebar = () => {
         </ul>
         <ul className="flex flex-col gap-1 mt-auto mb-3">
           <li>
-            <LinkNav
-              href="/compte-rendu"
-              icon={<Moon size={20} />}
-              title="Thème sombre"
-            />
+            <div className="flex items-center justify-between gap-2 p-2">
+              <div className="flex items-center gap-2">
+                <Moon
+                  size={20}
+                  className="text-sm text-colorTitle dark:text-colorMuted"
+                />
+                <span className="text-sm text-colorTitle dark:text-colorMuted">
+                  Thème sombre
+                </span>
+              </div>
+              <Switch
+                size="sm"
+                classNames={{
+                  thumb: "bg-white dark:bg-primaryColor",
+                  wrapper:
+                    "bg-bgGray dark:bg-bgGray dark:group-data-[selected=true]:bg-lightPrimaryColor",
+                }}
+                isSelected={theme === "dark"}
+                onValueChange={toggleTheme}
+              />
+            </div>
           </li>
           <li>
             <LinkNav

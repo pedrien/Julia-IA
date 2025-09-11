@@ -7,11 +7,11 @@ const CardWidgets = () => {
       <div className="col-span-12 lg:col-span-4">
         <div className="card bg-bgCard shadow-[0_5px_18px_#00000005]  p-4 rounded-2xl overflow-hidden">
           <div className="flex items-center gap-4">
-            <div className="icon text-primaryColor flex items-center justify-center w-[50px] h-[50px] bg-lightPrimaryColor  rounded-lg ">
+            <div className="icon text-primaryColor flex items-center justify-center w-[50px] h-[50px] bg-[#782efa45]  rounded-lg ">
               <Folder className="lg:w-7 lg:h-7"></Folder>
             </div>
             <div>
-              <p className="text-colorMuted text-sm">Total</p>
+              <p className="text-colorMuted text-sm mb-1">Total</p>
               <h4 className="text-colorTitle font-semibold lg:text-[22px]">
                 40
               </h4>
@@ -22,11 +22,11 @@ const CardWidgets = () => {
       <div className="col-span-12 lg:col-span-4">
         <div className="card bg-bgCard shadow-[0_5px_18px_#00000005]  p-4 rounded-2xl overflow-hidden">
           <div className="flex items-center gap-4">
-            <div className="icon text-[#ee863a] flex items-center justify-center w-[50px] h-[50px] bg-[#ee863a26]  rounded-lg ">
+            <div className="icon text-[#ee863a] flex items-center justify-center w-[50px] h-[50px] bg-[#ee863a45]  rounded-lg ">
               <Hourglass className="lg:w-7 lg:h-7"></Hourglass>
             </div>
             <div>
-              <p className="text-colorMuted text-sm">En cours</p>
+              <p className="text-colorMuted text-sm mb-1">En cours</p>
               <h4 className="text-colorTitle font-semibold lg:text-[22px]">
                 40
               </h4>
@@ -37,11 +37,11 @@ const CardWidgets = () => {
       <div className="col-span-12 lg:col-span-4">
         <div className="card bg-bgCard shadow-[0_5px_18px_#00000005]  p-4 rounded-2xl overflow-hidden">
           <div className="flex items-center gap-4">
-            <div className="icon text-[#22c66a] flex items-center justify-center w-[50px] h-[50px] bg-[#22c6691e]  rounded-lg ">
+            <div className="icon  flex items-center justify-center w-[50px] h-[50px] text-[#2ac693] bg-[#2ac69345]  rounded-lg ">
               <CircleCheck className="lg:w-7 lg:h-7"></CircleCheck>
             </div>
             <div>
-              <p className="text-colorMuted text-sm">Traités</p>
+              <p className="text-colorMuted text-sm mb-1">Traités</p>
               <h4 className="text-colorTitle font-semibold lg:text-[22px]">
                 40
               </h4>

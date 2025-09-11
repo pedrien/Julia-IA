@@ -2,15 +2,15 @@
 @plugin './hero.ts';
 /* Note: You may need to change the path to fit your project structure */
 @source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
-/* @custom-variant dark (&:is(.dark *)); */
+@custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #ffffff;
+  --background: #f5f7fb;
   --foreground: #171717;
   --bgCard: #ffffff;
   --primaryColor: #782efa;
   --lightPrimaryColor: #f7f1ff;
-  --bgGray: #f7f7f7;
+  --bgGray: #f5f7fb;
   --colorTitle: #121213;
   --colorMuted: #7d7d88;
   --colorBorder: #e9e6ee;
@@ -32,18 +32,29 @@
   --color-bgGray: var(--bgGray);
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
+/* Dark theme variables */
+.dark {
+  --background: #131118;
+  --foreground: #ededed;
+  --bgCard: #1e1b26;
+  --primaryColor: #8b5cf6;
+  --lightPrimaryColor: #3b2c5e;
+  --bgGray: #2c2837;
+  --colorTitle: #ffffff;
+  --colorMuted: #928f9b;
+  --colorBorder: #323033;
+  --colorBorderTr: #282628;
+}
+html {
+  background: var(--bgCard);
+}
 
 body {
-  background: var(--background);
+  background: var(--bgCard);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 .block-login {

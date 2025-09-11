@@ -230,7 +230,7 @@ const BlockFiles = ({ id }: { id: string }) => {
         }
       `}</style>
 
-      <div className="header p-3 flex items-center relative z-10 bg-[#f5f7fb]">
+      <div className="header p-3 flex items-center relative z-10 bg-background">
         <div className="block-btns p-1 bg-bgCard rounded-xl m-auto flex items-center gap-1">
           <Button
             isIconOnly
@@ -254,14 +254,15 @@ const BlockFiles = ({ id }: { id: string }) => {
           </Button>
         </div>
       </div>
-      <div className="body flex-grow overflow-y-auto px-3 overflow-hidden bg-[#f5f7fb]">
+      <div className="body flex-grow overflow-y-auto px-3 overflow-hidden bg-background">
         <PdfRender file={meetingDocument.url_report} />
       </div>
-      <div className="footer p-3 bg-[#f5f7fb] relative z-10">
+      <div className="footer p-3 bg-background relative z-10">
         <div
           className="absolute w-full h-[40%] top-[-40px] left-0 -z-10"
           style={{
-            background: "linear-gradient(to bottom, transparent,#f5f7fb)",
+            background:
+              "linear-gradient(to bottom, transparent,var(--background))",
           }}
         ></div>
         <div className="card p-3 rounded-xl bg-bgCard">
@@ -276,7 +277,7 @@ const BlockFiles = ({ id }: { id: string }) => {
                 max={duration || 0}
                 value={currentTime}
                 onChange={handleSeek}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                className="w-full h-2 bg-bgGray rounded-lg appearance-none cursor-pointer slider"
                 style={{
                   background: `linear-gradient(to right, #8b5cf6 0%, #8b5cf6 ${
                     (currentTime / duration) * 100
@@ -354,7 +355,7 @@ const BlockFiles = ({ id }: { id: string }) => {
               >
                 {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
               </Button>
-              <div className="w-16">
+              <div className="w-16 flex">
                 <input
                   type="range"
                   min="0"
@@ -362,13 +363,13 @@ const BlockFiles = ({ id }: { id: string }) => {
                   step="0.1"
                   value={isMuted ? 0 : volume}
                   onChange={handleVolumeChange}
-                  className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                  className="w-full h-1 var(--bgGray) rounded-lg appearance-none cursor-pointer slider"
                   style={{
                     background: `linear-gradient(to right, #8b5cf6 0%, #8b5cf6 ${
                       (isMuted ? 0 : volume) * 100
-                    }%, #e5e7eb ${
+                    }%, var(--bgGray) ${
                       (isMuted ? 0 : volume) * 100
-                    }%, #e5e7eb 100%)`,
+                    }%, var(--bgGray) 100%)`,
                   }}
                 />
               </div>

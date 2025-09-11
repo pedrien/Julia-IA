@@ -161,7 +161,7 @@ const NewRoom = () => {
         }}
         isDismissable={false}
       >
-        <ModalContent>
+        <ModalContent className="bg-bgCard">
           {() => (
             <>
               <ModalBody className="lg:px-2">
