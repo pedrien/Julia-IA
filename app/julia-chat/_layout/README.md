@@ -87,3 +87,4 @@ const exampleQuestions = [
 ### Styling personnalisé
 
 Les classes Tailwind peuvent être modifiées dans chaque composant selon vos besoins de design.
+

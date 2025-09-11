@@ -84,7 +84,7 @@ const BlockDash = () => {
                 onClick={() => openModal("ModalNewRoom")}
               >
                 <div className="content-icon gap-3 shadow-[0_5px_18px_#00000005] bg-bgCard transition-background duration-300 rounded-3xl flex items-center p-3">
-                  <div className="icon w-[50px] h-[50px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ff4949] text-white rounded-full flex justify-center items-center">
+                  <div className="icon w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ff4949] text-white rounded-full flex justify-center items-center">
                     <Mic size={24}></Mic>
                   </div>
                   <h4 className="text-colorTitle font-semibold text-sm">
@@ -96,7 +96,7 @@ const BlockDash = () => {
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
                 <div className="content-icon shadow-[0_5px_18px_#00000005]  bg-bgCard  transition-background duration-300 rounded-3xl flex items-center gap-3 p-3">
-                  <div className="icon  w-[50px] h-[50px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-primaryColor text-white rounded-full flex justify-center items-center">
+                  <div className="icon  w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-primaryColor text-white rounded-full flex justify-center items-center">
                     <ArrowUpToLine size={24}></ArrowUpToLine>
                   </div>
                   <h4 className="text-colorTitle font-semibold text-sm">
@@ -108,7 +108,7 @@ const BlockDash = () => {
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
                 <div className="content-icon shadow-[0_5px_18px_#00000005] p-3 gap-3 bg-bgCard  transition-background duration-300 rounded-2xl flex  items-center">
-                  <div className="icon w-[50px] h-[50px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#494cff] text-white rounded-full flex justify-center items-center">
+                  <div className="icon w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#494cff] text-white rounded-full flex justify-center items-center">
                     <Folder size={24}></Folder>
                   </div>
                   <h4 className="text-colorTitle font-semibold text-sm">
@@ -120,7 +120,7 @@ const BlockDash = () => {
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
                 <div className="content-icon shadow-[0_5px_18px_#00000005]  bg-bgCard  transition-background duration-300 rounded-3xl flex  items-center p-3 gap-3">
-                  <div className="icon w-[50px] h-[50px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#27c683] text-white rounded-full flex justify-center items-center">
+                  <div className="icon w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#27c683] text-white rounded-full flex justify-center items-center">
                     <Mic size={24}></Mic>
                   </div>
                   <h4 className="text-colorTitle font-semibold text-sm">
@@ -133,7 +133,7 @@ const BlockDash = () => {
             <div className="col-span-6 lg:col-span-1">
               <div className="card flex flex-col gap-2 cursor-pointer group">
                 <div className="content-icon shadow-[0_5px_18px_#00000005]  bg-bgCard rounded-3xl flex items-center gap-3 p-3">
-                  <div className="icon w-[50px] h-[50px] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ffa351] text-white rounded-full flex justify-center items-center">
+                  <div className="icon w-[50px] h-[50px] flex-none group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 bg-[#ffa351] text-white rounded-full flex justify-center items-center">
                     <ArrowUpToLine size={24}></ArrowUpToLine>
                   </div>
                   <h4 className="text-colorTitle font-semibold text-sm">

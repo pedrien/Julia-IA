@@ -254,7 +254,7 @@ const BlockFiles = ({ id }: { id: string }) => {
           </Button>
         </div>
       </div>
-      <div className="body flex-grow overflow-auto bg-[#f5f7fb]">
+      <div className="body flex-grow overflow-y-auto px-3 overflow-hidden bg-[#f5f7fb]">
         <PdfRender file={meetingDocument.url_report} />
       </div>
       <div className="footer p-3 bg-[#f5f7fb] relative z-10">
