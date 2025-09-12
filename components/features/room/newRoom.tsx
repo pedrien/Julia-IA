@@ -1,27 +1,28 @@
-import React, { useCallback, useRef, useTransition, useState } from "react";
+import ModalConfirmation from "@/components/common/modals/ModalConfirmation/ModalConfirmation";
+import { useModalContext } from "@/contexts/Modal/ModalContext";
+import { useCreateMeeting } from "@/hooks/features/meetings/hook.create-meeting";
+import { useGetListParticipants } from "@/hooks/features/participants/hook.list-participants";
+import { helpEnumParticipantType } from "@/types/enums/participants/enum.type-participants";
+import { createMeetingSchema } from "@/validators/meetings/validator.create-meeting";
+import { Participant } from "@/validators/participants/validator.list-participants";
 import type { SelectedItems } from "@heroui/react";
 import {
   Button,
+  Chip,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
-  Input,
   Select,
   SelectItem,
   Textarea,
-  Chip,
+  Avatar,
 } from "@heroui/react";
-import { useModalContext } from "@/contexts/Modal/ModalContext";
-import { X, Plus, RefreshCcw } from "lucide-react";
-import { useGetListParticipants } from "@/hooks/features/participants/hook.list-participants";
-import { Participant } from "@/validators/participants/validator.list-participants";
-import { helpEnumParticipantType } from "@/types/enums/participants/enum.type-participants";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createMeetingSchema } from "@/validators/meetings/validator.create-meeting";
-import { useCreateMeeting } from "@/hooks/features/meetings/hook.create-meeting";
-import ModalConfirmation from "@/components/common/modals/ModalConfirmation/ModalConfirmation";
+import { Mic, Plus, RefreshCcw, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useCallback, useRef, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 
 const NewRoom = () => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -160,7 +161,7 @@ const NewRoom = () => {
         }}
         isDismissable={false}
       >
-        <ModalContent>
+        <ModalContent className="bg-bgCard">
           {() => (
             <>
               <ModalBody className="lg:px-2">
@@ -177,10 +178,10 @@ const NewRoom = () => {
                         </p>
                         <form
                           ref={formRef}
-                          className="grid grid-cols-1 gap-3 lg:gap-4"
+                          className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4"
                           onSubmit={handleSubmit(onSubmit)}
                         >
-                          <div className="col-span-1">
+                          <div className="col-span-2">
                             <label
                               htmlFor="title"
                               className="text-[14px] text-colorTitle block mb-1"
@@ -205,7 +206,7 @@ const NewRoom = () => {
                               isInvalid={!!errors.title}
                             />
                           </div>
-                          <div className="col-span-1">
+                          <div className="col-span-2">
                             <label
                               htmlFor="description"
                               className="text-[14px] text-colorTitle block mb-1"
@@ -298,7 +299,7 @@ const NewRoom = () => {
                               isInvalid={!!errors.location}
                             />
                           </div>
-                          <div className="col-span-1">
+                          <div className="col-span-2">
                             <div className="flex items-center gap-2 mb-2">
                               <label
                                 htmlFor="participants"
@@ -392,7 +393,7 @@ const NewRoom = () => {
                               </p>
                             )}
                           </div>
-                          <div className="col-span-1">
+                          <div className="col-span-2">
                             <Button
                               className="w-full h-auto py-3 bg-primaryColor text-white mt-2"
                               isLoading={isSubmitting || isPendingMeeting}
@@ -406,7 +407,7 @@ const NewRoom = () => {
                       </div>
                     </div>
                     <div className="col-span-1">
-                      <div className="block-img rounded-xl relative overflow-hidden lg:min-h-[570px] h-full">
+                      <div className="block-img rounded-xl relative overflow-hidden lg:min-h-[570px] h-full z-10">
                         <Button
                           className="absolute z-10 p-0 min-w-0 h-[36px] w-[36px] rounded-full bg-bgCard top-2 right-2"
                           onPress={() => {
@@ -426,12 +427,47 @@ const NewRoom = () => {
                         </Button>
                         <video
                           src="/videos/2.mp4"
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover absolute top-0 left-0 -z-10"
                           playsInline
                           loop
                           autoPlay
                           muted
                         ></video>
+                        <div className="block-design h-full flex flex-col justify-center items-center">
+                          <div className="relative flex items-center justify-center">
+                            {/* Icône centrale */}
+                            <div className="relative z-10 icon-recording w-[140px] h-[140px] text-white bg-[#ffffff1f] border-[1px] border-white/10 backdrop-blur-[34px] rounded-full flex items-center justify-center">
+                            <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" className="absolute top-[-70px] z-10" />
+                            <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" className="absolute left-[-70px] z-10" />
+                            <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" className="absolute right-[-70px] z-10" />
+                              <Mic size={50}></Mic>
+                              <div
+                                className="absolute w-[140px] h-[140px] rounded-full border-2 border-white/20 animate-slow-pulse"
+                                style={{ animationDelay: "0s" }}
+                              ></div>
+                              <div
+                                className="absolute w-[180px] h-[180px] rounded-full border-2 border-white/15 animate-slow-pulse"
+                                style={{ animationDelay: ".5s" }}
+                              ></div>
+                              <div
+                                className="absolute w-[220px] h-[220px] rounded-full border-2 border-white/10 animate-slow-pulse"
+                                style={{ animationDelay: "1s" }}
+                              ></div>
+                              <div
+                                className="absolute w-[220px] h-[220px] rounded-full border-2 border-white/10 animate-slow-pulse"
+                                style={{ animationDelay: "1.5s" }}
+                              ></div>
+                            </div>
+                          </div>
+                          <h3 className="text-white font-semibold text-[24px] text-center mt-4">
+                            Enregistrement en cours
+                          </h3>
+                          <p className="text-white text-sm text-center px-20">
+                            {
+                              "Vous pouvez démarrer l'enregistrement en appuyant sur le bouton enregistrer."
+                            }
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>

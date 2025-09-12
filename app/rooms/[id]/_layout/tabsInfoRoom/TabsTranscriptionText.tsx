@@ -84,7 +84,7 @@ const TabsTranscriptionText = ({ id }: { id: string }) => {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col">
       <div className="flex items-center gap-2 mb-3 mt-2">
         <h3 className="text-colorTitle font-semibold">
           Transcription ({transcription.text.length} caractères)
@@ -92,7 +92,7 @@ const TabsTranscriptionText = ({ id }: { id: string }) => {
         <Tooltip
           content={copied ? "Copié !" : "Copier le texte"}
           classNames={{
-            content: ["bg-colorTitle border-0 text-white text-xs"],
+            content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
           }}
         >
           <Button

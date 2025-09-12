@@ -100,10 +100,10 @@ const BlockViewFolders = () => {
               </div>
             </div>
             <div
-              className="absolute -z-10 h-[24px] w-[60%] bg-[#f5f7fb] right-0 top-[-10px]"
+              className="absolute -z-10 h-[24px] w-[60%] bg-background right-0 top-[-10px]"
               style={{ transform: "skew(45deg)" }}
             ></div>
-            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_#f5f7fb] top-[14px]"></div>
+            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_var(--background)] top-[14px]"></div>
             <div className="content-card flex flex-col gap-2 items-center justify-center mt-2">
               <Folder size={44} className="text-colorMuted opacity-40"></Folder>
               <div className="w-full text-center">
@@ -130,10 +130,10 @@ const BlockViewFolders = () => {
               </div>
             </div>
             <div
-              className="absolute -z-10 h-[24px] w-[60%] bg-[#f5f7fb] right-0 top-[-10px]"
+              className="absolute -z-10 h-[24px] w-[60%] bg-background right-0 top-[-10px]"
               style={{ transform: "skew(45deg)" }}
             ></div>
-            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_#f5f7fb] top-[14px]"></div>
+            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_var(--background)] top-[14px]"></div>
             <div className="content-card flex flex-col gap-2 items-center justify-center mt-2">
               <Folder size={44} className="text-colorMuted opacity-40"></Folder>
               <div className="w-full text-center">
@@ -160,10 +160,10 @@ const BlockViewFolders = () => {
               </div>
             </div>
             <div
-              className="absolute -z-10 h-[24px] w-[60%] bg-[#f5f7fb] right-0 top-[-10px]"
+              className="absolute -z-10 h-[24px] w-[60%] bg-background right-0 top-[-10px]"
               style={{ transform: "skew(45deg)" }}
             ></div>
-            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_#f5f7fb] top-[14px]"></div>
+            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_var(--background)] top-[14px]"></div>
             <div className="content-card flex flex-col gap-2 items-center justify-center mt-2">
               <Folder size={44} className="text-colorMuted opacity-40"></Folder>
               <div className="w-full text-center">
@@ -190,10 +190,10 @@ const BlockViewFolders = () => {
               </div>
             </div>
             <div
-              className="absolute -z-10 h-[24px] w-[60%] bg-[#f5f7fb] right-0 top-[-10px]"
+              className="absolute -z-10 h-[24px] w-[60%] bg-background right-0 top-[-10px]"
               style={{ transform: "skew(45deg)" }}
             ></div>
-            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_#f5f7fb] top-[14px]"></div>
+            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_var(--background)] top-[14px]"></div>
             <div className="content-card flex flex-col gap-2 items-center justify-center mt-2">
               <Folder size={44} className="text-colorMuted opacity-40"></Folder>
               <div className="w-full text-center">
@@ -220,10 +220,10 @@ const BlockViewFolders = () => {
               </div>
             </div>
             <div
-              className="absolute -z-10 h-[24px] w-[60%] bg-[#f5f7fb] right-0 top-[-10px]"
+              className="absolute -z-10 h-[24px] w-[60%] bg-background right-0 top-[-10px]"
               style={{ transform: "skew(45deg)" }}
             ></div>
-            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_#f5f7fb] top-[14px]"></div>
+            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_var(--background)] top-[14px]"></div>
             <div className="content-card flex flex-col gap-2 items-center justify-center mt-2">
               <Folder size={44} className="text-colorMuted opacity-40"></Folder>
               <div className="w-full text-center">
@@ -250,10 +250,10 @@ const BlockViewFolders = () => {
               </div>
             </div>
             <div
-              className="absolute -z-10 h-[24px] w-[60%] bg-[#f5f7fb] right-0 top-[-10px]"
+              className="absolute -z-10 h-[24px] w-[60%] bg-background right-0 top-[-10px]"
               style={{ transform: "skew(45deg)" }}
             ></div>
-            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_#f5f7fb] top-[14px]"></div>
+            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_var(--background)] top-[14px]"></div>
             <div className="content-card flex flex-col gap-2 items-center justify-center mt-2">
               <Folder size={44} className="text-colorMuted opacity-40"></Folder>
               <div className="w-full text-center">
@@ -280,10 +280,10 @@ const BlockViewFolders = () => {
               </div>
             </div>
             <div
-              className="absolute -z-10 h-[24px] w-[60%] bg-[#f5f7fb] right-0 top-[-10px]"
+              className="absolute -z-10 h-[24px] w-[60%] bg-background right-0 top-[-10px]"
               style={{ transform: "skew(45deg)" }}
             ></div>
-            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_#f5f7fb] top-[14px]"></div>
+            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_var(--background)] top-[14px]"></div>
             <div className="content-card flex flex-col gap-2 items-center justify-center mt-2">
               <Folder size={44} className="text-colorMuted opacity-40"></Folder>
               <div className="w-full text-center">
@@ -310,10 +310,10 @@ const BlockViewFolders = () => {
               </div>
             </div>
             <div
-              className="absolute -z-10 h-[24px] w-[60%] bg-[#f5f7fb] right-0 top-[-10px]"
+              className="absolute -z-10 h-[24px] w-[60%] bg-background right-0 top-[-10px]"
               style={{ transform: "skew(45deg)" }}
             ></div>
-            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_#f5f7fb] top-[14px]"></div>
+            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_var(--background)] top-[14px]"></div>
             <div className="content-card flex flex-col gap-2 items-center justify-center mt-2">
               <Folder size={44} className="text-colorMuted opacity-40"></Folder>
               <div className="w-full text-center">
@@ -340,10 +340,10 @@ const BlockViewFolders = () => {
               </div>
             </div>
             <div
-              className="absolute -z-10 h-[24px] w-[60%] bg-[#f5f7fb] right-0 top-[-10px]"
+              className="absolute -z-10 h-[24px] w-[60%] bg-background right-0 top-[-10px]"
               style={{ transform: "skew(45deg)" }}
             ></div>
-            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_#f5f7fb] top-[14px]"></div>
+            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_var(--background)] top-[14px]"></div>
             <div className="content-card flex flex-col gap-2 items-center justify-center mt-2">
               <Folder size={44} className="text-colorMuted opacity-40"></Folder>
               <div className="w-full text-center">
@@ -370,10 +370,10 @@ const BlockViewFolders = () => {
               </div>
             </div>
             <div
-              className="absolute -z-10 h-[24px] w-[60%] bg-[#f5f7fb] right-0 top-[-10px]"
+              className="absolute -z-10 h-[24px] w-[60%] bg-background right-0 top-[-10px]"
               style={{ transform: "skew(45deg)" }}
             ></div>
-            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_#f5f7fb] top-[14px]"></div>
+            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_var(--background)] top-[14px]"></div>
             <div className="content-card flex flex-col gap-2 items-center justify-center mt-2">
               <Folder size={44} className="text-colorMuted opacity-40"></Folder>
               <div className="w-full text-center">
@@ -400,10 +400,10 @@ const BlockViewFolders = () => {
               </div>
             </div>
             <div
-              className="absolute -z-10 h-[24px] w-[60%] bg-[#f5f7fb] right-0 top-[-10px]"
+              className="absolute -z-10 h-[24px] w-[60%] bg-background right-0 top-[-10px]"
               style={{ transform: "skew(45deg)" }}
             ></div>
-            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_#f5f7fb] top-[14px]"></div>
+            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_var(--background)] top-[14px]"></div>
             <div className="content-card flex flex-col gap-2 items-center justify-center mt-2">
               <Folder size={44} className="text-colorMuted opacity-40"></Folder>
               <div className="w-full text-center">
@@ -430,10 +430,10 @@ const BlockViewFolders = () => {
               </div>
             </div>
             <div
-              className="absolute -z-10 h-[24px] w-[60%] bg-[#f5f7fb] right-0 top-[-10px]"
+              className="absolute -z-10 h-[24px] w-[60%] bg-background right-0 top-[-10px]"
               style={{ transform: "skew(45deg)" }}
             ></div>
-            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_#f5f7fb] top-[14px]"></div>
+            <div className="bubble w-[24px] h-[24px] absolute bg-transparent rounded-full right-0 shadow-[10px_-10px_0_var(--background)] top-[14px]"></div>
             <div className="content-card flex flex-col gap-2 items-center justify-center mt-2">
               <Folder size={44} className="text-colorMuted opacity-40"></Folder>
               <div className="w-full text-center">

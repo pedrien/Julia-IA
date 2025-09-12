@@ -1,8 +1,9 @@
+import HeroUIProvider from "@/providers/HeroUIProvider";
+import ProviderQuery from "@/providers/QueryProvider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
 import { Public_Sans } from "next/font/google";
 import "./globals.css";
-import HeroUIProvider from "@/providers/HeroUIProvider";
-import ProviderQuery from "@/providers/QueryProvider";
 
 const publicSans = Public_Sans({
   subsets: ["latin"],
@@ -20,11 +21,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={publicSans.className}>
-        <ProviderQuery>
-          <HeroUIProvider>{children}</HeroUIProvider>
-        </ProviderQuery>
+        <ThemeProvider>
+          <ProviderQuery>
+            <HeroUIProvider>{children}</HeroUIProvider>
+          </ProviderQuery>
+        </ThemeProvider>
       </body>
     </html>
   );

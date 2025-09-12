@@ -8,7 +8,7 @@ import { useModalContext } from "@/contexts/Modal/ModalContext";
 const TabsInfoRoom = () => {
   const { openModal } = useModalContext();
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-bgCard">
       <div className="header p-3 border-b border-colorBorder">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-1">
@@ -44,7 +44,7 @@ const TabsInfoRoom = () => {
             <div className="flex items-center gap-2 mb-3 mt-2">
               <h3 className="text-colorTitle font-semibold">Résumé de Julia</h3>
             </div>
-            <div className="card p-3 rounded-xl bg-[#f5f7fb] flex flex-col gap-2">
+            <div className="card p-3 rounded-xl bg-bgGray flex flex-col gap-2">
               <p className="text-colorTitle text-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem iusto minima quis dicta tempore unde eligendi non iste! Excepturi illum totam est consequuntur, laborum beatae officia quo quod autem laboriosam!</p>
               <p className="text-colorTitle text-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem iusto minima quis dicta tempore unde eligendi non iste! Excepturi illum totam est consequuntur, laborum beatae officia quo quod autem laboriosam!</p>
               <p className="text-colorTitle text-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem iusto minima quis dicta tempore unde eligendi non iste! Excepturi illum totam est consequuntur, laborum beatae officia quo quod autem laboriosam!</p>
@@ -55,7 +55,7 @@ const TabsInfoRoom = () => {
               <h3 className="text-colorTitle font-semibold">Activités</h3>
             </div>
             <div className="flex flex-col gap-3">
-              <div className="card p-3 rounded-xl bg-[#f5f7fb]">
+              <div className="card p-3 rounded-xl bg-bgGray">
                 <div className="flex items-center gap-2 mb-2">
                   <Avatar
                     alt={
@@ -81,7 +81,7 @@ const TabsInfoRoom = () => {
                   30/08/2025 à 15:50
                 </div>
               </div>
-              <div className="card p-3 rounded-xl bg-[#f5f7fb]">
+              <div className="card p-3 rounded-xl bg-bgGray">
                 <div className="flex items-center gap-2 mb-2">
                   <Avatar
                     alt={
@@ -107,7 +107,7 @@ const TabsInfoRoom = () => {
                   30/08/2025 à 15:50
                 </div>
               </div>
-              <div className="card p-3 rounded-xl bg-[#f5f7fb]">
+              <div className="card p-3 rounded-xl bg-bgGray">
                 <div className="flex items-center gap-2 mb-2">
                   <Avatar
                     alt={
@@ -140,7 +140,7 @@ const TabsInfoRoom = () => {
               <h3 className="text-colorTitle font-semibold">Avis</h3>
             </div>
             <div className="flex flex-col gap-3">
-              <div className="card p-3 rounded-xl bg-[#f5f7fb]">
+              <div className="card p-3 rounded-xl bg-bgGray">
                 <div className="flex items-center gap-2 mb-2">
                   <Avatar
                     alt={
@@ -166,7 +166,7 @@ const TabsInfoRoom = () => {
                   30/08/2025 à 15:50
                 </div>
               </div>
-              <div className="card p-3 rounded-xl bg-[#f5f7fb]">
+              <div className="card p-3 rounded-xl bg-bgGray">
                 <div className="flex items-center gap-2 mb-2">
                   <Avatar
                     alt={
@@ -192,7 +192,7 @@ const TabsInfoRoom = () => {
                   30/08/2025 à 15:50
                 </div>
               </div>
-              <div className="card p-3 rounded-xl bg-[#f5f7fb]">
+              <div className="card p-3 rounded-xl bg-bgGray">
                 <div className="flex items-center gap-2 mb-2">
                   <Avatar
                     alt={

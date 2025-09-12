@@ -32,7 +32,7 @@ const FloatingBot = () => {
           isOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-80 opacity-0 pointer-events-none"
         }`}
         style={{
-          background: "linear-gradient(to bottom,#782efa36,#fff)",
+          background: "linear-gradient(to bottom,#782efa36,var(--bgCard))",
           transformOrigin: "Bottom",
           transition: ".2s cubic-bezier(.68,-0.55,.27,1.55)"
         }}
@@ -53,7 +53,15 @@ const FloatingBot = () => {
               <Image
                 src={"/images/logos/logoJulia.png"}
                 alt="logo de julia"
-                className="w-[40px!important]"
+                className="w-[40px!important] dark:hidden"
+                width={0}
+                height={0}
+                layout="responsive"
+              />
+              <Image
+                src={"/images/logos/logoJuliaWhite.png"}
+                alt="logo de julia"
+                className="w-[40px!important] hidden dark:block"
                 width={0}
                 height={0}
                 layout="responsive"
@@ -69,40 +77,40 @@ const FloatingBot = () => {
             </div>
           </div>
         </div>
-        <div className="body flex flex-col flex-grow p-[18px]">
+        <div className="body flex flex-col flex-grow p-[18px] overflow-y-auto">
           <h2 className="lg:text-[32px] font-semibold">Bienvenue 👋</h2>
           <p className="text-colorTitle">
             Je suis Julia, toujours prête à vous assister.
           </p>
           <div className="list-prompt flex flex-col gap-2 mt-6">
-            <Button className="w-full bg-bgCard text-colorTitle shadow-[0_5px_18px_rgba(0,0,0,.05)]">
+            <Button className="w-full bg-bgCard dark:bg-bgGray text-colorTitle shadow-[0_5px_18px_rgba(0,0,0,.05)] dark:shadown-none">
               Voulez-vous importer vos premiers documents ?
             </Button>
-            <Button className="w-full bg-bgCard text-colorTitle shadow-[0_5px_18px_rgba(0,0,0,.05)]">
+            <Button className="w-full bg-bgCard dark:bg-bgGray text-colorTitle shadow-[0_5px_18px_rgba(0,0,0,.05)] dark:shadown-none">
               Enregistrez une réunion dès maintenant
             </Button>
-            <Button className="w-full bg-bgCard text-colorTitle shadow-[0_5px_18px_rgba(0,0,0,.05)]">
+            <Button className="w-full bg-bgCard dark:bg-bgGray text-colorTitle shadow-[0_5px_18px_rgba(0,0,0,.05)] dark:shadown-none">
               Générer un compte rendu en PDF
             </Button>
-            <Button className="w-full bg-bgCard text-colorTitle shadow-[0_5px_18px_rgba(0,0,0,.05)]">
+            <Button className="w-full bg-bgCard dark:bg-bgGray text-colorTitle shadow-[0_5px_18px_rgba(0,0,0,.05)] dark:shadown-none">
               Consulter vos documents récents
             </Button>
-            <Button className="w-full bg-bgCard text-colorTitle shadow-[0_5px_18px_rgba(0,0,0,.05)]">
+            <Button className="w-full bg-bgCard dark:bg-bgGray text-colorTitle shadow-[0_5px_18px_rgba(0,0,0,.05)] dark:shadown-none">
               Créer un nouveau dossier pour organiser vos fichiers
             </Button>
-            <Button className="w-full bg-bgCard text-colorTitle shadow-[0_5px_18px_rgba(0,0,0,.05)]">
+            <Button className="w-full bg-bgCard dark:bg-bgGray text-colorTitle shadow-[0_5px_18px_rgba(0,0,0,.05)] dark:shadown-none">
               Rechercher un document ou une réunion
             </Button>
           </div>
         </div>
-        <div className="footer p-[18px] py-3 overflow-y-auto">
+        <div className="footer p-[18px] py-3 overflow-y-auto flex-none">
           <Textarea
             placeholder="Demandez à Julia"
             variant="bordered"
             minRows={1}
             classNames={{
               inputWrapper:
-                "bg-transparent border-colorBorder border-[1px] shadow-none ",
+                "bg-bgGray border-colorBorder border-0 shadow-none ",
               input:
                 "text-colorTitle placeholder:text-colorMuted placeholder:opacity-70",
             }}

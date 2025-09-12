@@ -1,6 +1,6 @@
 import { Avatar, Skeleton } from "@heroui/react";
-import { LogOut, MessageCirclePlus, PanelLeft } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { LogOut, MessageCirclePlus, PanelLeft,  MessagesSquare  } from "lucide-react";
+import { signOut, useSession} from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import ItemDiscussion from "./itemDiscussion";
@@ -32,9 +32,17 @@ const Sidebar = ({
         <div className="flex items-center justify-between">
           <Link href={"/"}>
             <Image
-              src={"/images/logos/iconColor.png"}
+              src={"/images/logos/logoJulia.png"}
               alt="logo de julia"
-              className="w-[26px!important]"
+              className="w-[70px!important] dark:hidden"
+              width={0}
+              height={0}
+              layout="responsive"
+            />
+            <Image
+              src={"/images/logos/logoJuliaWhite.png"}
+              alt="logo de julia"
+              className="w-[70px!important] hidden dark:block"
               width={0}
               height={0}
               layout="responsive"
@@ -70,7 +78,10 @@ const Sidebar = ({
         <h2 className="text-colorMuted uppercase text-xs mb-2">Discussions</h2>
         <div className="flex flex-col space-y-1">
           {discussions.length === 0 ? (
-            <div className="text-center py-4">
+            <div className="text-center py-54">
+              <div className="flex justify-center text-colorTitle mb-2">
+                <MessagesSquare size={24} />
+              </div>
               <p className="text-colorMuted text-xs">Aucune discussion</p>
             </div>
           ) : (

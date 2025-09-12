@@ -21,8 +21,8 @@ const ItemDiscussion = ({
 }: ItemDiscussionProps) => {
   return (
     <div
-      className={`flex items-center card p-2 rounded-xl cursor-pointer gap-2 hover:bg-[#f5f7fb] relative group transition-all duration-200 ${
-        isActive ? "bg-[#f5f7fb]" : ""
+      className={`flex items-center card p-2 rounded-xl cursor-pointer gap-2 hover:bg-bgGray relative group transition-all duration-200 ${
+        isActive ? "bg-bgGray" : ""
       }`}
       onClick={onClick}
     >
@@ -54,7 +54,7 @@ const ItemDiscussion = ({
       </div>
       <div className="absolute right-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
         <Dropdown classNames={{
-          content: "min-w-[150px] shadow-[0_5px_18px_#00000005]"
+          content: "min-w-[150px] shadow-[0_5px_18px_#00000005] bg-bgCard"
         }}>
           <DropdownTrigger>
           <Button

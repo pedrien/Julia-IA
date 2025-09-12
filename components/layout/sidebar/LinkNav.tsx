@@ -14,17 +14,17 @@ const LinkNav = ({ icon, title, href }: LinkNavProps) => {
   return (
     <Link
       href={href}
-      className={`link flex text-sm py-2 px-2 rounded-lg relative font-medium items-center gap-2 ${
+      className={`link duration-300 flex text-sm py-2 px-2 rounded-lg relative font-medium items-center group gap-2 ${
         isActive
-          ? ""
-          : "text-colorTitle"
+          ? "dark:text-colorTitle"
+          : "text-colorTitle dark:text-colorMuted dark:hover:text-colorTitle"
       }`}
     >
       <div
-        className={`icon ${
+        className={`icon duration-300 ${
           isActive
             ? "text-primaryColor"
-            : "text-colorTitle"
+            : "text-colorTitle dark:text-colorMuted dark:group-hover:text-colorTitle"
         }`}
       >
         {icon}

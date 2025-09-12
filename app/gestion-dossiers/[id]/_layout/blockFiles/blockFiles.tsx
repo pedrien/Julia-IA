@@ -8,7 +8,7 @@ const BlockFiles = () => {
   const { openModal } = useModalContext();
   return (
     <div className="flex flex-col h-screen">
-      <div className="header p-3 flex items-center relative z-10 bg-[#f5f7fb]">
+      <div className="header p-3 flex items-center relative z-10 bg-background">
         <div className="block-btns p-1 bg-bgCard rounded-xl m-auto flex items-center gap-1">
           <Tooltip
             content={"Signer le document"}
@@ -63,7 +63,7 @@ const BlockFiles = () => {
           
         </div>
       </div>
-      <div className="body flex-grow overflow-y-auto overflow-hidden bg-[#f5f7fb] px-3">
+      <div className="body flex-grow overflow-y-auto overflow-hidden bg-background px-3">
         <PdfRender file={"/files/1.pdf"} />
       </div>
     </div>

@@ -84,7 +84,7 @@ const Sidebar = () => {
       <div className="footer px-5 p-4">
         <div className="flex gap-2">
           <Button
-            className="bg-[#f5f7fb] text-colorTitle w-1/2"
+            className="bg-bgGray text-colorTitle w-1/2"
             as={Link}
             href="/gestion-dossiers/"
           >

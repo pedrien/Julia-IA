@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import { Button, Input, Spinner } from "@heroui/react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import "./styles/styles.css";
-import { Input, Spinner, Button } from "@heroui/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface PdfRenderProps {
@@ -13,27 +13,52 @@ interface PdfRenderProps {
 }
 
 export default function PdfRender({ file }: PdfRenderProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [numPages, setNumPages] = useState<number | null>(null);
-  const [pageWidth, setPageWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth * 0.8 : 800
-  );
-  const [pageHeight, setPageHeight] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1); // État pour la page actuelle
-  const [inputValue, setInputValue] = useState<string>("1"); // État pour la valeur de l'Input
+  const [containerWidth, setContainerWidth] = useState<number>(800);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [inputValue, setInputValue] = useState<string>("1");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const pageRefs = useRef<(HTMLDivElement | null)[]>([]); // Références pour chaque page
+  const pageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    const handleResize = () => {
-      const newWidth = window.innerWidth * 0.8;
-      setPageWidth(newWidth > 800 ? 800 : newWidth);
+    let frame: number | null = null;
+    let timeoutId: NodeJS.Timeout | null = null;
+    let lastWidth = 0;
+
+    const measure = () => {
+      if (!containerRef.current) return;
+      const width = containerRef.current.getBoundingClientRect().width;
+      const newWidth = Math.min(width, 800);
+
+      // Éviter les mises à jour inutiles si la largeur n'a pas vraiment changé
+      if (Math.abs(newWidth - lastWidth) > 10) {
+        lastWidth = newWidth;
+        setContainerWidth(newWidth);
+      }
     };
 
-    window.addEventListener("resize", handleResize);
-    handleResize(); // Initial call to set the correct width
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    const debouncedMeasure = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        if (frame) cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(measure);
+      }, 150); // Debounce de 150ms pour plus de stabilité
+    };
+
+    const onResize = () => {
+      debouncedMeasure();
+    };
+
+    window.addEventListener("resize", onResize);
+    measure(); // Mesure initiale
+    return () => {
+      window.removeEventListener("resize", onResize);
+      if (frame) cancelAnimationFrame(frame);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, []); // Pas de dépendance pour éviter les boucles
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
@@ -77,8 +102,7 @@ export default function PdfRender({ file }: PdfRenderProps) {
     if (event.key === "Enter") {
       const page = parseInt(inputValue, 10);
       if (!isNaN(page) && page >= 1 && page <= (numPages || 1)) {
-        setCurrentPage(page); // Met à jour la page actuelle
-        pageRefs.current[page - 1]?.scrollIntoView({ behavior: "smooth" }); // Fait défiler jusqu'à la page spécifiée
+        goToPage(page);
       } else {
         // Réinitialise l'input à la page actuelle si la saisie est invalide
         setInputValue(currentPage.toString());
@@ -86,21 +110,22 @@ export default function PdfRender({ file }: PdfRenderProps) {
     }
   };
 
-  const goToPreviousPage = () => {
-    if (currentPage > 1) {
-      const newPage = currentPage - 1;
-      setCurrentPage(newPage);
-      pageRefs.current[newPage - 1]?.scrollIntoView({ behavior: "smooth" });
+  const goToPage = (page: number) => {
+    if (!pageRefs.current) return;
+    const p = Math.max(1, Math.min(page, numPages || 1));
+    const el = pageRefs.current[p - 1];
+    if (el && el.scrollIntoView) {
+      el.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
     }
+    setCurrentPage(p);
   };
 
-  const goToNextPage = () => {
-    if (currentPage < (numPages || 1)) {
-      const newPage = currentPage + 1;
-      setCurrentPage(newPage);
-      pageRefs.current[newPage - 1]?.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const goToPreviousPage = () => goToPage(currentPage - 1);
+  const goToNextPage = () => goToPage(currentPage + 1);
 
   const handleScroll = () => {
     if (pageRefs.current.length > 0) {
@@ -207,7 +232,10 @@ export default function PdfRender({ file }: PdfRenderProps) {
   }
 
   return (
-    <div className="pdf-container h-full relative lg:pb-[50px]">
+    <div
+      className="pdf-container h-full relative lg:pb-[50px]"
+      ref={containerRef}
+    >
       <Document
         file={file}
         onLoadSuccess={onDocumentLoadSuccess}
@@ -223,10 +251,9 @@ export default function PdfRender({ file }: PdfRenderProps) {
             key={`page_${index + 1}`}
             className="pdf-page"
             ref={(el) => {
-              pageRefs.current[index] = el; // Associe chaque page à une référence
+              pageRefs.current[index] = el;
             }}
             style={{
-              maxHeight: pageHeight ? `${pageHeight}px` : "none",
               overflow: "hidden",
               margin: "0 auto 20px auto",
               boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
@@ -235,8 +262,7 @@ export default function PdfRender({ file }: PdfRenderProps) {
           >
             <Page
               pageNumber={index + 1}
-              width={pageWidth}
-              height={pageHeight || undefined}
+              width={containerWidth}
               renderTextLayer={true}
               renderAnnotationLayer={true}
             />
@@ -244,8 +270,8 @@ export default function PdfRender({ file }: PdfRenderProps) {
         ))}
       </Document>
       {numPages && numPages > 0 && (
-        <div className="block-nav-page sticky w-auto min-w-[280px] z-50 mt-4 bottom-4 shadow-lg bg-bgCard p-4 rounded-2xl left-1/2 transform -translate-x-1/2 border border-gray-200">
-          <div className="content-nav flex justify-center items-center gap-4">
+        <div className="block-nav-page sticky w-auto min-w-[240px] z-50 mt-4 bottom-4 shadow-lg bg-bgCard p-2 rounded-2xl left-1/2 transform -translate-x-1/2">
+          <div className="content-nav flex items-center gap-4">
             <Button
               isIconOnly
               size="md"
@@ -258,7 +284,7 @@ export default function PdfRender({ file }: PdfRenderProps) {
             </Button>
 
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-colorMuted">Page</span>
+              <span className="text-xs font-medium text-colorMuted">Page</span>
               <Input
                 type="text"
                 id="page-input"
@@ -273,9 +299,9 @@ export default function PdfRender({ file }: PdfRenderProps) {
                   input: "text-colorTitle text-center font-medium text-sm",
                 }}
               />
-              <span className="text-sm font-medium text-colorMuted">
-                sur {numPages}
-              </span>
+              <div className="text-xs font-medium text-colorMuted flex gap-1">
+                <span>/</span><span>{numPages}</span>
+              </div>
             </div>
 
             <Button
