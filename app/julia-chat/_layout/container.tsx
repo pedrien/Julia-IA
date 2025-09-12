@@ -90,14 +90,14 @@ const Content = () => {
   };
 
   return (
-    <>
+    <div className="bg-bgCard h-screen py-2">
       <Sidebar
         onNewDiscussion={handleNewDiscussion}
         discussions={discussions}
         currentDiscussionId={currentDiscussionId}
         onSelectDiscussion={handleSelectDiscussion}
       />
-      <div className="flex flex-col h-screen bg-[#f5f7fb] lg:pl-[250px]">
+      <div className="flex flex-col h-[calc(100vh-16px)] bg-background lg:ml-[250px] rounded-tl-3xl rounded-bl-3xl">
         <div className="body flex-grow overflow-y-auto">
           <div className="max-w-[840px] w-full h-full flex flex-col mx-auto px-2 lg:px-0 lg:py-10 py-5">
             <div className="flex-grow lg:px-3">
@@ -127,7 +127,7 @@ const Content = () => {
                           <button
                             key={index}
                             onClick={() => handleSendMessage(question)}
-                            className="px-3 py-2 text-xs text-colorTitle bg-bgCard rounded-lg hover:text-white hover:bg-primaryColor hover:border-primaryColor transition-all duration-300 cursor-pointer"
+                            className="px-3 py-2 text-xs text-colorTitle bg-bgCard dark:bg-bgGray rounded-lg hover:text-white hover:bg-primaryColor dark:hover:bg-primaryColor transition-all duration-300 cursor-pointer"
                           >
                             {question}
                           </button>
@@ -147,7 +147,7 @@ const Content = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 const Container = () => {

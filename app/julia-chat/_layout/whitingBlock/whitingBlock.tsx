@@ -25,7 +25,7 @@ const WhitingBlock = ({ onSendMessage, isTyping }: WhitingBlockProps) => {
   };
 
   return (
-    <div className="flex items-start sticky bottom-5 bg-bgCard p-5 shadow-[0_5px_18px_#00000005] rounded-3xl">
+    <div className="flex items-start sticky bottom-5 bg-bgCard dark:bg-bgGray p-5 shadow-[0_5px_18px_#00000005] rounded-3xl">
       <Textarea
         placeholder="Demandez à Julia"
         variant="bordered"
