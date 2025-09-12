@@ -42,28 +42,28 @@ export const GET = async (
 
     const { id } = await params;
 
-    // const requestData = await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `meetings/${meetingId}/documents`,
-    //   undefined,
-    //   "GET"
-    // );
+    const requestData = await callApiWithToken(
+      tokenOrErrorResponse,
+      `meetings/${id}/media`,
+      undefined,
+      "GET"
+    );
 
-    // if (
-    //   !requestData ||
-    //   typeof requestData !== "object" ||
-    //   !("data" in requestData) ||
-    //   !requestData.data
-    // ) {
-    //   return NextResponse.json(
-    //     { message: "No documents found for this meeting." },
-    //     { status: 400 }
-    //   );
-    // }
-    const requestData = fakeMeetingDocument;
-
+    if (
+      !requestData ||
+      typeof requestData !== "object" ||
+      !("data" in requestData) ||
+      !requestData.data
+    ) {
+      return NextResponse.json(
+        { message: "No documents found for this meeting." },
+        { status: 400 }
+      );
+    }
+    //const requestData = fakeMeetingDocument;
+    console.log(requestData.data);
     const data: MeetingDocument = validateApiResponse(
-      requestData,
+      requestData.data,
       meetingDocumentSchema
     );
 

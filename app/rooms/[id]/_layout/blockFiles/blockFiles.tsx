@@ -106,7 +106,7 @@ const BlockFiles = ({ id }: { id: string }) => {
   const downloadAudio = () => {
     if (meetingDocument?.url_recording) {
       const link = document.createElement("a");
-      link.href = meetingDocument.url_recording;
+      link.href = "http://192.168.1.68:8000/" + meetingDocument.url_recording;
       link.download = `meeting-${id}-recording.mp3`;
       document.body.appendChild(link);
       link.click();
@@ -117,7 +117,7 @@ const BlockFiles = ({ id }: { id: string }) => {
   const downloadReport = () => {
     if (meetingDocument?.url_report) {
       const link = document.createElement("a");
-      link.href = meetingDocument.url_report;
+      link.href = "http://192.168.1.68:8000" + meetingDocument.url_report;
       link.download = `meeting-${id}-report.pdf`;
       document.body.appendChild(link);
       link.click();
@@ -197,7 +197,7 @@ const BlockFiles = ({ id }: { id: string }) => {
       {/* Élément audio caché */}
       <audio
         ref={audioRef}
-        src={meetingDocument?.url_recording}
+        src={"http://192.168.1.68:8000/" + meetingDocument?.url_recording}
         preload="metadata"
       />
 
@@ -255,7 +255,11 @@ const BlockFiles = ({ id }: { id: string }) => {
         </div>
       </div>
       <div className="body flex-grow overflow-auto bg-[#f5f7fb]">
-        <PdfRender file={meetingDocument.url_report} />
+        <PdfRender
+          file={
+            "https://nvhpp3eiwo.sharedwithexpose.com/storage/reports/zot3wza4AV-20250911_192055.pdf"
+          }
+        />
       </div>
       <div className="footer p-3 bg-[#f5f7fb] relative z-10">
         <div

@@ -42,28 +42,30 @@ export const GET = async (
 
     const { id } = await params;
 
-    // const requestData = await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `meetings/${meetingId}/detail`,
-    //   undefined,
-    //   "GET"
-    // );
+    const requestData = await callApiWithToken(
+      tokenOrErrorResponse,
+      `meetings/${id}/show`,
+      undefined,
+      "GET"
+    );
 
-    // if (
-    //   !requestData ||
-    //   typeof requestData !== "object" ||
-    //   !("data" in requestData) ||
-    //   !requestData.data
-    // ) {
-    //   return NextResponse.json(
-    //     { message: "No meeting found with this ID." },
-    //     { status: 400 }
-    //   );
-    // }
-    const requestData = fakeMeetingDetail;
+    console.log(requestData);
+
+    if (
+      !requestData ||
+      typeof requestData !== "object" ||
+      !("data" in requestData) ||
+      !requestData.data
+    ) {
+      return NextResponse.json(
+        { message: "No meeting found with this ID." },
+        { status: 400 }
+      );
+    }
+    //const requestData = fakeMeetingDetail;
 
     const data: DetailMeeting = validateApiResponse(
-      requestData,
+      requestData.data,
       detailMeetingSchema
     );
 
