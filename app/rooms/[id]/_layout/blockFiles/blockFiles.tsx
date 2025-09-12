@@ -47,7 +47,8 @@ const BlockFiles = ({ id }: { id: string }) => {
         "data" in data.data
       ) {
         console.log("PDF fetched successfully via hook:", data.data);
-        setPdfData(data.data);
+        const dataBuffer = data.data as unknown as ArrayBuffer;
+        setPdfData(dataBuffer);
       }
     },
   });
