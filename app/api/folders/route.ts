@@ -2,49 +2,42 @@ import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
-import { fakeMeetingDocument } from "@/mocks/meetings/fake.meeting-details";
+import { fakeFoldersList } from "@/mocks/folders/fake.folders";
 import {
-  MeetingDocument,
-  meetingDocumentSchema,
-} from "@/validators/meetings/validator.detail-meetings";
+  ListFolderSchema,
+  listFolderSchema,
+} from "@/validators/folders/validator.list-folder";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * @api {get} /api/meetings/:id/documents Get meeting documents
- * @apiName GetMeetingDocuments
- * @apiGroup Meetings
+ * @api {get} /api/folders Get list of folders
+ * @apiName GetFolders
+ * @apiGroup Folders
  * @apiDescription
- * Retrieves the documents (recording and report) for a specific meeting.
+ * Retrieves a list of folders.
  *
- * @apiParam {String} id Meeting ID
- *
- * @apiHeader {String} Authorization Bearer access token
+ * @apiHeader {String} Authorization Bearer access token (if not authenticated via session)
  *
  * @apiSuccess {String} message Success message
- * @apiSuccess {Object} data Meeting documents with URLs
+ * @apiSuccess {Object[]} data List of folders
  *
- * @apiError (400) {String} message Parameter validation error or no documents found
+ * @apiError (400) {String} message Parameter validation error or no folders found
  * @apiError (401) {String} message Not authenticated
  * @apiError (500) {String} message Internal server error
  *
  * @example {curl} Example usage:
- *     curl -X GET "https://<your-domain>/api/meetings/1/documents" -H "Authorization: Bearer <token>"
+ *     curl -X GET "https://<your-domain>/api/folders" -H "Authorization: Bearer <token>"
  */
-export const GET = async (
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) => {
+export const GET = async (req: NextRequest) => {
   try {
     const tokenOrErrorResponse = verifyBearerToken(req);
     if (tokenOrErrorResponse instanceof NextResponse) {
       return tokenOrErrorResponse;
     }
 
-    const { id } = await params;
-
     const requestData = await callApiWithToken(
       tokenOrErrorResponse,
-      `meetings/${id}/media`,
+      `folders`,
       undefined,
       "GET"
     );
@@ -56,20 +49,20 @@ export const GET = async (
       !requestData.data
     ) {
       return NextResponse.json(
-        { message: "No documents found for this meeting." },
+        { message: "No folders found." },
         { status: 400 }
       );
     }
-    //const requestData = fakeMeetingDocument;
-    console.log(requestData.data);
-    const data: MeetingDocument = validateApiResponse(
-      requestData.data,
-      meetingDocumentSchema
+    //const requestData = fakeFoldersList;
+
+    const data: ListFolderSchema = validateApiResponse(
+      requestData,
+      listFolderSchema
     );
 
     return NextResponse.json(
       {
-        message: "Meeting documents retrieved successfully.",
+        message: "Folders list retrieved successfully.",
         data: data,
       },
       { status: 200 }

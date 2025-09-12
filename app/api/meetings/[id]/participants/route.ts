@@ -48,20 +48,20 @@ export const GET = async (
       undefined,
       "GET"
     );
-
-    if (
-      !requestData ||
-      typeof requestData !== "object" ||
-      !("data" in requestData) ||
-      !requestData.data
-    ) {
-      return NextResponse.json(
-        { message: "No participants found for this meeting." },
-        { status: 400 }
-      );
-    }
+    console.log(requestData);
+    // if (
+    //   !requestData ||
+    //   typeof requestData !== "object" ||
+    //   !("data" in requestData) ||
+    //   !requestData.data
+    // ) {
+    //   return NextResponse.json(
+    //     { message: "No participants found for this meeting." },
+    //     { status: 400 }
+    //   );
+    // }
     // const requestData = fakeMeetingParticipants;
-
+    // console.log(requestData.data);
     const data: MeetingParticipantList = validateApiResponse(
       requestData,
       meetingParticipantListSchema

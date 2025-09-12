@@ -1,5 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Button } from "@heroui/react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useTransition,
+  useCallback,
+} from "react";
+import { Button, Spinner } from "@heroui/react";
 import {
   Play,
   Pause,
@@ -15,9 +21,13 @@ import { useModalContext } from "@/contexts/Modal/ModalContext";
 import { useGetMeetingDocuments } from "@/hooks/features/meetings/hook.get-meeting-documents";
 import { AnimatedDataLoadError } from "@/components/common/animated-error-states/animated-error-states";
 import { UiLoadingData } from "@/components/common/UiLoadingData/UiLoadingData";
+import { useFetchPdf } from "@/hooks/features/meetings/hook.fetch-pdf";
+import PdfView from "@/components/common/PdfView/PdfView";
 
 const BlockFiles = ({ id }: { id: string }) => {
   const { openModal } = useModalContext();
+  const [pdfData, setPdfData] = useState<ArrayBuffer | null>(null);
+  const [isPending, startTransition] = useTransition();
   const {
     data: meetingDocument,
     isLoading,
@@ -25,6 +35,22 @@ const BlockFiles = ({ id }: { id: string }) => {
     refetch,
     isRefetching,
   } = useGetMeetingDocuments(id);
+  const { mutate: fetchPdf, error } = useFetchPdf({
+    onSuccessCallback: (data) => {
+      console.log("PDF fetched successfully via hook:", data);
+      if (
+        data &&
+        typeof data === "object" &&
+        "data" in data &&
+        data.data &&
+        typeof data.data === "object" &&
+        "data" in data.data
+      ) {
+        console.log("PDF fetched successfully via hook:", data.data);
+        setPdfData(data.data);
+      }
+    },
+  });
 
   // États pour le lecteur audio
   const [isPlaying, setIsPlaying] = useState(false);
@@ -106,7 +132,7 @@ const BlockFiles = ({ id }: { id: string }) => {
   const downloadAudio = () => {
     if (meetingDocument?.url_recording) {
       const link = document.createElement("a");
-      link.href = meetingDocument.url_recording;
+      link.href = "http://192.168.1.68:8000/" + meetingDocument.url_recording;
       link.download = `meeting-${id}-recording.mp3`;
       document.body.appendChild(link);
       link.click();
@@ -117,13 +143,22 @@ const BlockFiles = ({ id }: { id: string }) => {
   const downloadReport = () => {
     if (meetingDocument?.url_report) {
       const link = document.createElement("a");
-      link.href = meetingDocument.url_report;
+      link.href = "http://192.168.1.68:8000" + meetingDocument.url_report;
       link.download = `meeting-${id}-report.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
   };
+  const handleFetchPdf = useCallback(() => {
+    if (meetingDocument?.url_report) {
+      startTransition(() => {
+        fetchPdf({
+          url: "http://192.168.1.68:8000/" + meetingDocument.url_report,
+        });
+      });
+    }
+  }, [meetingDocument?.url_report, fetchPdf]);
 
   // Effets pour gérer les événements audio
   useEffect(() => {
@@ -167,6 +202,12 @@ const BlockFiles = ({ id }: { id: string }) => {
     };
   }, [meetingDocument?.url_recording]);
 
+  useEffect(() => {
+    if (meetingDocument && !isLoading && !isError) {
+      handleFetchPdf();
+    }
+  }, [meetingDocument, isLoading, isError, handleFetchPdf]);
+
   if (isLoading) {
     return (
       <div className="flex flex-col h-screen">
@@ -197,7 +238,7 @@ const BlockFiles = ({ id }: { id: string }) => {
       {/* Élément audio caché */}
       <audio
         ref={audioRef}
-        src={meetingDocument?.url_recording}
+        src={"http://192.168.1.68:8000/" + meetingDocument?.url_recording}
         preload="metadata"
       />
 
@@ -255,7 +296,13 @@ const BlockFiles = ({ id }: { id: string }) => {
         </div>
       </div>
       <div className="body flex-grow overflow-auto bg-[#f5f7fb]">
-        <PdfRender file={meetingDocument.url_report} />
+        {isPending || !pdfData ? (
+          <div className="flex flex-col  items-center justify-center">
+            <Spinner size="lg" color="primary" />
+          </div>
+        ) : (
+          <PdfView arrayBuffer={pdfData} />
+        )}
       </div>
       <div className="footer p-3 bg-[#f5f7fb] relative z-10">
         <div

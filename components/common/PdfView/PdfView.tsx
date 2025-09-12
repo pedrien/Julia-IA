@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect, useRef } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -8,16 +9,16 @@ import { Input, Spinner, Button } from "@heroui/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-interface PdfRenderProps {
-  readonly file: File | string;
+interface PdfViewProps {
+  arrayBuffer: ArrayBuffer;
 }
 
-export default function PdfRender({ file }: PdfRenderProps) {
+function PdfView({ arrayBuffer }: PdfViewProps) {
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageWidth, setPageWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth * 0.8 : 800
   );
-  const [pageHeight, setPageHeight] = useState<number | null>(null);
+  const [pageHeight] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1); // État pour la page actuelle
   const [inputValue, setInputValue] = useState<string>("1"); // État pour la valeur de l'Input
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -142,26 +143,29 @@ export default function PdfRender({ file }: PdfRenderProps) {
   // Affichage de l'erreur
   if (error) {
     const handleDownloadPDF = () => {
-      if (typeof file === "string") {
+      try {
+        const blob = new Blob([arrayBuffer], { type: "application/pdf" });
+        const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
-        link.href = file;
+        link.href = url;
         link.download = "document.pdf";
         link.target = "_blank";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Error downloading PDF:", error);
       }
     };
 
     const handleRetry = () => {
       setError(null);
       setIsLoading(true);
-      // Force le rechargement en changeant légèrement l'URL
-      const timestamp = new Date().getTime();
-      if (typeof file === "string") {
-        const separator = file.includes("?") ? "&" : "?";
-        window.location.href = `${file}${separator}t=${timestamp}`;
-      }
+      // Reset states for retry
+      setNumPages(null);
+      setCurrentPage(1);
+      setInputValue("1");
     };
 
     return (
@@ -209,7 +213,7 @@ export default function PdfRender({ file }: PdfRenderProps) {
   return (
     <div className="pdf-container h-full relative lg:pb-[50px]">
       <Document
-        file={file}
+        file={arrayBuffer}
         onLoadSuccess={onDocumentLoadSuccess}
         onLoadError={onDocumentLoadError}
         loading={
@@ -294,3 +298,5 @@ export default function PdfRender({ file }: PdfRenderProps) {
     </div>
   );
 }
+
+export default PdfView;
