@@ -41,12 +41,12 @@ export const GET = async (
     }
 
     const { id } = await params;
-    // const requestData = await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `meetings/${meetingId}/transcription`,
-    //   undefined,
-    //   "GET"
-    // );
+    const requestData = await callApiWithToken(
+      tokenOrErrorResponse,
+      `meetings/${id}/transcriptions`,
+      undefined,
+      "GET"
+    );
 
     // if (
     //   !requestData ||
@@ -59,7 +59,7 @@ export const GET = async (
     //     { status: 400 }
     //   );
     // }
-    const requestData = fakeMeetingTranscription;
+    // const requestData = fakeMeetingTranscription;
 
     const data: MeetingTranscriptText = validateApiResponse(
       requestData,
