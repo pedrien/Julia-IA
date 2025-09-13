@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { Button, Input, Spinner } from "@heroui/react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import "./styles/styles.css";
-import { Input, Spinner, Button } from "@heroui/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface PdfViewProps {
@@ -15,25 +15,45 @@ interface PdfViewProps {
 
 function PdfView({ arrayBuffer }: PdfViewProps) {
   const [numPages, setNumPages] = useState<number | null>(null);
-  const [pageWidth, setPageWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth * 0.8 : 800
-  );
+  const [pageWidth, setPageWidth] = useState(800);
   const [pageHeight] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1); // État pour la page actuelle
   const [inputValue, setInputValue] = useState<string>("1"); // État pour la valeur de l'Input
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const pageRefs = useRef<(HTMLDivElement | null)[]>([]); // Références pour chaque page
+  const containerRef = useRef<HTMLDivElement>(null); // Référence pour le conteneur parent
 
   useEffect(() => {
     const handleResize = () => {
-      const newWidth = window.innerWidth * 0.8;
-      setPageWidth(newWidth > 800 ? 800 : newWidth);
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        // Prendre 90% de la largeur du conteneur, avec un minimum de 300px et maximum de 800px
+        const newWidth = Math.min(800, Math.max(300, containerWidth * 0.9));
+        setPageWidth(newWidth);
+      }
     };
 
+    // Initial call to set the correct width
+    handleResize();
+
+    // Utiliser ResizeObserver pour détecter les changements de taille du conteneur
+    let resizeObserver: ResizeObserver | null = null;
+
+    if (containerRef.current && window.ResizeObserver) {
+      resizeObserver = new ResizeObserver(handleResize);
+      resizeObserver.observe(containerRef.current);
+    }
+
+    // Fallback avec window resize
     window.addEventListener("resize", handleResize);
-    handleResize(); // Initial call to set the correct width
-    return () => window.removeEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+    };
   }, []);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
@@ -118,10 +138,8 @@ function PdfView({ arrayBuffer }: PdfViewProps) {
     }
   };
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -211,7 +229,10 @@ function PdfView({ arrayBuffer }: PdfViewProps) {
   }
 
   return (
-    <div className="pdf-container h-full relative lg:pb-[50px]">
+    <div
+      ref={containerRef}
+      className="pdf-container h-full relative lg:pb-[50px]"
+    >
       <Document
         file={arrayBuffer}
         onLoadSuccess={onDocumentLoadSuccess}
@@ -248,13 +269,13 @@ function PdfView({ arrayBuffer }: PdfViewProps) {
         ))}
       </Document>
       {numPages && numPages > 0 && (
-        <div className="block-nav-page sticky w-auto min-w-[280px] z-50 mt-4 bottom-4 shadow-lg bg-bgCard p-4 rounded-2xl left-1/2 transform -translate-x-1/2 border border-gray-200">
+        <div className="block-nav-page sticky w-auto z-50 mt-4 bottom-4 shadow-lg bg-bgCard dark:bg-bgGray p-2 rounded-2xl left-1/2 transform -translate-x-1/2">
           <div className="content-nav flex justify-center items-center gap-4">
             <Button
               isIconOnly
               size="md"
               variant="flat"
-              className="bg-transparent text-colorTitle hover:bg-bgGray min-w-0 w-10 h-10 rounded-full"
+              className="bg-transparent text-colorTitle hover:bg-bgGray dark:hover:bg-bgCard min-w-0 w-10 h-10 rounded-full"
               onPress={goToPreviousPage}
               isDisabled={currentPage <= 1}
             >
@@ -262,7 +283,7 @@ function PdfView({ arrayBuffer }: PdfViewProps) {
             </Button>
 
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-colorMuted">Page</span>
+              <span className="text-xs font-medium text-colorMuted">Page</span>
               <Input
                 type="text"
                 id="page-input"
@@ -277,16 +298,19 @@ function PdfView({ arrayBuffer }: PdfViewProps) {
                   input: "text-colorTitle text-center font-medium text-sm",
                 }}
               />
-              <span className="text-sm font-medium text-colorMuted">
-                sur {numPages}
-              </span>
+              <div className="flex items-center gap-1">
+                <span className="text-sm font-medium text-colorMuted">/</span>
+                <span className="text-xs font-medium text-colorMuted">
+                  {numPages}
+                </span>
+              </div>
             </div>
 
             <Button
               isIconOnly
               size="md"
               variant="flat"
-              className="bg-transparent text-colorTitle hover:bg-bgGray min-w-0 w-10 h-10 rounded-full"
+              className="bg-transparent text-colorTitle hover:bg-bgGray dark:hover:bg-bgCard  min-w-0 w-10 h-10 rounded-full"
               onPress={goToNextPage}
               isDisabled={currentPage >= numPages}
             >

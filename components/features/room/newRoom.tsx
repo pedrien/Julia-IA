@@ -3,10 +3,12 @@ import { useModalContext } from "@/contexts/Modal/ModalContext";
 import { useCreateMeeting } from "@/hooks/features/meetings/hook.create-meeting";
 import { useGetListParticipants } from "@/hooks/features/participants/hook.list-participants";
 import { helpEnumParticipantType } from "@/types/enums/participants/enum.type-participants";
+import { formatDateTimeLocalToUniversal } from "@/utils/dateUtils";
 import { createMeetingSchema } from "@/validators/meetings/validator.create-meeting";
 import { Participant } from "@/validators/participants/validator.list-participants";
 import type { SelectedItems } from "@heroui/react";
 import {
+  Avatar,
   Button,
   Chip,
   Input,
@@ -16,7 +18,6 @@ import {
   Select,
   SelectItem,
   Textarea,
-  Avatar,
 } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mic, Plus, RefreshCcw, X } from "lucide-react";
@@ -251,23 +252,20 @@ const NewRoom = () => {
                                   "text-colorTitle placeholder:text-colorMuted placeholder:opacity-50",
                               }}
                               {...register("scheduled_start_time", {
-                                onChange: (e) => {
-                                  const value = e.target.value;
-                                  // value is in format "YYYY-MM-DDTHH:MM"
-                                  if (value) {
-                                    const [date, time] = value.split("T");
-                                    // Pad seconds if not present
-                                    const formatted = `${date} ${
-                                      time.length === 5 ? time + ":00" : time
-                                    }`;
-                                    setValue("scheduled_start_time", formatted);
-                                    trigger("scheduled_start_time");
-                                  } else {
-                                    setValue("scheduled_start_time", "");
-                                    trigger("scheduled_start_time");
-                                  }
+                                setValueAs: (value) => {
+                                  // Convert datetime-local input to universal format YYYY-MM-DD HH:MM:SS
+                                  return formatDateTimeLocalToUniversal(value);
                                 },
                               })}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                // Convert datetime-local input to universal format YYYY-MM-DD HH:MM:SS
+                                const formatted =
+                                  formatDateTimeLocalToUniversal(value);
+                                console.log("Formatted value:", formatted);
+                                setValue("scheduled_start_time", formatted);
+                                trigger("scheduled_start_time");
+                              }}
                               errorMessage={
                                 errors.scheduled_start_time?.message
                               }
@@ -437,9 +435,18 @@ const NewRoom = () => {
                           <div className="relative flex items-center justify-center">
                             {/* Icône centrale */}
                             <div className="relative z-10 icon-recording w-[140px] h-[140px] text-white bg-[#ffffff1f] border-[1px] border-white/10 backdrop-blur-[34px] rounded-full flex items-center justify-center">
-                            <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" className="absolute top-[-70px] z-10" />
-                            <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" className="absolute left-[-70px] z-10" />
-                            <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" className="absolute right-[-70px] z-10" />
+                              <Avatar
+                                src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+                                className="absolute top-[-70px] z-10"
+                              />
+                              <Avatar
+                                src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+                                className="absolute left-[-70px] z-10"
+                              />
+                              <Avatar
+                                src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+                                className="absolute right-[-70px] z-10"
+                              />
                               <Mic size={50}></Mic>
                               <div
                                 className="absolute w-[140px] h-[140px] rounded-full border-2 border-white/20 animate-slow-pulse"

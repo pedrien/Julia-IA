@@ -194,7 +194,7 @@ const ModalStep: React.FC<ModalStepProps> = ({
         isDismissable={false}
         hideCloseButton={true}
       >
-        <ModalContent className="bg-linear-to-b from-[#ece2fd] to-white">
+        <ModalContent className="bg-linear-to-b from-[#782efa36] to-bgCard">
           {() => (
             <>
               <ModalBody>

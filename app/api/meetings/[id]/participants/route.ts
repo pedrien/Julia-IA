@@ -2,7 +2,6 @@ import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
-import { fakeMeetingParticipants } from "@/mocks/meetings/fake.meeting-details";
 import {
   MeetingParticipantList,
   meetingParticipantListSchema,
@@ -75,7 +74,7 @@ export const GET = async (
       { status: 200 }
     );
   } catch (error) {
-    console.log(error.response);
+    console.log(error);
     return handleApiServerError(error);
   }
 };

@@ -123,7 +123,7 @@ const Content = ({ id }: { id: string }) => {
 
   return (
     <>
-      <div className="flex flex-col block-recording h-screen bg-linear-to-b from-[#ece2fd] to-white">
+      <div className="flex flex-col block-recording h-screen bg-linear-to-b from-[#782efa36] to-bgCard">
         <div className="body flex-grow flex flex-col">
           <div className="m-auto flex flex-col justify-center items-center gap-3">
             <div className="lg:w-[170px] lg:h-[170px] rounded-full overflow-hidden">

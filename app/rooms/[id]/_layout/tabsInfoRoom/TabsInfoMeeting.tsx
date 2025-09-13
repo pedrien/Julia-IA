@@ -72,7 +72,10 @@ const TabsInfoMeeting = ({ id }: { id: string }) => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[300px]">
-        <Spinner />
+        <Spinner classNames={{
+          circle1: "border-b-primaryColor",
+          circle2: "border-b-primaryColor",
+        }}/>
       </div>
     );
   }

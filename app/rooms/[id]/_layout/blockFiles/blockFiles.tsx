@@ -296,10 +296,13 @@ const BlockFiles = ({ id }: { id: string }) => {
           </Button>
         </div>
       </div>
-      <div className="body flex-grow overflow-auto bg-[#f5f7fb]">
+      <div className="body flex-grow overflow-y-auto overflow-hidden bg-background">
         {isPending || !pdfData ? (
           <div className="flex flex-col  items-center justify-center">
-            <Spinner size="lg" color="primary" />
+            <Spinner size="lg"classNames={{
+              circle1: "border-b-primaryColor",
+              circle2: "border-b-primaryColor",
+            }}/>
           </div>
         ) : (
           <PdfView arrayBuffer={pdfData} />
@@ -329,9 +332,9 @@ const BlockFiles = ({ id }: { id: string }) => {
                 style={{
                   background: `linear-gradient(to right, #8b5cf6 0%, #8b5cf6 ${
                     (currentTime / duration) * 100
-                  }%, #e5e7eb ${
+                  }%, var(--bgGray) ${
                     (currentTime / duration) * 100
-                  }%, #e5e7eb 100%)`,
+                  }%, var(--bgGray) 100%)`,
                 }}
               />
             </div>
@@ -411,7 +414,7 @@ const BlockFiles = ({ id }: { id: string }) => {
                   step="0.1"
                   value={isMuted ? 0 : volume}
                   onChange={handleVolumeChange}
-                  className="w-full h-1 var(--bgGray) rounded-lg appearance-none cursor-pointer slider"
+                  className="w-full h-1 bg-bgGray rounded-lg appearance-none cursor-pointer slider"
                   style={{
                     background: `linear-gradient(to right, #8b5cf6 0%, #8b5cf6 ${
                       (isMuted ? 0 : volume) * 100
