@@ -1,5 +1,6 @@
-import { Button, Textarea } from "@heroui/react";
-import { SendHorizonal } from "lucide-react";
+import { useGetMeetingChat } from "@/hooks/features/meetings/hook.get-meeting-chat";
+import { Button, Spinner, Textarea } from "@heroui/react";
+import { RefreshCcw, SendHorizonal } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -11,6 +12,14 @@ interface Message {
 }
 
 const BlockChatIa = ({ id }: { id: string }) => {
+  const {
+    data: chatMessages,
+    isLoading,
+    isError,
+    isRefetching,
+    refetch,
+  } = useGetMeetingChat(id);
+  console.log(chatMessages);
   const [messages, setMessages] = useState<Message[]>([]);
   const [hasStartedConversation, setHasStartedConversation] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -202,7 +211,7 @@ const BlockChatIa = ({ id }: { id: string }) => {
               height={0}
               layout="responsive"
             />
-             <Image
+            <Image
               src={"/images/logos/logoJuliaWhite.png"}
               alt="logo de julia"
               className="w-[44px!important] hidden dark:block"
@@ -215,8 +224,33 @@ const BlockChatIa = ({ id }: { id: string }) => {
       </div>
 
       <div className="body p-3 flex-grow overflow-y-auto px-4">
-        {!hasStartedConversation ? (
-          // Message de bienvenue initial
+        {isLoading === true ? (
+          <div className="flex items-center justify-center h-full">
+            <Spinner
+              classNames={{
+                circle1: "border-b-primaryColor",
+                circle2: "border-b-primaryColor",
+              }}
+              title="Chargement des messages"
+              label="Nous chargeons les messages"
+            />
+          </div>
+        ) : isError === true || !chatMessages ? (
+          <div className="flex items-center flex-col justify-center h-full gap-3">
+            <span className="text-colorTitle text-sm text-center">
+              Une erreur est survenue lors de la récupération des messages
+            </span>
+            <Button
+              className="border-1"
+              onPress={() => refetch()}
+              isLoading={isRefetching}
+              isIconOnly
+              variant="bordered"
+            >
+              <RefreshCcw size={14} />
+            </Button>
+          </div>
+        ) : chatMessages?.data.length === 0 ? (
           <div className="flex flex-col h-full justify-center items-center">
             <div className="w-full text-center">
               <h2 className="lg:text-[24px] font-semibold">Salut Martins 👋</h2>
@@ -226,58 +260,12 @@ const BlockChatIa = ({ id }: { id: string }) => {
             </div>
           </div>
         ) : (
-          // Interface de chat
-          <div className="flex flex-col space-y-3">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${
-                  message.isUser ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
-                    message.isUser
-                      ? "bg-primaryColor text-white rounded-br-none"
-                      : "bg-bgGray text-colorTitle rounded-bl-none"
-                  }`}
-                >
-                  <div className="whitespace-pre-wrap text-sm">
-                    {message.text}
-                  </div>
-                  <div
-                    className={`text-xs mt-1 ${
-                      message.isUser ? "text-white/70" : "text-colorMuted"
-                    }`}
-                  >
-                    {formatTime(message.timestamp)}
-                  </div>
-                </div>
-              </div>
+          <div>
+            {chatMessages?.data.map((message) => (
+              <div key={message.id}>{message.message}</div>
             ))}
-
-            {isTyping && (
-              <div className="flex justify-start">
-                <div className="bg-bgGray text-gray-800 rounded-lg p-3">
-                  <div className="flex items-center space-x-1">
-                    <div className="flex space-x-1">
-                      <div className="w-1 h-1 bg-colorTitle rounded-full animate-bounce"></div>
-                      <div
-                        className="w-1 h-1 bg-colorTitle rounded-full animate-bounce"
-                        style={{ animationDelay: "0.1s" }}
-                      ></div>
-                      <div
-                        className="w-1 h-1 bg-colorTitle rounded-full animate-bounce"
-                        style={{ animationDelay: "0.2s" }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       <div className="footer p-[18px] py-3">
