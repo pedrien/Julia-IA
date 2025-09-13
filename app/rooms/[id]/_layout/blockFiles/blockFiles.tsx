@@ -23,6 +23,7 @@ import { AnimatedDataLoadError } from "@/components/common/animated-error-states
 import { UiLoadingData } from "@/components/common/UiLoadingData/UiLoadingData";
 import { useFetchPdf } from "@/hooks/features/meetings/hook.fetch-pdf";
 import PdfView from "@/components/common/PdfView/PdfView";
+import { ENV } from "@/env";
 
 const BlockFiles = ({ id }: { id: string }) => {
   const { openModal } = useModalContext();
@@ -133,7 +134,7 @@ const BlockFiles = ({ id }: { id: string }) => {
   const downloadAudio = () => {
     if (meetingDocument?.url_recording) {
       const link = document.createElement("a");
-      link.href = "http://192.168.1.68:8000/" + meetingDocument.url_recording;
+      link.href = ENV.NEXT_PUBLIC_BASED_API_URL + meetingDocument.url_recording;
       link.download = `meeting-${id}-recording.mp3`;
       document.body.appendChild(link);
       link.click();
@@ -144,7 +145,7 @@ const BlockFiles = ({ id }: { id: string }) => {
   const downloadReport = () => {
     if (meetingDocument?.url_report) {
       const link = document.createElement("a");
-      link.href = "http://192.168.1.68:8000" + meetingDocument.url_report;
+      link.href = ENV.NEXT_PUBLIC_BASED_API_URL + meetingDocument.url_report;
       link.download = `meeting-${id}-report.pdf`;
       document.body.appendChild(link);
       link.click();
@@ -155,7 +156,7 @@ const BlockFiles = ({ id }: { id: string }) => {
     if (meetingDocument?.url_report) {
       startTransition(() => {
         fetchPdf({
-          url: "http://192.168.1.68:8000/" + meetingDocument.url_report,
+          url: ENV.NEXT_PUBLIC_BASED_API_URL + meetingDocument.url_report,
         });
       });
     }
@@ -239,7 +240,7 @@ const BlockFiles = ({ id }: { id: string }) => {
       {/* Élément audio caché */}
       <audio
         ref={audioRef}
-        src={"http://192.168.1.68:8000/" + meetingDocument?.url_recording}
+        src={ENV.NEXT_PUBLIC_BASED_API_URL + meetingDocument?.url_recording}
         preload="metadata"
       />
 

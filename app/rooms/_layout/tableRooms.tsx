@@ -34,13 +34,20 @@ const TableRooms = () => {
   };
 
   // Fonction pour formater la durée
+  // duration is in seconds, so convert to hours, minutes, seconds
   const formatDuration = (duration: number) => {
     if (duration < 60) {
-      return `${duration}min`;
+      return `${duration}s`;
     }
-    const hours = Math.floor(duration / 60);
-    const minutes = duration % 60;
-    return minutes > 0 ? `${hours}h${minutes}min` : `${hours}h`;
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    const seconds = duration % 60;
+
+    let result = "";
+    if (hours > 0) result += `${hours}h`;
+    if (minutes > 0) result += `${minutes}min`;
+    if (seconds > 0 && hours === 0) result += `${seconds}s`; // show seconds only if less than 1h
+    return result || "0s";
   };
 
   // Fonction pour formater la date
