@@ -199,7 +199,9 @@ const BlockChatIa = ({ id }: { id: string }) => {
             <Button
               className="w-[32px] h-[32px] bg-primaryColor min-w-0 p-0 flex-none text-white"
               onPress={handleSendMessage}
-              isDisabled={!inputValue.trim() || askAiMutation.isPending}
+              isDisabled={
+                isLoading || !inputValue.trim() || askAiMutation.isPending
+              }
               isLoading={askAiMutation.isPending}
             >
               <SendHorizonal size={16} />

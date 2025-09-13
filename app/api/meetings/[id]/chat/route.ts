@@ -2,7 +2,6 @@ import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
-import { fakeChatMeetings } from "@/mocks/meetings/fake.chat-meetings";
 import {
   ListChatMeetingSchema,
   listChatMeetingSchema,
@@ -42,16 +41,12 @@ export const GET = async (
 
     const { id } = await params;
 
-    // const requestData = await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `meetings/${id}/chat`,
-    //   undefined,
-    //   "GET"
-    // );
-
-    const requestData = fakeChatMeetings;
-
-    console.log(requestData);
+    const requestData = await callApiWithToken(
+      tokenOrErrorResponse,
+      `ai/meetings/${id}/conversations`,
+      undefined,
+      "GET"
+    );
 
     if (
       !requestData ||
@@ -64,9 +59,6 @@ export const GET = async (
         { status: 400 }
       );
     }
-
-    // Uncomment the line below to use fake data for testing
-    // const requestData = fakeChatMeetings;
 
     const data: ListChatMeetingSchema = validateApiResponse(
       requestData,
