@@ -67,6 +67,8 @@ export const POST = async (
     //   "POST"
     // );
 
+    throw new Error("test");
+
     const requestData = getRandomResponseAskAi();
 
     // // Mock response for testing

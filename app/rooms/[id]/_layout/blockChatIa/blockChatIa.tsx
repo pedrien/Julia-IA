@@ -3,7 +3,7 @@ import { useAskAiMeeting } from "@/hooks/features/meetings/hook.ask-ai-meeting";
 import { Button, Spinner, Textarea } from "@heroui/react";
 import { RefreshCcw, SendHorizonal } from "lucide-react";
 import Image from "next/image";
-import React, { useState, useTransition, useEffect } from "react";
+import React, { useState, useTransition, useEffect, useRef } from "react";
 import { ListChatMeetingSchema } from "@/validators/meetings/validator.list-chat-meetings";
 
 const BlockChatIa = ({ id }: { id: string }) => {
@@ -21,12 +21,18 @@ const BlockChatIa = ({ id }: { id: string }) => {
     onSuccessCallback: (data) => {
       console.log("Question envoyée avec succès:", data);
 
-      // Ajouter la réponse de l'IA à la liste locale
+      // Effacer l'erreur et le message en attente
+      setLastMessageError(null);
+      setPendingMessage(null);
+
       // Rafraîchir les messages après une nouvelle question pour synchroniser
       refetch();
     },
     onErrorCallback: (error) => {
       console.error("Erreur lors de l'envoi:", error);
+
+      // Marquer l'erreur pour le dernier message
+      setLastMessageError(error.message || "Erreur lors de l'envoi");
     },
   });
 
@@ -35,6 +41,9 @@ const BlockChatIa = ({ id }: { id: string }) => {
   const [inputValue, setInputValue] = useState("");
   const [localMessages, setLocalMessages] =
     useState<ListChatMeetingSchema | null>(null);
+  const [lastMessageError, setLastMessageError] = useState<string | null>(null);
+  const [pendingMessage, setPendingMessage] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Synchroniser les messages locaux avec les données de l'API
   useEffect(() => {
@@ -42,6 +51,11 @@ const BlockChatIa = ({ id }: { id: string }) => {
       setLocalMessages(chatMessages);
     }
   }, [chatMessages]);
+
+  // Scroll automatique en bas quand de nouveaux messages arrivent
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [localMessages?.data]);
 
   const handleSendMessage = () => {
     if (!inputValue.trim() || isPending) return;
@@ -52,6 +66,10 @@ const BlockChatIa = ({ id }: { id: string }) => {
     if (!hasStartedConversation) {
       setHasStartedConversation(true);
     }
+
+    // Effacer les erreurs précédentes
+    setLastMessageError(null);
+    setPendingMessage(userMessage);
 
     // Ajouter immédiatement le message de l'utilisateur à la liste locale
     const newUserMessage = {
@@ -76,6 +94,22 @@ const BlockChatIa = ({ id }: { id: string }) => {
     });
 
     setInputValue("");
+  };
+
+  // Fonction pour renvoyer le message en cas d'erreur
+  const handleResendMessage = () => {
+    if (!pendingMessage) return;
+
+    setLastMessageError(null);
+
+    startAskingAi(() => {
+      askQuestionAi({
+        meetingId: id,
+        message: pendingMessage,
+        id_last_message:
+          localMessages?.data[localMessages?.data.length - 1]?.id || null,
+      });
+    });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -212,20 +246,50 @@ const BlockChatIa = ({ id }: { id: string }) => {
                 </div>
               </div>
             )}
+
+            {/* Affichage de l'erreur avec bouton de resend */}
+            {lastMessageError && (
+              <div className="flex justify-end">
+                <div className="bg-red-100 border border-red-300 text-red-700 rounded-lg p-3 max-w-[80%]">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm">{lastMessageError}</span>
+                    <Button
+                      size="sm"
+                      variant="light"
+                      color="danger"
+                      onPress={handleResendMessage}
+                      className="min-w-0 p-1 h-auto"
+                    >
+                      <RefreshCcw size={14} />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
+
+        {/* Référence pour le scroll automatique */}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="footer p-[18px] py-3">
         <Textarea
-          placeholder="Demandez à Julia"
+          placeholder={
+            lastMessageError
+              ? "Résolvez l'erreur pour continuer"
+              : "Demandez à Julia"
+          }
           variant="bordered"
           minRows={1}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
+          isDisabled={isLoading || isPending || !!lastMessageError}
           classNames={{
-            inputWrapper: "bg-bgGray border-colorBorder border-0 shadow-none ",
+            inputWrapper: `bg-bgGray border-colorBorder border-0 shadow-none ${
+              lastMessageError ? "opacity-50" : ""
+            }`,
             input:
               "text-colorTitle placeholder:text-colorMuted placeholder:opacity-70",
           }}
@@ -233,7 +297,12 @@ const BlockChatIa = ({ id }: { id: string }) => {
             <Button
               className="w-[32px] h-[32px] bg-primaryColor min-w-0 p-0 flex-none text-white"
               onPress={handleSendMessage}
-              isDisabled={isLoading || !inputValue.trim() || isPending}
+              isDisabled={
+                isLoading ||
+                !inputValue.trim() ||
+                isPending ||
+                !!lastMessageError
+              }
               isLoading={isLoading || isAskingAi}
               isIconOnly
             >

@@ -47,7 +47,7 @@ export const GET = async (
       undefined,
       "GET"
     );
-    console.log(requestData);
+
     // if (
     //   !requestData ||
     //   typeof requestData !== "object" ||
