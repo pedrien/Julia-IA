@@ -38,7 +38,7 @@ export const GET = async (
       { status: 200 }
     );
   } catch (error) {
-    console.log("error", error);
+    console.log("error", error.response);
     return handleApiServerError(error);
   }
 };

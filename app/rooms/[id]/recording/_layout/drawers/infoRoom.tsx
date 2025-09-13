@@ -32,7 +32,39 @@ const InfoRoom = ({ meetingDetail }: { meetingDetail: MeetingDetail }) => {
             <div className="py-4 border-b-[1px] border-dashed border-colorBorderTr">
               <h6 className="text-sm text-colorTitle mb-2">Date</h6>
               <p className="text-sm text-colorMuted">
-                {meetingDetail.scheduled_start_time}
+                {(() => {
+                  const date = new Date(meetingDetail.scheduled_start_time);
+                  const jours = [
+                    "dimanche",
+                    "lundi",
+                    "mardi",
+                    "mercredi",
+                    "jeudi",
+                    "vendredi",
+                    "samedi",
+                  ];
+                  const mois = [
+                    "jan",
+                    "fév",
+                    "mar",
+                    "avr",
+                    "mai",
+                    "jui",
+                    "jui",
+                    "aoû",
+                    "sep",
+                    "oct",
+                    "nov",
+                    "déc",
+                  ];
+                  const jourSemaine = jours[date.getDay()];
+                  const jour = date.getDate().toString().padStart(2, "0");
+                  const moisNom = mois[date.getMonth()];
+                  const annee = date.getFullYear();
+                  const heures = date.getHours().toString().padStart(2, "0");
+                  const minutes = date.getMinutes().toString().padStart(2, "0");
+                  return `${jourSemaine} ${jour} ${moisNom} ${annee} à ${heures}h${minutes}`;
+                })()}
               </p>
             </div>
           </div>
