@@ -1,7 +1,12 @@
 import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
+import { validateRequestBody } from "@/libs/validateRequestBody";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
-import { addGuestMeetingSchema } from "@/validators/meetings/validator.add-guest-meeting";
+import {
+  AddGuestMeetingSchema,
+  addGuestMeetingSchema,
+} from "@/validators/meetings/validator.add-guest-meeting";
+
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -49,29 +54,27 @@ export const POST = async (
     const body = await req.json();
 
     // Validate request body
-    const validatedBody = addGuestMeetingSchema.parse({
-      meetingId: id,
-      type: body.type,
-      external_name: body.external_name,
-      external_email: body.external_email,
-      external_phone: body.external_phone,
-      external_company: body.external_company,
-    });
+    const validatedData: AddGuestMeetingSchema = validateRequestBody(
+      body,
+      addGuestMeetingSchema
+    );
 
+    const bodyFormatted = {
+      meetingId: id,
+      type: validatedData.type,
+      name: validatedData.external_name,
+      email: validatedData.external_email,
+      phone: validatedData.external_phone,
+      company: validatedData.external_company,
+    };
+
+    console.log(bodyFormatted);
     const requestData = await callApiWithToken(
       tokenOrErrorResponse,
       `meetings/${id}/add-guest`,
-      {
-        type: validatedBody.type,
-        external_name: validatedBody.external_name,
-        external_email: validatedBody.external_email,
-        external_phone: validatedBody.external_phone,
-        external_company: validatedBody.external_company,
-      },
+      bodyFormatted,
       "POST"
     );
-
-    console.log(requestData);
 
     if (
       !requestData ||

@@ -1,6 +1,7 @@
 "use client";
 
 import ModalAddInternalParticipantsMeetings from "@/components/features/room/modals/ModalAddInternalParticipantsMeetings";
+import NewInvite from "@/components/features/room/NewInvite";
 import { useDrawerContext } from "@/contexts/Drawer/DrawerContext";
 import { useCurrentParticipant } from "@/contexts/features/meetings/context.current-participant-meetings-detail";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
@@ -175,7 +176,7 @@ const TabsParticipants = ({ id }: { id: string }) => {
             >
               <Button
                 className="bg-transparent border border-colorBorder  text-colorTitle text-xs p-0 min-w-0 h-[26px] w-[26px]"
-                onPress={() => openModal("ModalNewUser")}
+                onPress={() => openModal("NewInvite")}
               >
                 <Plus size={14}></Plus>
               </Button>
@@ -246,6 +247,7 @@ const TabsParticipants = ({ id }: { id: string }) => {
         listParticipants={participants.participants}
         meetingId={id}
       />
+      <NewInvite idMeeting={id} />
     </>
   );
 };
