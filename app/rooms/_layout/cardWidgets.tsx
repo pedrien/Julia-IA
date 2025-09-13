@@ -46,7 +46,7 @@ const CardWidgets = ({
       <div className="col-span-12 lg:col-span-4 2xl:col-span-4">
         <div className="card bg-bgCard shadow-[0_5px_18px_#00000005]  p-4 rounded-2xl overflow-hidden">
           <div className="flex items-center gap-4">
-            <div className="icon text-[#2ac693] bg-[#2ac69345]  flex items-center justify-center w-[50px] h-[50px] rounded-lg">
+            <div className="icon bg-[#27c6832e] text-[#27c683]  flex items-center justify-center w-[50px] h-[50px] rounded-lg">
               <CheckCircle className="lg:w-7 lg:h-7"></CheckCircle>
             </div>
             <div>
