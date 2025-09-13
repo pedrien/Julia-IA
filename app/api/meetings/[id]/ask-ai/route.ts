@@ -1,6 +1,7 @@
 import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
+import { validateRequestBody } from "@/libs/validateRequestBody";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
 import { fakeChatMeetings } from "@/mocks/meetings/fake.chat-meetings";
 import {
@@ -49,12 +50,10 @@ export const POST = async (
     const { id } = await params;
     const body = await req.json();
 
-    // Validate request body
-    const validatedBody = askAiMeetingSchema.parse({
-      meetingId: id,
-      message: body.message,
-    });
-
+    const validatedBody: AskAiMeetingSchema = validateRequestBody(
+      body,
+      askAiMeetingSchema
+    );
     // const requestData = await callApiWithToken(
     //   tokenOrErrorResponse,
     //   `meetings/${id}/ask-ai`,
