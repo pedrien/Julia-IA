@@ -1,7 +1,16 @@
 import { Folder, CircleCheck, Hourglass } from "lucide-react";
 import React from "react";
 
-const CardWidgets = () => {
+interface CardWidgetsProps {
+  totalFolders: number;
+  inprocessFolders: number;
+  treatedFolders: number;
+}
+const CardWidgets = ({
+  totalFolders,
+  inprocessFolders,
+  treatedFolders,
+}: CardWidgetsProps) => {
   return (
     <div className="grid grid-cols-12 gap-3 lg:gap-4">
       <div className="col-span-12 lg:col-span-4">
@@ -13,7 +22,7 @@ const CardWidgets = () => {
             <div>
               <p className="text-colorMuted text-sm mb-1">Total</p>
               <h4 className="text-colorTitle font-semibold lg:text-[22px]">
-                40
+                {totalFolders}
               </h4>
             </div>
           </div>
@@ -28,7 +37,7 @@ const CardWidgets = () => {
             <div>
               <p className="text-colorMuted text-sm mb-1">En cours</p>
               <h4 className="text-colorTitle font-semibold lg:text-[22px]">
-                40
+                {inprocessFolders}
               </h4>
             </div>
           </div>
@@ -43,7 +52,7 @@ const CardWidgets = () => {
             <div>
               <p className="text-colorMuted text-sm mb-1">Traités</p>
               <h4 className="text-colorTitle font-semibold lg:text-[22px]">
-                40
+                {treatedFolders}
               </h4>
             </div>
           </div>

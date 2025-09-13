@@ -406,7 +406,13 @@ const ModalStep: React.FC<ModalStepProps> = ({
                 <div className="flex items-center gap-3 w-full mt-1">
                   <Button
                     className="w-1/2 bg-bgGray h-auto py-3 text-colorTitle"
-                    onPress={() => closeModal("ModalStep")}
+                    onPress={() => {
+                      if (currentStep === 3) {
+                        window.location.href = `/rooms/${meetingId}`;
+                      } else {
+                        closeModal("ModalStep");
+                      }
+                    }}
                   >
                     {currentStep === 3 ? "Voir la réunion" : "Annuler"}
                   </Button>

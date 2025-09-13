@@ -4,8 +4,61 @@ import CardWidgets from "./cardWidgets";
 import BlockViewFolders from "./blockViewFolders";
 import BlockViewFoldersInprocess from "./blockViewFoldersInprocess";
 import Link from "next/link";
+import { useGetListFolders } from "@/hooks/features/folders/hook.list-folders";
+import { AnimatedDataLoadError } from "@/components/common/animated-error-states/animated-error-states";
+import { UiLoadingData } from "@/components/common/UiLoadingData/UiLoadingData";
+import { FolderSchema } from "@/validators/folders/validator.list-folder";
+import { useCallback, useEffect, useState } from "react";
 
 const BlockDash = () => {
+  const {
+    data: folders,
+    isLoading,
+    isError,
+    isRefetching,
+    refetch,
+  } = useGetListFolders();
+  const [folderList, setfolderList] = useState<FolderSchema[]>([]);
+
+  useEffect(() => {
+    if (folders && isLoading === false && isError === false) {
+      setfolderList(folders.data);
+    }
+  }, [folders, isError, isLoading]);
+
+  const handleSearchFolders = useCallback(
+    (search: string) => {
+      if (search === "") {
+        setfolderList(folders?.data || []);
+        return;
+      }
+      setfolderList((prevFolders) =>
+        prevFolders.filter((folder: FolderSchema) =>
+          folder.name.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    },
+    [folders?.data]
+  );
+
+  if (isLoading) {
+    return <UiLoadingData />;
+  }
+  if (isError || !folders) {
+    return (
+      <AnimatedDataLoadError
+        onRetry={refetch}
+        retryLoading={isLoading}
+        title="Une erreur est survenue"
+        showContactSupport={true}
+        onContactSupport={() => {
+          console.log("contact support");
+        }}
+        isRetryLoading={isRefetching}
+        message="Nous avons rencontré un problème lors du chargement des informations des dossiers. Veuillez réessayer ou contacter le support si le problème persiste."
+      />
+    );
+  }
   return (
     <div className="container-fluid lg:px-7 px-2">
       <div className="flex items-center justify-between lg:mb-4">
@@ -21,7 +74,19 @@ const BlockDash = () => {
           Nouveau dossier
         </Button>
       </div>
-      <CardWidgets />
+      <CardWidgets
+        totalFolders={folders?.data.length || 0}
+        inprocessFolders={
+          folders?.data.filter(
+            (folder: FolderSchema) => folder.status === "EN_COURS"
+          ).length
+        }
+        treatedFolders={
+          folders?.data.filter(
+            (folder: FolderSchema) => folder.status === "TRAITE"
+          ).length
+        }
+      />
       <Tabs
         aria-label="Options"
         classNames={{
@@ -34,10 +99,20 @@ const BlockDash = () => {
         }}
       >
         <Tab key="inprocess" title="En cours">
-          <BlockViewFoldersInprocess/>
+          <BlockViewFoldersInprocess
+            folders={folderList.filter(
+              (folder: FolderSchema) => folder.status === "EN_COURS"
+            )}
+            onSearch={handleSearchFolders}
+          />
         </Tab>
         <Tab key="treated" title="Traités">
-          <BlockViewFolders />
+          <BlockViewFolders
+            folders={folderList.filter(
+              (folder: FolderSchema) => folder.status === "TRAITE"
+            )}
+            onSearch={handleSearchFolders}
+          />
         </Tab>
       </Tabs>
     </div>
