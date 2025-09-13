@@ -1,18 +1,10 @@
 import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
-import { validateApiResponse } from "@/libs/validateApiResponse";
 import { validateRequestBody } from "@/libs/validateRequestBody";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
 import {
-  fakeChatMeetings,
-  getRandomResponseAskAi,
-  getResponseAskAiById,
-} from "@/mocks/meetings/fake.chat-meetings";
-import {
   AskAiMeetingSchema,
   askAiMeetingSchema,
-  responseAskAiMeetingSchema,
-  ResponseAskAiMeetingSchema,
 } from "@/validators/meetings/validator.ask-ai-meeting";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -60,33 +52,31 @@ export const POST = async (
       body,
       askAiMeetingSchema
     );
-    // const requestData = await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `meetings/${id}/ask-ai`,
-    //   { message: validatedBody.message },
-    //   "POST"
-    // );
 
-    throw new Error("test");
+    await callApiWithToken(
+      tokenOrErrorResponse,
+      `ai/meetings/${id}/conversations/store`,
+      { message: validatedBody.message },
+      "POST"
+    );
 
-    const requestData = getRandomResponseAskAi();
+    // const requestData = getRandomResponseAskAi();
 
-    // // Mock response for testing
-    // const requestData = {
-    //   data: {
-    //     id: `chat-ai-${Date.now()}`,
-    //     type: "AI",
-    //     message: `Merci pour votre question : "${validatedBody.message}". Voici ma réponse basée sur l'analyse de la réunion :\n\n**Résumé de la question :** ${validatedBody.message}\n\n**Réponse de l'IA :**\n• J'ai analysé l'enregistrement de la réunion\n• Voici les points clés que j'ai identifiés\n• Les décisions importantes prises sont...\n• Les prochaines étapes recommandées sont...\n\nN'hésitez pas si vous avez d'autres questions !`,
-    //     date_time: new Date().toISOString().slice(0, 19).replace("T", " "),
-    //   },
-    // };
+    // // // Mock response for testing
+    // // const requestData = {
+    // //   data: {
+    // //     id: `chat-ai-${Date.now()}`,
+    // //     type: "AI",
+    // //     message: `Merci pour votre question : "${validatedBody.message}". Voici ma réponse basée sur l'analyse de la réunion :\n\n**Résumé de la question :** ${validatedBody.message}\n\n**Réponse de l'IA :**\n• J'ai analysé l'enregistrement de la réunion\n• Voici les points clés que j'ai identifiés\n• Les décisions importantes prises sont...\n• Les prochaines étapes recommandées sont...\n\nN'hésitez pas si vous avez d'autres questions !`,
+    // //     date_time: new Date().toISOString().slice(0, 19).replace("T", " "),
+    // //   },
+    // // };
 
-    console.log(requestData);
+    // console.log(requestData);
 
     return NextResponse.json(
       {
         message: "AI response generated successfully.",
-        data: requestData,
       },
       { status: 200 }
     );

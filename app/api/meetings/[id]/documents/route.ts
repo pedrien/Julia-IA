@@ -2,7 +2,6 @@ import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
-import { fakeMeetingDocument } from "@/mocks/meetings/fake.meeting-details";
 import {
   MeetingDocument,
   meetingDocumentSchema,
@@ -61,7 +60,7 @@ export const GET = async (
       );
     }
     //const requestData = fakeMeetingDocument;
-    console.log(requestData.data);
+    //console.log(requestData.data);
     const data: MeetingDocument = validateApiResponse(
       requestData.data,
       meetingDocumentSchema
