@@ -4,6 +4,7 @@ import React from "react";
 import { useGetMeetingDetail } from "@/hooks/features/meetings/hook.get-meeting-detail";
 import { Button, Spinner } from "@heroui/react";
 import { RefreshCcw } from "lucide-react";
+import { helpEnumMeetingStatus } from "@/types/enums/meetings/enum.meeting-status";
 
 const TabsInfoMeeting = ({ id }: { id: string }) => {
   const {
@@ -72,10 +73,12 @@ const TabsInfoMeeting = ({ id }: { id: string }) => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[300px]">
-        <Spinner classNames={{
-          circle1: "border-b-primaryColor",
-          circle2: "border-b-primaryColor",
-        }}/>
+        <Spinner
+          classNames={{
+            circle1: "border-b-primaryColor",
+            circle2: "border-b-primaryColor",
+          }}
+        />
       </div>
     );
   }
@@ -139,7 +142,7 @@ const TabsInfoMeeting = ({ id }: { id: string }) => {
                   meetingDetail.status
                 )}`}
               >
-                {getStatusText(meetingDetail.status)}
+                {helpEnumMeetingStatus(meetingDetail.status)}
               </span>
             </div>
           </div>
