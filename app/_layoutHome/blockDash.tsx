@@ -9,12 +9,11 @@ import {
 } from "lucide-react";
 import { Button, Input } from "@heroui/react";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
-
+import BlockCardWidget from "./blockCardWidget";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import NewRoom from "@/components/features/room/newRoom";
 import NewUser from "@/components/features/room/newUser";
-import BlockRecentFoldes from "./blockRecentFoldes";
 
 const BlockDash = () => {
   const { openModal } = useModalContext();
@@ -122,8 +121,9 @@ const BlockDash = () => {
             </div>
           </div>
         </div>
+        <BlockCardWidget />
         <div className="block-action-rapide lg:mt-3">
-          <h3 className="text-colorTitle font-semibold text-[18px] mb-3">
+          <h3 className="text-colorTitle font-semibold text-[16px] mb-3">
             Actions rapides
           </h3>
           <div className="grid grid-cols-5 gap-3 lg:gap-3">
@@ -192,12 +192,6 @@ const BlockDash = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div className="block-recent-folder lg:mt-3">
-          <h3 className="text-colorTitle font-semibold text-[18px] mb-3">
-            Dossiers recents
-          </h3>
-          <BlockRecentFoldes />
         </div>
         <div className="block-file-recents lg:mt-6 mt-3">
           <div className="card bg-bgCard shadow-[0_5px_18px_#00000005]  rounded-2xl">
