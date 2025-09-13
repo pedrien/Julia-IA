@@ -9,7 +9,10 @@ import {
 import { handleServerActionError } from "@/libs/handleServerActionError";
 import { actionClient } from "@/libs/safeAction";
 import axios from "axios";
-import { AskAiMeetingSchema } from "@/validators/meetings/validator.ask-ai-meeting";
+import {
+  AskAiMeetingSchema,
+  ResponseAskAiMeetingSchema,
+} from "@/validators/meetings/validator.ask-ai-meeting";
 import { auth } from "@/auth";
 import { z } from "zod";
 
@@ -19,7 +22,7 @@ import { z } from "zod";
  * @function askAiMeeting
  * @param {string} meetingId - The ID of the meeting
  * @param {string} message - The question to ask the AI
- * @returns {Promise<(IActionSuccess & { data: AskAiMeetingSchema }) | IActionError>}
+ * @returns {Promise<(IActionSuccess & { data: ResponseAskAiMeetingSchema }) | IActionError>}
  *   An object indicating the success or failure of the operation, and the AI response if successful.
  *
  * - Requires a valid user session (access token).
@@ -46,7 +49,7 @@ export const askAiMeeting = actionClient
     async ({
       parsedInput,
     }): Promise<
-      (IActionSuccess & { data: AskAiMeetingSchema }) | IActionError
+      (IActionSuccess & { data: ResponseAskAiMeetingSchema }) | IActionError
     > => {
       try {
         const session = await auth();
@@ -78,7 +81,7 @@ export const askAiMeeting = actionClient
           };
         }
 
-        const responseData: AskAiMeetingSchema = response.data.data;
+        const responseData: ResponseAskAiMeetingSchema = response.data.data;
         return { success: true, data: responseData };
       } catch (error) {
         return {

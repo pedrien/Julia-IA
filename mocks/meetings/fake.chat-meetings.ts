@@ -1,4 +1,5 @@
 import { ListChatMeetingSchema } from "@/validators/meetings/validator.list-chat-meetings";
+import { ResponseAskAiMeetingSchema } from "@/validators/meetings/validator.ask-ai-meeting";
 
 /**
  * Données factices pour les chats de meetings
@@ -153,6 +154,119 @@ export const getRandomChatMeetings = (): ListChatMeetingSchema => {
 
   const randomIndex = Math.floor(Math.random() * chatOptions.length);
   return chatOptions[randomIndex];
+};
+
+/**
+ * Données factices pour les réponses de l'IA aux questions sur les meetings
+ */
+export const fakeResponseAskAiMeetings: ResponseAskAiMeetingSchema[] = [
+  {
+    data: {
+      id: "ai-response-001",
+      type: "AI",
+      message:
+        "Merci pour votre question ! Voici ma réponse basée sur l'analyse de la réunion :\n\n**Résumé de la question :** Quelles ont été les décisions clés de cette réunion ?\n\n**Réponse de l'IA :**\n• Discussion sur le nouveau projet MIZARU\n• Budget alloué : 150 000€\n• Échéance : 30 mars 2024\n• Responsable technique : Jean Dupont\n• Prochain point : 22 janvier 2024\n\nN'hésitez pas si vous avez d'autres questions !",
+      date_time: "2024-01-15 14:30:25",
+    },
+  },
+  {
+    data: {
+      id: "ai-response-002",
+      type: "AI",
+      message:
+        "Excellente question ! Voici ce que j'ai identifié dans cette réunion :\n\n**Points clés identifiés :**\n• 5 participants présents\n• Durée : 1h 23min\n• 3 décisions importantes prises\n• 8 points d'action définis\n\n**Recommandations :**\n• Suivre les échéances définies\n• Organiser un point de suivi dans 2 semaines\n• Documenter les décisions prises\n\nY a-t-il autre chose que vous souhaitez savoir ?",
+      date_time: "2024-01-15 14:32:18",
+    },
+  },
+  {
+    data: {
+      id: "ai-response-003",
+      type: "AI",
+      message:
+        "Parfait ! J'ai analysé l'enregistrement et voici mes observations :\n\n**Analyse des performances :**\n• Temps de parole équilibré entre les participants\n• 12 interruptions identifiées\n• 8 questions posées\n• 3 décisions finalisées\n\n**Recommandations d'amélioration :**\n• Structurer mieux les discussions\n• Préparer un agenda plus détaillé\n• Réduire les interruptions\n\nSouhaitez-vous que je génère un rapport détaillé ?",
+      date_time: "2024-01-15 14:35:42",
+    },
+  },
+  {
+    data: {
+      id: "ai-response-004",
+      type: "AI",
+      message:
+        "Très bonne question ! Voici ce que j'ai trouvé :\n\n**Résumé exécutif :**\n• Réunion productive avec 5 participants\n• Objectifs atteints à 85%\n• 3 décisions stratégiques prises\n• Prochaines étapes clairement définies\n\n**Points d'attention :**\n• Certains sujets nécessitent un suivi\n• Budget à valider avec la direction\n• Échéances à respecter impérativement\n\nAvez-vous besoin de plus de détails sur un point spécifique ?",
+      date_time: "2024-01-15 14:38:15",
+    },
+  },
+  {
+    data: {
+      id: "ai-response-005",
+      type: "AI",
+      message:
+        "Excellente question ! Voici mon analyse complète :\n\n**Synthèse de la réunion :**\n• **Participants :** 5 personnes (Jean, Marie, Pierre, Sophie, Marc)\n• **Durée :** 1h 23min\n• **Objectif :** Validation du projet MIZARU\n\n**Décisions prises :**\n✅ Approbation du budget de 150 000€\n✅ Validation de l'équipe technique\n✅ Définition des jalons principaux\n\n**Actions à suivre :**\n• Rédaction du cahier des charges (Jean)\n• Validation technique (Pierre)\n• Communication client (Marie)\n\nBesoin d'autres informations ?",
+      date_time: "2024-01-15 14:41:33",
+    },
+  },
+];
+
+/**
+ * Helper pour obtenir une réponse IA aléatoire
+ */
+export const getRandomResponseAskAi = (): ResponseAskAiMeetingSchema => {
+  const randomIndex = Math.floor(
+    Math.random() * fakeResponseAskAiMeetings.length
+  );
+  return fakeResponseAskAiMeetings[randomIndex];
+};
+
+/**
+ * Helper pour obtenir une réponse IA par ID de message
+ */
+export const getResponseAskAiById = (
+  messageId: string
+): ResponseAskAiMeetingSchema | null => {
+  const response = fakeResponseAskAiMeetings.find(
+    (resp) => resp.data.id === messageId
+  );
+  return response || null;
+};
+
+/**
+ * Helper pour simuler une réponse IA basée sur une question
+ */
+export const generateAiResponse = (
+  question: string
+): ResponseAskAiMeetingSchema => {
+  const currentTime = new Date().toISOString().slice(0, 19).replace("T", " ");
+
+  // Réponses contextuelles basées sur le contenu de la question
+  let responseMessage = "";
+
+  if (
+    question.toLowerCase().includes("décision") ||
+    question.toLowerCase().includes("décisions")
+  ) {
+    responseMessage = `Excellente question sur les décisions ! Voici ce que j'ai identifié :\n\n**Décisions clés de la réunion :**\n• Validation du budget de 150 000€\n• Approbation de l'équipe technique\n• Définition des jalons de livraison\n• Planification des revues de code\n\n**Impact de ces décisions :**\n• Projet lancé officiellement\n• Équipe mobilisée\n• Échéances fixées\n\nY a-t-il une décision spécifique qui vous intéresse ?`;
+  } else if (
+    question.toLowerCase().includes("participant") ||
+    question.toLowerCase().includes("qui")
+  ) {
+    responseMessage = `Voici les informations sur les participants :\n\n**Participants présents :**\n• Jean Dupont - Chef de projet\n• Marie Martin - Responsable technique\n• Pierre Durand - Développeur senior\n• Sophie Leroy - UX Designer\n• Marc Petit - Product Owner\n\n**Rôles et contributions :**\n• Jean : Animation et coordination\n• Marie : Validation technique\n• Pierre : Architecture et développement\n• Sophie : Interface utilisateur\n• Marc : Vision produit\n\nSouhaitez-vous plus de détails sur un participant ?`;
+  } else if (
+    question.toLowerCase().includes("budget") ||
+    question.toLowerCase().includes("coût")
+  ) {
+    responseMessage = `Voici les informations budgétaires :\n\n**Budget alloué :** 150 000€\n\n**Répartition prévue :**\n• Développement : 60% (90 000€)\n• Design : 20% (30 000€)\n• Tests : 15% (22 500€)\n• Gestion de projet : 5% (7 500€)\n\n**Échéances de paiement :**\n• 30% à la signature (45 000€)\n• 40% à mi-parcours (60 000€)\n• 30% à la livraison (45 000€)\n\nAvez-vous des questions sur la répartition ?`;
+  } else {
+    responseMessage = `Merci pour votre question : "${question}"\n\nVoici ma réponse basée sur l'analyse de la réunion :\n\n**Analyse générale :**\n• Réunion productive de 1h 23min\n• 5 participants engagés\n• Objectifs atteints\n\n**Points clés identifiés :**\n• Discussion constructive\n• Décisions prises\n• Actions définies\n\n**Recommandations :**\n• Suivre les échéances\n• Maintenir la communication\n• Documenter les décisions\n\nN'hésitez pas si vous avez d'autres questions !`;
+  }
+
+  return {
+    data: {
+      id: `ai-response-${Date.now()}`,
+      type: "AI",
+      message: responseMessage,
+      date_time: currentTime,
+    },
+  };
 };
 
 /**
