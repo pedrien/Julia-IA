@@ -35,25 +35,25 @@ export const GET = async (req: NextRequest) => {
       return tokenOrErrorResponse;
     }
 
-    const requestData = await callApiWithToken(
-      tokenOrErrorResponse,
-      `folders`,
-      undefined,
-      "GET"
-    );
+    // const requestData = await callApiWithToken(
+    //   tokenOrErrorResponse,
+    //   `folders`,
+    //   undefined,
+    //   "GET"
+    // );
 
-    if (
-      !requestData ||
-      typeof requestData !== "object" ||
-      !("data" in requestData) ||
-      !requestData.data
-    ) {
-      return NextResponse.json(
-        { message: "No folders found." },
-        { status: 400 }
-      );
-    }
-    //const requestData = fakeFoldersList;
+    // if (
+    //   !requestData ||
+    //   typeof requestData !== "object" ||
+    //   !("data" in requestData) ||
+    //   !requestData.data
+    // ) {
+    //   return NextResponse.json(
+    //     { message: "No folders found." },
+    //     { status: 400 }
+    //   );
+    // }
+    const requestData = fakeFoldersList;
 
     const data: ListFolderSchema = validateApiResponse(
       requestData,

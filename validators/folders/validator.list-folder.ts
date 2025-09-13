@@ -8,6 +8,7 @@ export const folderSchema = z.object({
   total_files: z.number(),
 });
 
+export type FolderSchema = z.infer<typeof folderSchema>;
 export const listFolderSchema = z.object({
   data: z.array(folderSchema),
 });
