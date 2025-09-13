@@ -10,11 +10,10 @@ import { handleServerActionError } from "@/libs/handleServerActionError";
 import { actionClient } from "@/libs/safeAction";
 import axios from "axios";
 import {
-  AskAiMeetingSchema,
+  askAiMeetingSchema,
   ResponseAskAiMeetingSchema,
 } from "@/validators/meetings/validator.ask-ai-meeting";
 import { auth } from "@/auth";
-import { z } from "zod";
 
 /**
  * Sends a question to the AI about a specific meeting and returns the AI's response.
@@ -39,12 +38,7 @@ import { z } from "zod";
  *   }
  */
 export const askAiMeeting = actionClient
-  .inputSchema(
-    z.object({
-      meetingId: z.string(),
-      message: z.string().min(1, "Message cannot be empty"),
-    })
-  )
+  .inputSchema(askAiMeetingSchema)
   .action(
     async ({
       parsedInput,
@@ -62,7 +56,7 @@ export const askAiMeeting = actionClient
 
         const response = await axios.post(
           `${ENV.API_LOCAL_BASE_URL}meetings/${parsedInput.meetingId}/ask-ai`,
-          { message: parsedInput.message },
+          parsedInput,
           {
             headers: {
               Authorization: `Bearer ${session.token.access_token}`,

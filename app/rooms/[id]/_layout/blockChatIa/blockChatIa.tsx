@@ -3,7 +3,7 @@ import { useAskAiMeeting } from "@/hooks/features/meetings/hook.ask-ai-meeting";
 import { Button, Spinner, Textarea } from "@heroui/react";
 import { RefreshCcw, SendHorizonal } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 
 const BlockChatIa = ({ id }: { id: string }) => {
   const {
@@ -14,7 +14,9 @@ const BlockChatIa = ({ id }: { id: string }) => {
     refetch,
   } = useGetMeetingChat(id);
 
-  const askAiMutation = useAskAiMeeting({
+  const [isAskingAi, startAskingAi] = useTransition();
+
+  const { mutate: askQuestionAi, isPending } = useAskAiMeeting({
     onSuccessCallback: (data) => {
       console.log("Question envoyée avec succès:", data);
       // Rafraîchir les messages après une nouvelle question
@@ -30,7 +32,7 @@ const BlockChatIa = ({ id }: { id: string }) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleSendMessage = () => {
-    if (!inputValue.trim() || askAiMutation.isPending) return;
+    if (!inputValue.trim() || isPending) return;
 
     // Marquer le début de la conversation
     if (!hasStartedConversation) {
@@ -38,9 +40,13 @@ const BlockChatIa = ({ id }: { id: string }) => {
     }
 
     // Envoyer la question à l'IA via l'API
-    askAiMutation.mutate({
-      meetingId: id,
-      message: inputValue.trim(),
+    startAskingAi(() => {
+      askQuestionAi({
+        meetingId: id,
+        message: inputValue.trim(),
+        id_last_message:
+          chatMessages?.data[chatMessages?.data.length - 1].id || null,
+      });
     });
 
     setInputValue("");
@@ -159,7 +165,7 @@ const BlockChatIa = ({ id }: { id: string }) => {
               </div>
             ))}
 
-            {askAiMutation.isPending && (
+            {isPending && (
               <div className="flex justify-start">
                 <div className="bg-bgGray text-gray-800 rounded-lg p-3">
                   <div className="flex items-center space-x-1">
@@ -199,10 +205,9 @@ const BlockChatIa = ({ id }: { id: string }) => {
             <Button
               className="w-[32px] h-[32px] bg-primaryColor min-w-0 p-0 flex-none text-white"
               onPress={handleSendMessage}
-              isDisabled={
-                isLoading || !inputValue.trim() || askAiMutation.isPending
-              }
-              isLoading={askAiMutation.isPending}
+              isDisabled={isLoading || !inputValue.trim() || isPending}
+              isLoading={isLoading || isAskingAi}
+              isIconOnly
             >
               <SendHorizonal size={16} />
             </Button>

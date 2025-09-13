@@ -6,21 +6,19 @@ import {
 } from "@/hooks/common/hook.use-mutation";
 import { askAiMeeting } from "@/services/meetings/service.ask-ai-meeting";
 import { IActionSuccess } from "@/interfaces/interface.result-actions";
-import { ResponseAskAiMeetingSchema } from "@/validators/meetings/validator.ask-ai-meeting";
+import {
+  AskAiMeetingSchema,
+  ResponseAskAiMeetingSchema,
+} from "@/validators/meetings/validator.ask-ai-meeting";
 
-// Type pour les paramètres de la question
-export interface AskAiMeetingParams {
-  meetingId: string;
-  message: string;
-}
-
+//
 // Type pour les paramètres supplémentaires
 export interface AskAiMeetingOptions {
   onSuccessCallback?: (
     data: MutationResult<IActionSuccess & { data: ResponseAskAiMeetingSchema }>,
-    questionData: AskAiMeetingParams
+    questionData: AskAiMeetingSchema
   ) => void;
-  onErrorCallback?: (error: Error, questionData: AskAiMeetingParams) => void;
+  onErrorCallback?: (error: Error, questionData: AskAiMeetingSchema) => void;
 }
 
 /**
@@ -37,7 +35,7 @@ export interface AskAiMeetingOptions {
 export const useAskAiMeeting = (options?: AskAiMeetingOptions) => {
   return useCustomMutation<
     IActionSuccess & { data: ResponseAskAiMeetingSchema },
-    AskAiMeetingParams
+    AskAiMeetingSchema
   >({
     mutationFn: askAiMeeting,
     messages: {
@@ -51,6 +49,8 @@ export const useAskAiMeeting = (options?: AskAiMeetingOptions) => {
         options.onSuccessCallback(data, variables);
       }
     },
+    showToast: false,
+    useLoading: false,
     onError: (error, variables) => {
       if (options?.onErrorCallback) {
         options.onErrorCallback(error as Error, variables);
