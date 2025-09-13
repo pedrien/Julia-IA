@@ -86,13 +86,13 @@ const TableRooms = () => {
     <div className="card bg-bgCard rounded-2xl shadow-[0_5px_18px_#00000005]">
       <div className="flex items-center justify-between lg:mb-4 mb-6 px-4 pt-4">
         <h2 className="text-colorTitle font-semibold">
-          Liste des comptes rendus
+          Liste des compte rendus
         </h2>
         <div>
           <Input
             type="text"
             variant="bordered"
-            placeholder="Trouvez une réunion"
+            placeholder="Trouvez un compte rendu"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             classNames={{
@@ -157,10 +157,10 @@ const TableRooms = () => {
           ) : (
             <tr>
               <td colSpan={6} className="text-center py-8">
-                <div className="text-colorMuted">
+                <div className="text-colorMuted text-center py-8">
                   {searchTerm
-                    ? "Aucune réunion trouvée"
-                    : "Aucune réunion disponible"}
+                    ? "Aucun compte rendu trouvé"
+                    : "Aucun compte rendu disponible"}
                 </div>
               </td>
             </tr>

@@ -1,11 +1,8 @@
-import React from 'react';
-import Container from './_layout/container';
+"use client";
+import Container from "./_layout/container";
 
 const Page = () => {
-    return (
-        <Container> 
-        </Container>
-    );
-}
+  return <Container></Container>;
+};
 
 export default Page;

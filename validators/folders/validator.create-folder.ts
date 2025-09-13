@@ -11,6 +11,10 @@ export const createFolderSchema = z.object({
     .max(1000, "La description ne peut pas dépasser 1000 caractères"),
   fichier: z
     .instanceof(File)
+    .refine(
+      (file) => file instanceof File,
+      "Veuillez sélectionner un fichier valide"
+    )
     .refine((file) => file.size > 0, "Le fichier est requis")
     .refine(
       (file) => file.size <= 50 * 1024 * 1024,
