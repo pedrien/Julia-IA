@@ -3,7 +3,8 @@ import { useAskAiMeeting } from "@/hooks/features/meetings/hook.ask-ai-meeting";
 import { Button, Spinner, Textarea } from "@heroui/react";
 import { RefreshCcw, SendHorizonal } from "lucide-react";
 import Image from "next/image";
-import React, { useState, useTransition } from "react";
+import React, { useState, useTransition, useEffect } from "react";
+import { ListChatMeetingSchema } from "@/validators/meetings/validator.list-chat-meetings";
 
 const BlockChatIa = ({ id }: { id: string }) => {
   const {
@@ -19,7 +20,9 @@ const BlockChatIa = ({ id }: { id: string }) => {
   const { mutate: askQuestionAi, isPending } = useAskAiMeeting({
     onSuccessCallback: (data) => {
       console.log("Question envoyée avec succès:", data);
-      // Rafraîchir les messages après une nouvelle question
+
+      // Ajouter la réponse de l'IA à la liste locale
+      // Rafraîchir les messages après une nouvelle question pour synchroniser
       refetch();
     },
     onErrorCallback: (error) => {
@@ -30,22 +33,45 @@ const BlockChatIa = ({ id }: { id: string }) => {
   console.log(chatMessages);
   const [hasStartedConversation, setHasStartedConversation] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [localMessages, setLocalMessages] =
+    useState<ListChatMeetingSchema | null>(null);
+
+  // Synchroniser les messages locaux avec les données de l'API
+  useEffect(() => {
+    if (chatMessages) {
+      setLocalMessages(chatMessages);
+    }
+  }, [chatMessages]);
 
   const handleSendMessage = () => {
     if (!inputValue.trim() || isPending) return;
+
+    const userMessage = inputValue.trim();
 
     // Marquer le début de la conversation
     if (!hasStartedConversation) {
       setHasStartedConversation(true);
     }
 
+    // Ajouter immédiatement le message de l'utilisateur à la liste locale
+    const newUserMessage = {
+      id: `user-${Date.now()}`,
+      type: "USER" as const,
+      message: userMessage,
+      date_time: new Date().toISOString().slice(0, 19).replace("T", " "),
+    };
+
+    setLocalMessages((prev) => ({
+      data: [...(prev?.data || []), newUserMessage],
+    }));
+
     // Envoyer la question à l'IA via l'API
     startAskingAi(() => {
       askQuestionAi({
         meetingId: id,
-        message: inputValue.trim(),
+        message: userMessage,
         id_last_message:
-          chatMessages?.data[chatMessages?.data.length - 1].id || null,
+          localMessages?.data[localMessages?.data.length - 1]?.id || null,
       });
     });
 
@@ -121,7 +147,7 @@ const BlockChatIa = ({ id }: { id: string }) => {
               <RefreshCcw size={14} />
             </Button>
           </div>
-        ) : chatMessages?.data.length === 0 ? (
+        ) : (localMessages?.data || chatMessages?.data || []).length === 0 ? (
           <div className="flex flex-col h-full justify-center items-center">
             <div className="w-full text-center">
               <h2 className="lg:text-[24px] font-semibold">Salut Martins 👋</h2>
@@ -132,38 +158,40 @@ const BlockChatIa = ({ id }: { id: string }) => {
           </div>
         ) : (
           <div className="flex flex-col space-y-3">
-            {chatMessages?.data.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${
-                  message.type === "USER" ? "justify-end" : "justify-start"
-                }`}
-              >
+            {(localMessages?.data || chatMessages?.data || []).map(
+              (message) => (
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
-                    message.type === "USER"
-                      ? "bg-primaryColor text-white rounded-br-none"
-                      : "bg-bgGray text-colorTitle rounded-bl-none"
+                  key={message.id}
+                  className={`flex ${
+                    message.type === "USER" ? "justify-end" : "justify-start"
                   }`}
                 >
-                  <div className="whitespace-pre-wrap text-sm">
-                    {message.message}
-                  </div>
                   <div
-                    className={`text-xs mt-1 ${
+                    className={`max-w-[80%] rounded-lg p-3 ${
                       message.type === "USER"
-                        ? "text-white/70"
-                        : "text-colorMuted"
+                        ? "bg-primaryColor text-white rounded-br-none"
+                        : "bg-bgGray text-colorTitle rounded-bl-none"
                     }`}
                   >
-                    {new Date(message.date_time).toLocaleTimeString("fr-FR", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    <div className="whitespace-pre-wrap text-sm">
+                      {message.message}
+                    </div>
+                    <div
+                      className={`text-xs mt-1 ${
+                        message.type === "USER"
+                          ? "text-white/70"
+                          : "text-colorMuted"
+                      }`}
+                    >
+                      {new Date(message.date_time).toLocaleTimeString("fr-FR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
 
             {isPending && (
               <div className="flex justify-start">

@@ -81,27 +81,10 @@ export const POST = async (
 
     console.log(requestData);
 
-    if (
-      !requestData ||
-      typeof requestData !== "object" ||
-      !("data" in requestData) ||
-      !requestData.data
-    ) {
-      return NextResponse.json(
-        { message: "Failed to get AI response for this meeting." },
-        { status: 400 }
-      );
-    }
-
-    const data: ResponseAskAiMeetingSchema = validateApiResponse(
-      requestData.data,
-      responseAskAiMeetingSchema
-    );
-
     return NextResponse.json(
       {
         message: "AI response generated successfully.",
-        data: data,
+        data: requestData,
       },
       { status: 200 }
     );

@@ -6,16 +6,13 @@ import {
 } from "@/hooks/common/hook.use-mutation";
 import { askAiMeeting } from "@/services/meetings/service.ask-ai-meeting";
 import { IActionSuccess } from "@/interfaces/interface.result-actions";
-import {
-  AskAiMeetingSchema,
-  ResponseAskAiMeetingSchema,
-} from "@/validators/meetings/validator.ask-ai-meeting";
+import { AskAiMeetingSchema } from "@/validators/meetings/validator.ask-ai-meeting";
 
 //
 // Type pour les paramètres supplémentaires
 export interface AskAiMeetingOptions {
   onSuccessCallback?: (
-    data: MutationResult<IActionSuccess & { data: ResponseAskAiMeetingSchema }>,
+    data: MutationResult<IActionSuccess>,
     questionData: AskAiMeetingSchema
   ) => void;
   onErrorCallback?: (error: Error, questionData: AskAiMeetingSchema) => void;
@@ -25,7 +22,7 @@ export interface AskAiMeetingOptions {
  * Hook personnalisé pour envoyer une question à l'IA à propos d'une réunion spécifique.
  *
  * @param {AskAiMeetingOptions} [options] - Callbacks optionnels pour la gestion du succès et des erreurs.
- * @returns {MutationResult<IActionSuccess & { data: ResponseAskAiMeetingSchema }>, AskAiMeetingParams>}
+ * @returns {MutationResult<IActionSuccess>, AskAiMeetingParams>}
  *
  * - Utilise un hook de mutation personnalisé pour gérer l'appel API et l'état.
  * - En cas de succès, invalide la requête "meeting-chat" pour rafraîchir la conversation.
@@ -33,10 +30,7 @@ export interface AskAiMeetingOptions {
  * - Permet de passer des callbacks personnalisés pour les événements de succès et d'erreur.
  */
 export const useAskAiMeeting = (options?: AskAiMeetingOptions) => {
-  return useCustomMutation<
-    IActionSuccess & { data: ResponseAskAiMeetingSchema },
-    AskAiMeetingSchema
-  >({
+  return useCustomMutation<IActionSuccess, AskAiMeetingSchema>({
     mutationFn: askAiMeeting,
     messages: {
       success: "Question envoyée à l'IA avec succès",
