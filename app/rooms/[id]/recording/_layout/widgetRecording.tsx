@@ -230,7 +230,7 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
           <Tooltip
             content={"Participants"}
             classNames={{
-              content: ["bg-colorTitle border-0 text-white text-xs"],
+              content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
             }}
           >
             <Button
@@ -240,15 +240,15 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
               <UsersRound size={22} />
             </Button>
           </Tooltip>
-          <div className="content-btns-action p-2 items-center flex gap-2 bg-bgGray rounded-full">
+          <div className="content-btns-action p-2 items-center flex gap-2 bg-bgGray  rounded-full">
             <Tooltip
               content={"Arrêter"}
               classNames={{
-                content: ["bg-colorTitle border-0 text-white text-xs"],
+                content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
               }}
             >
               <Button
-                className="w-[50px] h-[50px] min-w-0 p-0 rounded-full bg-bgCard text-colorTitle"
+                className="w-[50px] h-[50px] min-w-0 p-0 rounded-full bg-bgCard dark:bg-bgGray text-colorTitle"
                 onPress={() => {
                   handleStopRecording();
                 }}
@@ -260,7 +260,7 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
             <Tooltip
               content={isRecording ? "En cours..." : "Démarrer"}
               classNames={{
-                content: ["bg-colorTitle border-0 text-white text-xs"],
+                content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
               }}
             >
               <Button
@@ -277,11 +277,11 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
             <Tooltip
               content={"Supprimer"}
               classNames={{
-                content: ["bg-colorTitle border-0 text-white text-xs"],
+                content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
               }}
             >
               <Button
-                className="w-[50px] h-[50px] min-w-0 p-0 rounded-full bg-bgCard text-colorTitle"
+                className="w-[50px] h-[50px] min-w-0 p-0 rounded-full bg-bgCard dark:bg-bgGray  text-colorTitle"
                 onPress={handleDeleteRecording}
                 isDisabled={!audioUrl && !isRecording}
               >
@@ -292,7 +292,7 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
           <Tooltip
             content={"Infos générales"}
             classNames={{
-              content: ["bg-colorTitle border-0 text-white text-xs"],
+              content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
             }}
           >
             <Button

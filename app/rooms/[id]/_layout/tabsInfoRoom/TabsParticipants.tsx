@@ -47,7 +47,10 @@ const TabsParticipants = ({ id }: { id: string }) => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[300px]">
-        <Spinner />
+        <Spinner classNames={{
+          circle1: "border-b-primaryColor",
+          circle2: "border-b-primaryColor",
+        }}/>
       </div>
     );
   }
@@ -141,7 +144,7 @@ const TabsParticipants = ({ id }: { id: string }) => {
           <Tooltip
             content={"Ajouter"}
             classNames={{
-              content: ["bg-colorTitle border-0 text-white text-xs"],
+              content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
             }}
           >
             <Button

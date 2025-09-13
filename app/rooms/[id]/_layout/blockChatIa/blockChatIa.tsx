@@ -238,8 +238,8 @@ const BlockChatIa = ({ id }: { id: string }) => {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.isUser
-                      ? "bg-primaryColor text-white"
-                      : "bg-bgGray text-colorTitle"
+                      ? "bg-primaryColor text-white rounded-br-none"
+                      : "bg-bgGray text-colorTitle rounded-bl-none"
                   }`}
                 >
                   <div className="whitespace-pre-wrap text-sm">

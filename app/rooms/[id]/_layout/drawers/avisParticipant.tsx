@@ -41,7 +41,7 @@ const AvisParticipants = () => {
       size="md"
       radius="none"
     >
-      <DrawerContent>
+      <DrawerContent className="bg-bgCard">
         <DrawerHeader className="border-b border-colorBorderTr">
           {currentParticipant === null ? (
             <Skeleton className="w-full h-[40px] rounded-lg" />
