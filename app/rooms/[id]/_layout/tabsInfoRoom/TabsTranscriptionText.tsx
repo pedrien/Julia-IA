@@ -219,10 +219,12 @@ const TabsTranscriptionText = ({ id }: { id: string }) => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[300px]">
-        <Spinner classNames={{
-          circle1: "border-b-primaryColor",
-          circle2: "border-b-primaryColor",
-        }}/>
+        <Spinner
+          classNames={{
+            circle1: "border-b-primaryColor",
+            circle2: "border-b-primaryColor",
+          }}
+        />
       </div>
     );
   }
@@ -247,9 +249,7 @@ const TabsTranscriptionText = ({ id }: { id: string }) => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-2 mb-3 mt-2">
-        <h3 className="text-colorTitle font-semibold">
-          Transcription ({transcription.text.length} caractères)
-        </h3>
+        <h3 className="text-colorTitle font-semibold">Transcription</h3>
         <div className="flex items-center gap-1">
           <Tooltip
             content={copied ? "Copié !" : "Copier le texte"}
