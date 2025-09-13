@@ -43,15 +43,15 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
     // Format data for API before sending
     const formattedData = {
       type: validatedData.type,
-      external_name: validatedData.external_name,
-      external_email: validatedData.external_email,
-      external_phone: validatedData.external_phone,
-      external_company: validatedData.external_company,
+      name: validatedData.external_name,
+      email: validatedData.external_email,
+      phone: validatedData.external_phone,
+      company: validatedData.external_company,
     };
     console.log(formattedData);
     await callApiWithToken(
       tokenOrErrorResponse,
-      "meetings/participants/external/store",
+      "external-participants/store",
       formattedData,
       "POST"
     );
