@@ -9,10 +9,17 @@ import {
   createFolderSchema,
 } from "@/validators/folders/validator.create-folder";
 import { useCreateFolder } from "@/hooks/features/folders/hook.create-folder";
+import { useFolderCreation } from "@/contexts/features/folder/context.folder-creation";
 const Sidebar = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isPendingFolder, startTransition] = useTransition();
+  const {
+    selectedFile,
+    setSelectedFile,
+    removeFile: removeFileFromContext,
+  } = useFolderCreation();
+
   const {
     register,
     handleSubmit,
@@ -20,7 +27,6 @@ const Sidebar = () => {
     reset,
     setValue,
     trigger,
-    watch,
   } = useForm<CreateFolderSchema>({
     resolver: zodResolver(createFolderSchema),
     defaultValues: {
@@ -32,11 +38,10 @@ const Sidebar = () => {
     mode: "all",
   });
 
-  const selectedFile = watch("fichier");
-
   const { mutate: createFolder } = useCreateFolder({
     onSuccessCallback: () => {
       reset();
+      removeFileFromContext();
     },
   });
 
@@ -44,18 +49,20 @@ const Sidebar = () => {
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
       if (file) {
+        setSelectedFile(file);
         setValue("fichier", file);
         setValue("size", file.size);
         await trigger(["fichier", "size"]);
       }
     },
-    [setValue, trigger]
+    [setSelectedFile, setValue, trigger]
   );
 
   const removeFile = useCallback(async () => {
+    removeFileFromContext();
     reset({
-      nom_dossier: watch("nom_dossier"),
-      description: watch("description"),
+      nom_dossier: "",
+      description: "",
       fichier: undefined,
       size: 0,
     });
@@ -63,7 +70,7 @@ const Sidebar = () => {
       fileInputRef.current.value = "";
     }
     await trigger(["fichier", "size"]);
-  }, [reset, watch, trigger]);
+  }, [removeFileFromContext, reset, trigger]);
 
   const onSubmit = useCallback(
     async (data: CreateFolderSchema) => {
