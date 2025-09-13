@@ -1,35 +1,36 @@
 import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
-import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
-import {
-  MeetingDocument,
-  meetingDocumentSchema,
-} from "@/validators/meetings/validator.detail-meetings";
+import { addInternalParticipantSchema } from "@/validators/meetings/validator.add-internal-participant";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * @api {get} /api/meetings/:id/documents Get meeting documents
- * @apiName GetMeetingDocuments
+ * @api {post} /api/meetings/:id/add-internal-participants Add internal participants to a meeting
+ * @apiName AddInternalParticipantsMeeting
  * @apiGroup Meetings
  * @apiDescription
- * Retrieves the documents (recording and report) for a specific meeting.
+ * Adds internal participants to a specific meeting.
  *
  * @apiParam {String} id Meeting ID
  *
  * @apiHeader {String} Authorization Bearer access token
+ * @apiHeader {String} Content-Type application/json
+ *
+ * @apiBody {String[]} participantIds Array of participant IDs
  *
  * @apiSuccess {String} message Success message
- * @apiSuccess {Object} data Meeting documents with URLs
  *
- * @apiError (400) {String} message Parameter validation error or no documents found
+ * @apiError (400) {String} message Parameter validation error or invalid request
  * @apiError (401) {String} message Not authenticated
  * @apiError (500) {String} message Internal server error
  *
  * @example {curl} Example usage:
- *     curl -X GET "https://<your-domain>/api/meetings/1/documents" -H "Authorization: Bearer <token>"
+ *     curl -X POST "https://<your-domain>/api/meetings/1/add-internal-participants" \
+ *          -H "Authorization: Bearer <token>" \
+ *          -H "Content-Type: application/json" \
+ *          -d '{"participantIds": ["participant-1", "participant-2", "participant-3"]}'
  */
-export const GET = async (
+export const POST = async (
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) => {
@@ -40,13 +41,24 @@ export const GET = async (
     }
 
     const { id } = await params;
+    const body = await req.json();
+
+    // Validate request body
+    const validatedBody = addInternalParticipantSchema.parse({
+      meetingId: id,
+      participantIds: body.participantIds,
+    });
 
     const requestData = await callApiWithToken(
       tokenOrErrorResponse,
-      `meetings/${id}/media`,
-      undefined,
-      "GET"
+      `meetings/${id}/add-internal-participants`,
+      {
+        participantIds: validatedBody.participantIds,
+      },
+      "POST"
     );
+
+    console.log(requestData);
 
     if (
       !requestData ||
@@ -55,21 +67,14 @@ export const GET = async (
       !requestData.data
     ) {
       return NextResponse.json(
-        { message: "No documents found for this meeting." },
+        { message: "Failed to add internal participants to this meeting." },
         { status: 400 }
       );
     }
-    //const requestData = fakeMeetingDocument;
-    //console.log(requestData.data);
-    const data: MeetingDocument = validateApiResponse(
-      requestData.data,
-      meetingDocumentSchema
-    );
 
     return NextResponse.json(
       {
-        message: "Meeting documents retrieved successfully.",
-        data: data,
+        message: "Internal participants added to meeting successfully.",
       },
       { status: 200 }
     );

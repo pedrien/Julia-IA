@@ -3,31 +3,31 @@ import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
 import {
-  MeetingParticipantList,
-  meetingParticipantListSchema,
-} from "@/validators/meetings/validator.detail-meetings";
+  ListChatMeetingSchema,
+  listChatMeetingSchema,
+} from "@/validators/meetings/validator.list-chat-meetings";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * @api {get} /api/meetings/:id/participants Get meeting participants
- * @apiName GetMeetingParticipants
+ * @api {get} /api/meetings/:id/chat Get meeting chat messages
+ * @apiName GetMeetingChat
  * @apiGroup Meetings
  * @apiDescription
- * Retrieves the list of participants for a specific meeting.
+ * Retrieves the chat messages for a specific meeting.
  *
  * @apiParam {String} id Meeting ID
  *
  * @apiHeader {String} Authorization Bearer access token
  *
  * @apiSuccess {String} message Success message
- * @apiSuccess {Object} data Participants list with internal and guest participants
+ * @apiSuccess {Object} data List of chat messages
  *
- * @apiError (400) {String} message Parameter validation error or no participants found
+ * @apiError (400) {String} message Parameter validation error or no meeting found
  * @apiError (401) {String} message Not authenticated
  * @apiError (500) {String} message Internal server error
  *
  * @example {curl} Example usage:
- *     curl -X GET "https://<your-domain>/api/meetings/1/participants" -H "Authorization: Bearer <token>"
+ *     curl -X GET "https://<your-domain>/api/meetings/1/chat" -H "Authorization: Bearer <token>"
  */
 export const GET = async (
   req: NextRequest,
@@ -43,32 +43,33 @@ export const GET = async (
 
     const requestData = await callApiWithToken(
       tokenOrErrorResponse,
-      `meetings/${id}/participants`,
+      `ai/meetings/${id}/conversations`,
       undefined,
       "GET"
     );
 
-    // if (
-    //   !requestData ||
-    //   typeof requestData !== "object" ||
-    //   !("data" in requestData) ||
-    //   !requestData.data
-    // ) {
-    //   return NextResponse.json(
-    //     { message: "No participants found for this meeting." },
-    //     { status: 400 }
-    //   );
-    // }
-    // const requestData = fakeMeetingParticipants;
-    // console.log(requestData.data);
-    const data: MeetingParticipantList = validateApiResponse(
+    //const requestData = fakeChatMeetings;
+
+    if (
+      !requestData ||
+      typeof requestData !== "object" ||
+      !("data" in requestData) ||
+      !requestData.data
+    ) {
+      return NextResponse.json(
+        { message: "No chat messages found for this meeting." },
+        { status: 400 }
+      );
+    }
+
+    const data: ListChatMeetingSchema = validateApiResponse(
       requestData,
-      meetingParticipantListSchema
+      listChatMeetingSchema
     );
 
     return NextResponse.json(
       {
-        message: "Meeting participants retrieved successfully.",
+        message: "Meeting chat messages retrieved successfully.",
         data: data,
       },
       { status: 200 }

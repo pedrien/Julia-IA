@@ -1,5 +1,7 @@
 "use client";
 
+import ModalAddInternalParticipantsMeetings from "@/components/features/room/modals/ModalAddInternalParticipantsMeetings";
+import NewInvite from "@/components/features/room/NewInvite";
 import { useDrawerContext } from "@/contexts/Drawer/DrawerContext";
 import { useCurrentParticipant } from "@/contexts/features/meetings/context.current-participant-meetings-detail";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
@@ -47,10 +49,12 @@ const TabsParticipants = ({ id }: { id: string }) => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[300px]">
-        <Spinner classNames={{
-          circle1: "border-b-primaryColor",
-          circle2: "border-b-primaryColor",
-        }}/>
+        <Spinner
+          classNames={{
+            circle1: "border-b-primaryColor",
+            circle2: "border-b-primaryColor",
+          }}
+        />
       </div>
     );
   }
@@ -71,151 +75,180 @@ const TabsParticipants = ({ id }: { id: string }) => {
     );
   }
   return (
-    <div className="flex flex-col gap-5">
-      <div>
-        <h3 className="text-colorTitle font-semibold mb-3 mt-2">
-          Participants ({participants.participants.length})
-        </h3>
-        <div className="flex flex-col gap-4">
-          {participants.participants.length > 0 ? (
-            participants.participants.map((participant) => (
-              <div
-                key={participant.id}
-                className="flex gap-2 items-center cursor-pointer"
-                onClick={() => {
-                  setCurrentParticipant(participant);
-                  openDrawer("AvisParticipants");
-                }}
-              >
-                <Avatar
-                  alt={participant.name}
-                  className="shrink-0"
-                  size="md"
-                  src={getAvatarUrl(participant.name)}
-                />
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-2">
-                    <span className="text-small text-colorTitle">
-                      {participant.name}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <Chip
-                        className={`${getReadStatusColor(
-                          participant.has_read_report || false
-                        )} text-[10px]`}
-                        size="sm"
-                      >
-                        {getReadStatusText(
-                          participant.has_read_report || false
-                        )}
-                      </Chip>
-                      <Chip
-                        className={`${getProcessedStatusColor(
-                          participant.has_processed_report || false
-                        )} text-[10px]`}
-                        size="sm"
-                      >
-                        {getProcessedStatusText(
-                          participant.has_processed_report || false
-                        )}
-                      </Chip>
-                    </div>
-                  </div>
-                  <span className="text-tiny text-colorMuted">
-                    {participant.email}
-                  </span>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-center py-4">
-              <span className="text-colorMuted text-sm">
-                Aucun participant interne
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-      <div>
-        <div className="flex items-center gap-2 mb-3 mt-2">
-          <h3 className="text-colorTitle font-semibold">
-            Invités ({participants.guest_participants.length})
-          </h3>
-          <Tooltip
-            content={"Ajouter"}
-            classNames={{
-              content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
-            }}
-          >
-            <Button
-              className="bg-transparent border border-colorBorder  text-colorTitle text-xs p-0 min-w-0 h-[26px] w-[26px]"
-              onPress={() => openModal("ModalNewUser")}
+    <>
+      <div className="flex flex-col gap-5">
+        <div>
+          <div className="flex items-center gap-2 mb-3 mt-2">
+            <h3 className="text-colorTitle font-semibold">
+              Participants ({participants.participants.length})
+            </h3>
+            <Tooltip
+              content={"Ajouter"}
+              classNames={{
+                content: [
+                  "bg-black/70 backdrop-blur-sm border-0 text-white text-xs",
+                ],
+              }}
             >
-              <Plus size={14}></Plus>
-            </Button>
-          </Tooltip>
-        </div>
-        <div className="flex flex-col gap-4">
-          {participants.guest_participants.length > 0 ? (
-            participants.guest_participants.map((participant) => (
-              <div
-                key={participant.id}
-                className="flex gap-2 items-center cursor-pointer"
-                onClick={() => {
-                  setCurrentParticipant(participant);
-                  openDrawer("AvisParticipants");
-                }}
+              <Button
+                className="bg-transparent border border-colorBorder  text-colorTitle text-xs p-0 min-w-0 h-[26px] w-[26px]"
+                onPress={() =>
+                  openModal("ModalAddInternalParticipantsMeetings")
+                }
               >
-                <Avatar
-                  alt={participant.name}
-                  className="shrink-0"
-                  size="md"
-                  src={getAvatarUrl(participant.name)}
-                />
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-2">
-                    <span className="text-small text-colorTitle">
-                      {participant.name}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <Chip
-                        className={`${getReadStatusColor(
-                          participant.has_read_report || false
-                        )} text-[10px]`}
-                        size="sm"
-                      >
-                        {getReadStatusText(
-                          participant.has_read_report || false
-                        )}
-                      </Chip>
-                      <Chip
-                        className={`${getProcessedStatusColor(
-                          participant.has_processed_report || false
-                        )} text-[10px]`}
-                        size="sm"
-                      >
-                        {getProcessedStatusText(
-                          participant.has_processed_report || false
-                        )}
-                      </Chip>
+                <Plus size={14}></Plus>
+              </Button>
+            </Tooltip>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            {participants.participants.length > 0 ? (
+              participants.participants.map((participant) => (
+                <div
+                  key={participant.id}
+                  className="flex gap-2 items-center cursor-pointer"
+                  onClick={() => {
+                    setCurrentParticipant(participant);
+                    openDrawer("AvisParticipants");
+                  }}
+                >
+                  <Avatar
+                    alt={participant.name}
+                    className="shrink-0"
+                    size="md"
+                    src={getAvatarUrl(participant.name)}
+                  />
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <span className="text-small text-colorTitle">
+                        {participant.name}
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <Chip
+                          className={`${getReadStatusColor(
+                            participant.has_read_report || false
+                          )} text-[10px]`}
+                          size="sm"
+                        >
+                          {getReadStatusText(
+                            participant.has_read_report || false
+                          )}
+                        </Chip>
+                        <Chip
+                          className={`${getProcessedStatusColor(
+                            participant.has_processed_report || false
+                          )} text-[10px]`}
+                          size="sm"
+                        >
+                          {getProcessedStatusText(
+                            participant.has_processed_report || false
+                          )}
+                        </Chip>
+                      </div>
                     </div>
+                    <span className="text-tiny text-colorMuted">
+                      {participant.email}
+                    </span>
                   </div>
-                  <span className="text-tiny text-colorMuted">
-                    {participant.email}
-                  </span>
                 </div>
+              ))
+            ) : (
+              <div className="text-center py-4">
+                <span className="text-colorMuted text-sm">
+                  Aucun participant interne
+                </span>
               </div>
-            ))
-          ) : (
-            <div className="text-center py-4">
-              <span className="text-colorMuted text-sm">
-                Aucun participant externe
-              </span>
-            </div>
-          )}
+            )}
+          </div>
+        </div>
+        <div>
+          <div className="flex items-center gap-2 mb-3 mt-2">
+            <h3 className="text-colorTitle font-semibold">
+              Invités ({participants.guest_participants.length})
+            </h3>
+            <Tooltip
+              content={"Ajouter"}
+              classNames={{
+                content: [
+                  "bg-black/70 backdrop-blur-sm border-0 text-white text-xs",
+                ],
+              }}
+            >
+              <Button
+                className="bg-transparent border border-colorBorder  text-colorTitle text-xs p-0 min-w-0 h-[26px] w-[26px]"
+                onPress={() => openModal("NewInvite")}
+              >
+                <Plus size={14}></Plus>
+              </Button>
+            </Tooltip>
+          </div>
+          <div className="flex flex-col gap-4">
+            {participants.guest_participants.length > 0 ? (
+              participants.guest_participants.map((participant) => (
+                <div
+                  key={participant.id}
+                  className="flex gap-2 items-center cursor-pointer"
+                  onClick={() => {
+                    setCurrentParticipant(participant);
+                    openDrawer("AvisParticipants");
+                  }}
+                >
+                  <Avatar
+                    alt={participant.name}
+                    className="shrink-0"
+                    size="md"
+                    src={getAvatarUrl(participant.name)}
+                  />
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <span className="text-small text-colorTitle">
+                        {participant.name}
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <Chip
+                          className={`${getReadStatusColor(
+                            participant.has_read_report || false
+                          )} text-[10px]`}
+                          size="sm"
+                        >
+                          {getReadStatusText(
+                            participant.has_read_report || false
+                          )}
+                        </Chip>
+                        <Chip
+                          className={`${getProcessedStatusColor(
+                            participant.has_processed_report || false
+                          )} text-[10px]`}
+                          size="sm"
+                        >
+                          {getProcessedStatusText(
+                            participant.has_processed_report || false
+                          )}
+                        </Chip>
+                      </div>
+                    </div>
+                    <span className="text-tiny text-colorMuted">
+                      {participant.email}
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-4">
+                <span className="text-colorMuted text-sm">
+                  Aucun participant externe
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      <ModalAddInternalParticipantsMeetings
+        listParticipants={participants.participants}
+        meetingId={id}
+      />
+      <NewInvite idMeeting={id} />
+    </>
   );
 };
 
