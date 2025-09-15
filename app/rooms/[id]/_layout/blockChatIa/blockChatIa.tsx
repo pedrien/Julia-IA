@@ -5,6 +5,7 @@ import { RefreshCcw, SendHorizonal } from "lucide-react";
 import Image from "next/image";
 import React, { useState, useTransition, useEffect, useRef } from "react";
 import { ListChatMeetingSchema } from "@/validators/meetings/validator.list-chat-meetings";
+import { useSession } from "next-auth/react";
 
 const BlockChatIa = ({ id }: { id: string }) => {
   const {
@@ -14,6 +15,7 @@ const BlockChatIa = ({ id }: { id: string }) => {
     isRefetching,
     refetch,
   } = useGetMeetingChat(id);
+  const { data: session } = useSession();
 
   const [isAskingAi, startAskingAi] = useTransition();
 
@@ -184,7 +186,9 @@ const BlockChatIa = ({ id }: { id: string }) => {
         ) : (localMessages?.data || chatMessages?.data || []).length === 0 ? (
           <div className="flex flex-col h-full justify-center items-center">
             <div className="w-full text-center">
-              <h2 className="lg:text-[24px] font-semibold">Salut Martins 👋</h2>
+              <h2 className="lg:text-[24px] font-semibold">
+                Salut {session?.user?.name} 👋
+              </h2>
               <p className="text-colorMuted text-sm">
                 Je suis Julia, toujours prête à vous assister.
               </p>
