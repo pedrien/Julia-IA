@@ -12,13 +12,11 @@ export const createMeetingSchema = z.object({
     .string()
     .min(1, "La description est requise")
     .max(1000, "La description ne peut pas dépasser 1000 caractères"),
-  scheduled_start_time: z
-    .string()
-    .min(1, "L'heure de début est requise")
-    .regex(
-      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
-      "Le format de l'heure doit être YYYY-MM-DD HH:MM:SS"
-    ),
+  scheduled_start_time: z.string().min(1, "L'heure de début est requise"),
+  // .regex(
+  //   /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+  //   "Le format de l'heure doit être YYYY-MM-DD HH:MM:SS"
+  // ),
 
   location: z
     .string()
