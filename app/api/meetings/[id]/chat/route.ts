@@ -75,7 +75,7 @@ export const GET = async (
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
     return handleApiServerError(error);
   }
 };

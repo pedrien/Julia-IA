@@ -33,16 +33,67 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
       return tokenOrErrorResponse;
     }
 
-    // Parse form data
+    // Parse form data (supports flat keys and bracketed keys)
     const formData = await req.formData();
-    const nomDossier = formData.get("nom_dossier") as string;
-    const description = formData.get("description") as string;
-    const fichier = formData.get("fichier") as File;
-    const size = formData.get("size") as string;
 
-    if (!nomDossier || !description || !fichier || !size) {
+    // Flat keys (legacy)
+    const nomDossier = (formData.get("nom_dossier") as string) || "";
+    const legacyDescription = (formData.get("description") as string) || null;
+    const legacyFile = (formData.get("fichier") as File) || null;
+    const legacySize = (formData.get("size") as string) || null;
+
+    // Bracketed folder keys
+    const folderNameBracket = (formData.get("folder[name]") as string) || "";
+    const folderDescriptionBracket = ((formData.get(
+      "folder[description]"
+    ) as string) || null) as string | null;
+    const folderParentIdBracket = ((formData.get(
+      "folder[parent_id]"
+    ) as string) || null) as string | null;
+    const folderVisibilityBracket = ((formData.get(
+      "folder[visibility]"
+    ) as string) || null) as string | null;
+
+    // Bracketed document keys
+    const documentTitleBracket =
+      (formData.get("document[title]") as string) || "";
+    const documentDescriptionBracket = ((formData.get(
+      "document[description]"
+    ) as string) || null) as string | null;
+    const documentVisibilityBracket = ((formData.get(
+      "document[visibility]"
+    ) as string) || null) as string | null;
+    const documentFileBracket = formData.get("document[file]") as File | null;
+
+    // Consolidate values (prefer bracketed if present)
+    const fichier = documentFileBracket || legacyFile;
+    const folderName = folderNameBracket || nomDossier;
+    const folderDescription = folderDescriptionBracket ?? legacyDescription;
+    const folderParentId = folderParentIdBracket ?? "dd,dd,d,dnfnfnf";
+    const folderVisibility = folderVisibilityBracket ?? "dd,dd,d,dnfnfnf";
+    const inferFileName = (file: File | null) =>
+      file?.name ? file.name.replace(/\.[^.]+$/, "") : "";
+    const documentTitle =
+      documentTitleBracket || folderName || inferFileName(fichier);
+    const documentDescription = documentDescriptionBracket ?? "dfjfjfjfjf";
+    const documentVisibility = documentVisibilityBracket ?? "dd,dd,d,dnfnfnf";
+
+    // Required checks
+    if (!folderName) {
       return NextResponse.json(
-        { message: "Tous les champs sont requis." },
+        { message: "Le nom du dossier est requis (folder[name])." },
+        { status: 400 }
+      );
+    }
+    if (!documentTitle) {
+      return NextResponse.json(
+        { message: "Le titre du document est requis (document[title])." },
+        { status: 400 }
+      );
+    }
+    if (!fichier) {
+      return NextResponse.json(
+        { message: "Le fichier du document est requis (document[file])." },
         { status: 400 }
       );
     }
@@ -65,15 +116,27 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 
     // Create new FormData for API call
     const apiFormData = new FormData();
-    apiFormData.append("nom_dossier", nomDossier);
-    apiFormData.append("description", description);
-    apiFormData.append("fichier", fichier);
-    apiFormData.append("size", size);
+    apiFormData.append("folder[name]", folderName);
+    if (folderDescription)
+      apiFormData.append("folder[description]", folderDescription);
+    // if (folderParentId) apiFormData.append("folder[parent_id]", folderParentId);
+    // if (folderVisibility)
+    //   apiFormData.append("folder[visibility]", folderVisibility);
+
+    apiFormData.append("document[title]", folderName);
+    // if (documentDescription)
+    //   apiFormData.append("document[description]", documentDescription);
+    // if (documentVisibility)
+    //   apiFormData.append("document[visibility]", documentVisibility);
+    apiFormData.append("document[file]", fichier);
+
+    // Preserve size if provided by client
+    if (legacySize) apiFormData.append("size", legacySize);
 
     console.log("apiFormData", ...apiFormData);
     const response = await callApiWithToken(
       tokenOrErrorResponse,
-      "folders/create",
+      "folders/store-with-document",
       apiFormData,
       "POST",
       true,
