@@ -23,7 +23,7 @@ const Sidebar = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
   return (
-    <div className="sidebar shadow-[0_5px_18px_#00000005] flex flex-col h-full fixed top-0 left-0 bg-bgCard md:w-[250px]">
+    <div className="sidebar shadow-[0_5px_18px_#00000005] flex flex-col h-full fixed top-0 left-0 bg-bgCard md:w-[250px] translate-x-[-100%] md:translate-x-[0%]">
       <div className="header p-3 border-b border-colorBorder">
         <div className="flex items-center justify-between">
           <Link href={"/"}>
