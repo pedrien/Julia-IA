@@ -55,10 +55,10 @@ export const POST = async (
       );
     }
 
-    // Validate file type
-    if (!audioFile.type.startsWith("audio/")) {
+    // Validate file type - must be audio/webm
+    if (audioFile.type !== "audio/webm") {
       return NextResponse.json(
-        { message: "Le fichier doit être un fichier audio." },
+        { message: "Le fichier doit être au format audio/webm." },
         { status: 400 }
       );
     }
@@ -87,7 +87,9 @@ export const POST = async (
       { status: 200 }
     );
   } catch (error) {
-    console.log("error in end meeting", error.response);
+    // Best-effort log for Axios-like errors without using 'any'
+    const maybeResponse = (error as { response?: unknown })?.response;
+    console.log("error in end meeting", maybeResponse);
     return handleApiServerError(error);
   }
 };

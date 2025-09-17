@@ -15,6 +15,7 @@ import { useModalContext } from "@/contexts/Modal/ModalContext";
 import { useLoading } from "@/contexts/Overlay/LoadingContext";
 import ModalShareRapport from "@/components/features/room/modals/ModalShareRapport";
 import { useRouter } from "next/navigation";
+import { showToast } from "@/utils/utils.toast";
 
 const Content = ({ id }: { id: string }) => {
   const { openModal } = useModalContext();
@@ -26,6 +27,7 @@ const Content = ({ id }: { id: string }) => {
     isError,
     refetch,
     isRefetching,
+    d,
   } = useGetMeetingDetailRecording(id);
   const [audioFileState, setAudioFileState] = useState<File | null>(null);
   const [duration, setDuration] = useState<number>(0);
@@ -44,11 +46,33 @@ const Content = ({ id }: { id: string }) => {
   });
 
   const handleRecordingStart = () => {
+    if (isRecording) {
+      return;
+    }
+    if (audioFileState || recordedAudio) {
+      showToast({
+        title: "Enregistrement déjà présent",
+        description:
+          "Supprimez l'enregistrement existant avant d'en lancer un nouveau.",
+        color: "warning",
+      });
+      return;
+    }
     setIsRecording(true);
   };
 
   const handleRecordingStop = (audioUrl?: string) => {
     setIsRecording(false);
+    if (!audioUrl) {
+      showToast({
+        title: "Arrêt impossible",
+        description:
+          "Nous n'avons pas pu récupérer l'audio. Veuillez réessayer.",
+        color: "danger",
+      });
+      // On ne modifie pas l'état des fichiers afin de permettre un nouvel essai
+      return;
+    }
     if (audioUrl) {
       // Récupérer le blob depuis l'URL
       fetch(audioUrl)
@@ -87,6 +111,14 @@ const Content = ({ id }: { id: string }) => {
         })
         .catch((error) => {
           console.error("Erreur lors de la récupération du blob audio:", error);
+          showToast({
+            title: "Erreur d'enregistrement",
+            description:
+              "La récupération de l'audio a échoué. Supprimez et recommencez.",
+            color: "danger",
+          });
+          // Réinitialiser pour permettre un nouvel essai propre
+          handleRecordingDelete();
         });
     }
   };
