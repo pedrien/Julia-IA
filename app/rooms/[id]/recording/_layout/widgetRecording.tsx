@@ -36,8 +36,8 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const { startLoading, stopLoading } = useLoading();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(0);
+  const [, setCurrentTime] = useState<number>(0);
+  const [, setDuration] = useState<number>(0);
   const { mutate: startMeeting } = useStartMeeting({
     onSuccessCallback: async () => {
       stopLoading();
@@ -230,7 +230,9 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
           <Tooltip
             content={"Participants"}
             classNames={{
-              content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
+              content: [
+                "bg-black/70 backdrop-blur-sm border-0 text-white text-xs",
+              ],
             }}
           >
             <Button
@@ -244,7 +246,9 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
             <Tooltip
               content={"Arrêter"}
               classNames={{
-                content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
+                content: [
+                  "bg-black/70 backdrop-blur-sm border-0 text-white text-xs",
+                ],
               }}
             >
               <Button
@@ -260,7 +264,9 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
             <Tooltip
               content={isRecording ? "En cours..." : "Démarrer"}
               classNames={{
-                content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
+                content: [
+                  "bg-black/70 backdrop-blur-sm border-0 text-white text-xs",
+                ],
               }}
             >
               <Button
@@ -277,7 +283,9 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
             <Tooltip
               content={"Supprimer"}
               classNames={{
-                content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
+                content: [
+                  "bg-black/70 backdrop-blur-sm border-0 text-white text-xs",
+                ],
               }}
             >
               <Button
@@ -292,7 +300,9 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
           <Tooltip
             content={"Infos générales"}
             classNames={{
-              content: ["bg-black/70 backdrop-blur-sm border-0 text-white text-xs"],
+              content: [
+                "bg-black/70 backdrop-blur-sm border-0 text-white text-xs",
+              ],
             }}
           >
             <Button
