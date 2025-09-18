@@ -16,7 +16,6 @@ import {
   VolumeX,
   Share2,
 } from "lucide-react";
-import PdfRender from "@/components/common/pdfRender/pdfRender";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
 import { useGetMeetingDocuments } from "@/hooks/features/meetings/hook.get-meeting-documents";
 import { AnimatedDataLoadError } from "@/components/common/animated-error-states/animated-error-states";
@@ -36,7 +35,7 @@ const BlockFiles = ({ id }: { id: string }) => {
     refetch,
     isRefetching,
   } = useGetMeetingDocuments(id);
-  const { mutate: fetchPdf, error } = useFetchPdf({
+  const { mutate: fetchPdf } = useFetchPdf({
     onSuccessCallback: (data) => {
       console.log("PDF fetched successfully via hook:", data);
       if (
@@ -300,10 +299,13 @@ const BlockFiles = ({ id }: { id: string }) => {
       <div className="body flex-grow overflow-y-auto overflow-hidden bg-background">
         {isPending || !pdfData ? (
           <div className="flex flex-col  items-center justify-center">
-            <Spinner size="lg"classNames={{
-              circle1: "border-b-primaryColor",
-              circle2: "border-b-primaryColor",
-            }}/>
+            <Spinner
+              size="lg"
+              classNames={{
+                circle1: "border-b-primaryColor",
+                circle2: "border-b-primaryColor",
+              }}
+            />
           </div>
         ) : (
           <PdfView arrayBuffer={pdfData} />

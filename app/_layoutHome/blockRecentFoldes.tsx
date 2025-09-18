@@ -1,14 +1,5 @@
 import React from "react";
-import { Folder, Search, ChevronDown } from "lucide-react";
-import {
-  Button,
-  Input,
-  Dropdown,
-  DropdownTrigger,
-  DropdownSection,
-  DropdownMenu,
-  DropdownItem,
-} from "@heroui/react";
+import { Folder } from "lucide-react";
 
 const BlockRecentFoldes = () => {
   return (

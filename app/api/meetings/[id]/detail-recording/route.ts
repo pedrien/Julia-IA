@@ -2,7 +2,6 @@ import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
-import { fakeMeetingDetailRecording } from "@/mocks/meetings/fake.meeting-details";
 import {
   MeetingRecordingDetail,
   meetingRecordingDetailSchema,
@@ -49,7 +48,7 @@ export const GET = async (
       "GET"
     );
 
-    console.log(requestData.data.participants);
+    // console.log(requestData.data.participants);
     if (
       !requestData ||
       typeof requestData !== "object" ||
