@@ -2,6 +2,7 @@ import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
+import { fakeMeetingDocument } from "@/mocks/meetings/fake.meeting-details";
 import {
   MeetingDocument,
   meetingDocumentSchema,
@@ -41,28 +42,29 @@ export const GET = async (
 
     const { id } = await params;
 
-    const requestData = await callApiWithToken(
-      tokenOrErrorResponse,
-      `meetings/${id}/media`,
-      undefined,
-      "GET"
-    );
+    // const requestData = await callApiWithToken(
+    //   tokenOrErrorResponse,
+    //   `meetings/${id}/media`,
+    //   undefined,
+    //   "GET"
+    // );
 
-    if (
-      !requestData ||
-      typeof requestData !== "object" ||
-      !("data" in requestData) ||
-      !requestData.data
-    ) {
-      return NextResponse.json(
-        { message: "No documents found for this meeting." },
-        { status: 400 }
-      );
-    }
-    //const requestData = fakeMeetingDocument;
+    // console.log(requestData);
+    // if (
+    //   !requestData ||
+    //   typeof requestData !== "object" ||
+    //   !("data" in requestData) ||
+    //   !requestData.data
+    // ) {
+    //   return NextResponse.json(
+    //     { message: "No documents found for this meeting." },
+    //     { status: 400 }
+    //   );
+    // }
+    const requestData = fakeMeetingDocument;
     //console.log(requestData.data);
     const data: MeetingDocument = validateApiResponse(
-      requestData.data,
+      requestData,
       meetingDocumentSchema
     );
 
