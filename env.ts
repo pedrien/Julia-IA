@@ -23,10 +23,12 @@ export const ENV = createEnv({
   client: {
     NEXT_PUBLIC_APP_BASE_URL: z.string().url(),
     NEXT_PUBLIC_API_URL: z.string().url(),
+    NEXT_PUBLIC_BASED_API_URL: z.string().url(),
   },
 
   experimental__runtimeEnv: {
     NEXT_PUBLIC_APP_BASE_URL: process.env.NEXT_PUBLIC_APP_BASE_URL,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_BASED_API_URL: process.env.NEXT_PUBLIC_BASED_API_URL,
   },
 });

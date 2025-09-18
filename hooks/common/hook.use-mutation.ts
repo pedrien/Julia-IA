@@ -71,6 +71,7 @@ export interface MutationConfig<TData, TVariables> {
 
   // Configuration du loading
   useLoading?: boolean;
+  showToast?: boolean;
 
   // Options de mutation personnalisées
   mutationOptions?: Omit<
@@ -106,6 +107,7 @@ export const useCustomMutation = <TData = unknown, TVariables = unknown>(
     onValidationError,
     useLoading: shouldUseLoading = true,
     mutationOptions = {},
+    showToast: shouldShowToast = true,
   } = config;
 
   const mutation = useMutation({
@@ -129,11 +131,13 @@ export const useCustomMutation = <TData = unknown, TVariables = unknown>(
         if (response.success) {
           // Succès
           if (messages.success) {
-            showToast({
-              title: "Succès",
-              description: messages.success,
-              color: "success",
-            });
+            if (shouldShowToast) {
+              showToast({
+                title: "Succès",
+                description: messages.success,
+                color: "success",
+              });
+            }
           }
 
           // Invalider les requêtes spécifiées
@@ -162,11 +166,13 @@ export const useCustomMutation = <TData = unknown, TVariables = unknown>(
               ? response.error.join(", ")
               : "Une erreur s'est produite";
 
-          showToast({
-            title: "Erreur",
-            description: errorMessage,
-            color: "danger",
-          });
+          if (shouldShowToast) {
+            showToast({
+              title: "Erreur",
+              description: errorMessage,
+              color: "danger",
+            });
+          }
         }
       } else {
         // C'est une réponse API classique, utiliser handleServerResponse
@@ -194,11 +200,13 @@ export const useCustomMutation = <TData = unknown, TVariables = unknown>(
           onSuccess: async () => {
             // Message de succès
             if (messages.success) {
-              showToast({
-                title: "Succès",
-                description: messages.success,
-                color: "success",
-              });
+              if (shouldShowToast) {
+                showToast({
+                  title: "Succès",
+                  description: messages.success,
+                  color: "success",
+                });
+              }
             }
 
             // Invalider les requêtes spécifiées
@@ -229,11 +237,13 @@ export const useCustomMutation = <TData = unknown, TVariables = unknown>(
               // Comportement par défaut
               Object.entries(errors).forEach(([field, errorMessages]) => {
                 errorMessages.forEach((error) => {
-                  showToast({
-                    title: "Erreur de validation",
-                    description: `${field}: ${error}`,
-                    color: "danger",
-                  });
+                  if (shouldShowToast) {
+                    showToast({
+                      title: "Erreur de validation",
+                      description: `${field}: ${error}`,
+                      color: "danger",
+                    });
+                  }
                 });
               });
             }
@@ -251,18 +261,22 @@ export const useCustomMutation = <TData = unknown, TVariables = unknown>(
               // Comportement par défaut
               if (Array.isArray(error)) {
                 error.forEach((errorMessage) => {
-                  showToast({
-                    title: "Erreur",
-                    description: errorMessage,
-                    color: "danger",
-                  });
+                  if (shouldShowToast) {
+                    showToast({
+                      title: "Erreur",
+                      description: errorMessage,
+                      color: "danger",
+                    });
+                  }
                 });
               } else {
-                showToast({
-                  title: "Erreur",
-                  description: error as string,
-                  color: "danger",
-                });
+                if (shouldShowToast) {
+                  showToast({
+                    title: "Erreur",
+                    description: error as string,
+                    color: "danger",
+                  });
+                }
               }
             }
           },
@@ -284,11 +298,13 @@ export const useCustomMutation = <TData = unknown, TVariables = unknown>(
         onError(error, variables);
       } else {
         // Comportement par défaut
-        showToast({
-          title: "Erreur",
-          description: messages.error || "Une erreur s'est produite",
-          color: "danger",
-        });
+        if (shouldShowToast) {
+          showToast({
+            title: "Erreur",
+            description: messages.error || "Une erreur s'est produite",
+            color: "danger",
+          });
+        }
       }
 
       if (shouldUseLoading) {

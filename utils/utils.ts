@@ -52,3 +52,11 @@ export function formatDateTime(dateString: string | null | undefined): string {
     minute: "2-digit",
   }).format(date);
 }
+
+// Fonction pour générer l'URL de l'avatar
+export const getAvatarUrl = (name: string) => {
+  // Utiliser une URL d'avatar basée sur le nom ou une URL par défaut
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    name
+  )}&background=random&color=fff&size=40`;
+};

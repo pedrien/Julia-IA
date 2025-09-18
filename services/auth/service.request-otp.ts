@@ -57,14 +57,14 @@ export const requestOtp = actionClient
 
         return {
           success: true,
-          message: "Un code de vérification a été envoyé avec succès.",
+          // message: "Un code de vérification a été envoyé avec succès.",
         };
       } catch (error) {
-        const errorResult = handleServerActionError(error);
+        //const errorResult = handleServerActionError(error);
+        console.log(error);
         return {
           success: false,
-          error:
-            errorResult.error[0] || "Une erreur inattendue s'est produite.",
+          error: ["Une erreur inattendue s'est produite."],
         };
       }
     }

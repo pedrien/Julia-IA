@@ -2,18 +2,19 @@
 @plugin './hero.ts';
 /* Note: You may need to change the path to fit your project structure */
 @source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
-/* @custom-variant dark (&:is(.dark *)); */
+@custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #ffffff;
+  --background: #f5f7fb;
   --foreground: #171717;
   --bgCard: #ffffff;
   --primaryColor: #782efa;
   --lightPrimaryColor: #f7f1ff;
-  --bgGray: #f9f8fb;
+  --bgGray: #f5f7fb;
   --colorTitle: #121213;
   --colorMuted: #7d7d88;
   --colorBorder: #e9e6ee;
+  --colorBorderTr: #f4f2f9;
 }
 
 @theme inline {
@@ -24,24 +25,36 @@
   --color-primaryColor: var(--primaryColor);
   --color-bgCard: var(--bgCard);
   --color-colorBorder: var(--colorBorder);
+  --color-colorBorderTr: var(--colorBorderTr);
   --color-lightPrimaryColor: var(--lightPrimaryColor);
   --color-colorTitle: var(--colorTitle);
   --color-colorMuted: var(--colorMuted);
   --color-bgGray: var(--bgGray);
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
+/* Dark theme variables */
+.dark {
+  --background: #131118;
+  --foreground: #ededed;
+  --bgCard: #1e1b26;
+  --primaryColor: #8b5cf6;
+  --lightPrimaryColor: #3b2c5e;
+  --bgGray: #2c2837;
+  --colorTitle: #ffffff;
+  --colorMuted: #928f9b;
+  --colorBorder: #323033;
+  --colorBorderTr: #282628;
+}
+html {
+  background: var(--bgCard);
+}
 
 body {
-  background: var(--background);
+  background: var(--bgCard);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 .block-login {
@@ -64,21 +77,99 @@ body {
       font-size: 14px;
       color: var(--colorTitle);
       font-weight: 500;
-      padding: 12px 14px;
-      padding-left: 14px;
+      padding: 12px 20px;
       white-space: nowrap;
       text-align: start;
     }
   }
   tr {
-    border-top: 1px solid var(--colorBorder);
+    border-top: 1px solid var(--colorBorderTr);
   }
   td {
     font-size: 14px;
-    padding: 12px 14px;
-    padding-left: 14px;
+    padding: 12px 20px;
     white-space: nowrap;
     text-align: start;
     color: var(--colorMuted);
   }
+}
+
+/* overlay waiting */
+.loader__container__api {
+  @apply h-full w-full fixed top-0 left-0 flex items-center justify-center backdrop-blur-[2px];
+  z-index: 999;
+}
+
+.loader__api {
+  @apply text-primaryColor;
+  font-size: 45px;
+  text-indent: -9999em;
+  overflow: hidden;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  position: relative;
+  transform: translateZ(0);
+  animation: mltShdSpin 1.7s infinite ease, round 1.7s infinite ease;
+}
+
+@keyframes mltShdSpin {
+  0% {
+    box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+      0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+  }
+  5%,
+  95% {
+    box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+      0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+  }
+  10%,
+  59% {
+    box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em,
+      -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em,
+      -0.297em -0.775em 0 -0.477em;
+  }
+  20% {
+    box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em,
+      -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em,
+      -0.749em -0.34em 0 -0.477em;
+  }
+  38% {
+    box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em,
+      -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em,
+      -0.82em -0.09em 0 -0.477em;
+  }
+  100% {
+    box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+      0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+  }
+}
+
+@keyframes round {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animation de pulse lente pour l'enregistrement */
+@keyframes slow-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+.animate-slow-pulse {
+  animation: slow-pulse 1.5s infinite ease-out;
 }
