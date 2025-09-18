@@ -11,6 +11,7 @@ import { actionClient } from "@/libs/safeAction";
 import axios from "axios";
 import { InfoFolderSchema } from "@/validators/folders/validator.info-folder";
 import { auth } from "@/auth";
+import { z } from "zod";
 
 /**
  * Fetches detailed information for a specific folder from the remote API.
@@ -33,45 +34,53 @@ import { auth } from "@/auth";
  *     // Handle result.error
  *   }
  */
-export const getFolderInfo = actionClient.action(
-  async (
-    folderId: string
-  ): Promise<(IActionSuccess & { data: InfoFolderSchema }) | IActionError> => {
-    try {
-      const session = await auth();
-      if (!session) {
-        return {
-          success: false,
-          error: [APP_CONSTANTS.MESSAGE_AUTH_NO_ACTIVE_SESSION],
-        };
-      }
-
-      const response = await axios.get(
-        `${ENV.API_LOCAL_BASE_URL}folders/${folderId}/info`,
-        {
-          headers: {
-            Authorization: `Bearer ${session.token.access_token}`,
-          },
+export const getFolderInfo = actionClient
+  .inputSchema(
+    z.object({
+      folderId: z.string(),
+    })
+  )
+  .action(
+    async ({
+      parsedInput,
+    }): Promise<
+      (IActionSuccess & { data: InfoFolderSchema }) | IActionError
+    > => {
+      try {
+        const session = await auth();
+        if (!session) {
+          return {
+            success: false,
+            error: [APP_CONSTANTS.MESSAGE_AUTH_NO_ACTIVE_SESSION],
+          };
         }
-      );
 
-      if (response.status !== 200) {
-        const errorResponse = response.data?.error || "Unknown error";
+        const response = await axios.get(
+          `${ENV.API_LOCAL_BASE_URL}folders/${parsedInput.folderId}/info`,
+          {
+            headers: {
+              Authorization: `Bearer ${session.token.access_token}`,
+            },
+          }
+        );
+
+        if (response.status !== 200) {
+          const errorResponse = response.data?.error || "Unknown error";
+          return {
+            success: false,
+            error:
+              errorResponse ||
+              "There seems to be an error with the information you provided.",
+          };
+        }
+
+        const responseData: InfoFolderSchema = response.data.data;
+        return { success: true, data: responseData };
+      } catch (error) {
         return {
           success: false,
-          error:
-            errorResponse ||
-            "There seems to be an error with the information you provided.",
+          error: handleServerActionError(error).error,
         };
       }
-
-      const responseData: InfoFolderSchema = response.data.data;
-      return { success: true, data: responseData };
-    } catch (error) {
-      return {
-        success: false,
-        error: handleServerActionError(error).error,
-      };
     }
-  }
-);
+  );

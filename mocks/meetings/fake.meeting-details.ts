@@ -106,7 +106,7 @@ export const fakeMeetingDetail: DetailMeeting = {
   total_participants: 5,
   date_meeting: "2024-01-15",
   duration: 120,
-  status: "TRAITE",
+  status: "CANCELLED",
 };
 
 /**
@@ -126,7 +126,7 @@ export const fakeInProgressMeetingDetail: DetailMeeting = {
   total_participants: 8,
   date_meeting: "2024-01-20",
   duration: 90,
-  status: "EN_COURS",
+  status: "IN_PROGRESS",
 };
 
 /**
@@ -138,7 +138,7 @@ export const fakePendingMeetingDetail: DetailMeeting = {
   total_participants: 4,
   date_meeting: "2024-01-18",
   duration: 60,
-  status: "EN_ATTENTE",
+  status: "SCHEDULED",
 };
 
 /**

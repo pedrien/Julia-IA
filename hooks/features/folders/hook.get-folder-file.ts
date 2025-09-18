@@ -9,7 +9,9 @@ const getFolderFileData = async (
   folderId: string
 ): Promise<FileFolderSchema | null> => {
   try {
-    const response = await getFolderFile(folderId);
+    const response = await getFolderFile({
+      folderId,
+    });
     if (response?.data?.success === false) {
       handleClientAuthError(response.data.error, false);
       throw new Error(response.data.error.join(", "));

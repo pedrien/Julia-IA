@@ -9,7 +9,7 @@ const getFolderInfoData = async (
   folderId: string
 ): Promise<InfoFolderSchema | null> => {
   try {
-    const response = await getFolderInfo(folderId);
+    const response = await getFolderInfo({ folderId });
     if (response?.data?.success === false) {
       handleClientAuthError(response.data.error, false);
       throw new Error(response.data.error.join(", "));

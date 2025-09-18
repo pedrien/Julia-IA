@@ -12,7 +12,8 @@ function base64ToUint8Array(base64: string): Uint8Array {
       "L'argument base64 doit être une chaîne de caractères non vide."
     );
   }
-  return new Uint8Array(Buffer.from(base64, "base64"));
+  const buffer = Buffer.from(base64, "base64");
+  return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
 }
 
 const ALGORITHM = "AES-GCM";
@@ -23,7 +24,7 @@ async function getCryptoKey(): Promise<CryptoKey> {
   const keyBuffer = base64ToUint8Array(KEY_B64);
   return await crypto.subtle.importKey(
     "raw",
-    keyBuffer,
+    new Uint8Array(keyBuffer),
     { name: ALGORITHM },
     false,
     ["encrypt", "decrypt"]
@@ -67,8 +68,8 @@ export async function decryptToken(encrypted: string): Promise<string> {
   if (!ivB64 || !ciphertextB64) {
     throw new Error("Invalid token format");
   }
-  const iv = base64ToUint8Array(ivB64);
-  const ciphertext = base64ToUint8Array(ciphertextB64);
+  const iv = new Uint8Array(base64ToUint8Array(ivB64));
+  const ciphertext = new Uint8Array(base64ToUint8Array(ciphertextB64));
   const key = await getCryptoKey();
   const decrypted = await crypto.subtle.decrypt(
     { name: ALGORITHM, iv },

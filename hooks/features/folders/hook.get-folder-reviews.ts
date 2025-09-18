@@ -9,7 +9,7 @@ const getFolderReviewsData = async (
   folderId: string
 ): Promise<ListReviewFolderSchema | null> => {
   try {
-    const response = await getFolderReviews(folderId);
+    const response = await getFolderReviews({ folderId });
     if (response?.data?.success === false) {
       handleClientAuthError(response.data.error, false);
       throw new Error(response.data.error.join(", "));
