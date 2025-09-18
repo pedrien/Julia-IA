@@ -113,8 +113,8 @@ export const fakeMeetingDetail: DetailMeeting = {
  * Données factices pour les documents d'une réunion
  */
 export const fakeMeetingDocument: MeetingDocument = {
-  url_recording: "http://localhost:4000/recordings/meeting-1-2024-01-15.mp3",
-  url_report: "http://localhost:4000/reports/meeting-1-2024-01-15.pdf",
+  url_recording: "recordings/meeting-1-2024-01-15.mp3",
+  url_report: "reports/meeting-1-2024-01-15.pdf",
 };
 
 /**
