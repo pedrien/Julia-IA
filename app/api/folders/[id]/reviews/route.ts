@@ -43,25 +43,25 @@ export const GET = async (
 
     const { id } = await params;
 
-    const requestData = await callApiWithToken(
-      tokenOrErrorResponse,
-      `folders/${id}/reviews`,
-      undefined,
-      "GET"
-    );
+    // const requestData = await callApiWithToken(
+    //   tokenOrErrorResponse,
+    //   `folders/${id}/reviews`,
+    //   undefined,
+    //   "GET"
+    // );
 
-    if (
-      !requestData ||
-      typeof requestData !== "object" ||
-      !("data" in requestData) ||
-      !requestData.data
-    ) {
-      return NextResponse.json(
-        { message: "No reviews found for this folder." },
-        { status: 400 }
-      );
-    }
-    //const requestData = fakeReviewFolder;
+    // if (
+    //   !requestData ||
+    //   typeof requestData !== "object" ||
+    //   !("data" in requestData) ||
+    //   !requestData.data
+    // ) {
+    //   return NextResponse.json(
+    //     { message: "No reviews found for this folder." },
+    //     { status: 400 }
+    //   );
+    // }
+    const requestData = fakeReviewFolder;
 
     const data: ListReviewFolderSchema = validateApiResponse(
       requestData,
