@@ -1,4 +1,3 @@
-import { Avatar } from "@heroui/react";
 import { useEffect, useRef } from "react";
 import Message from "./message";
 

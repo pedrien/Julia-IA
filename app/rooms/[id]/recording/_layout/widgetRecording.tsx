@@ -1,17 +1,8 @@
 import { useDrawerContext } from "@/contexts/Drawer/DrawerContext";
-import { useModalContext } from "@/contexts/Modal/ModalContext";
 import { useLoading } from "@/contexts/Overlay/LoadingContext";
 import { useStartMeeting } from "@/hooks/features/meetings/hook.start-meeting";
 import { Button, Tooltip } from "@heroui/react";
-import {
-  Info,
-  Mic,
-  Square,
-  Trash,
-  UsersRound,
-  Play,
-  Pause,
-} from "lucide-react";
+import { Info, Mic, Square, Trash, UsersRound } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface WidgetRecordingProps {
@@ -35,7 +26,7 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const { startLoading, stopLoading } = useLoading();
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [, setIsPlaying] = useState<boolean>(false);
   const [, setCurrentTime] = useState<number>(0);
   const [, setDuration] = useState<number>(0);
   const { mutate: startMeeting } = useStartMeeting({
@@ -99,13 +90,13 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
   }, []);
 
   // Fonction pour formater le temps en mm:ss
-  const formatTime = (time: number): string => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}`;
-  };
+  // const formatTime = (time: number): string => {
+  //   const minutes = Math.floor(time / 60);
+  //   const seconds = Math.floor(time % 60);
+  //   return `${minutes.toString().padStart(2, "0")}:${seconds
+  //     .toString()
+  //     .padStart(2, "0")}`;
+  // };
 
   // Fonction pour initialiser l'audio
   const initializeAudio = (url: string) => {
@@ -131,30 +122,30 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
   };
 
   // Fonction pour jouer/pause l'audio
-  const togglePlayPause = async () => {
-    if (!audioRef.current || !audioUrl) return;
+  // const togglePlayPause = async () => {
+  //   if (!audioRef.current || !audioUrl) return;
 
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      try {
-        await audioRef.current.play();
-        setIsPlaying(true);
-      } catch (error) {
-        console.error("Erreur lors de la lecture:", error);
-      }
-    }
-  };
+  //   if (isPlaying) {
+  //     audioRef.current.pause();
+  //     setIsPlaying(false);
+  //   } else {
+  //     try {
+  //       await audioRef.current.play();
+  //       setIsPlaying(true);
+  //     } catch (error) {
+  //       console.error("Erreur lors de la lecture:", error);
+  //     }
+  //   }
+  // };
 
   // Fonction pour changer la position dans l'audio
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!audioRef.current) return;
+  // const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (!audioRef.current) return;
 
-    const newTime = parseFloat(e.target.value);
-    audioRef.current.currentTime = newTime;
-    setCurrentTime(newTime);
-  };
+  //   const newTime = parseFloat(e.target.value);
+  //   audioRef.current.currentTime = newTime;
+  //   setCurrentTime(newTime);
+  // };
 
   const requestMicPermission = async (): Promise<MediaStream> => {
     return await navigator.mediaDevices.getUserMedia({ audio: true });

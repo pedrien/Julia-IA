@@ -66,7 +66,7 @@ const BlockDash = () => {
                 .length
             }
           />
-          <TableRooms meetings={meetings} />
+          <TableRooms />
         </div>
       </div>
       <NewRoom />

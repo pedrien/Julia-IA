@@ -1,4 +1,4 @@
-import { callApiWithToken } from "@/libs/axiosServer";
+// import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
 import { NextRequest, NextResponse } from "next/server";
@@ -32,6 +32,7 @@ export const POST = async (
     }
 
     const { id } = await params;
+    console.log(id);
 
     // await callApiWithToken(
     //   tokenOrErrorResponse,

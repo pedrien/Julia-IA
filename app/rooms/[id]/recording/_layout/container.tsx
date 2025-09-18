@@ -27,7 +27,6 @@ const Content = ({ id }: { id: string }) => {
     isError,
     refetch,
     isRefetching,
-    d,
   } = useGetMeetingDetailRecording(id);
   const [audioFileState, setAudioFileState] = useState<File | null>(null);
   const [duration, setDuration] = useState<number>(0);

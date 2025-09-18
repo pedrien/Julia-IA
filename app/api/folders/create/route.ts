@@ -47,36 +47,36 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
     const folderDescriptionBracket = ((formData.get(
       "folder[description]"
     ) as string) || null) as string | null;
-    const folderParentIdBracket = ((formData.get(
-      "folder[parent_id]"
-    ) as string) || null) as string | null;
-    const folderVisibilityBracket = ((formData.get(
-      "folder[visibility]"
-    ) as string) || null) as string | null;
+    // const folderParentIdBracket = ((formData.get(
+    //   "folder[parent_id]"
+    // ) as string) || null) as string | null;
+    // const folderVisibilityBracket = ((formData.get(
+    //   "folder[visibility]"
+    // ) as string) || null) as string | null;
 
     // Bracketed document keys
     const documentTitleBracket =
       (formData.get("document[title]") as string) || "";
-    const documentDescriptionBracket = ((formData.get(
-      "document[description]"
-    ) as string) || null) as string | null;
-    const documentVisibilityBracket = ((formData.get(
-      "document[visibility]"
-    ) as string) || null) as string | null;
+    // const documentDescriptionBracket = ((formData.get(
+    //   "document[description]"
+    // ) as string) || null) as string | null;
+    // const documentVisibilityBracket = ((formData.get(
+    //   "document[visibility]"
+    // ) as string) || null) as string | null;
     const documentFileBracket = formData.get("document[file]") as File | null;
 
     // Consolidate values (prefer bracketed if present)
     const fichier = documentFileBracket || legacyFile;
     const folderName = folderNameBracket || nomDossier;
     const folderDescription = folderDescriptionBracket ?? legacyDescription;
-    const folderParentId = folderParentIdBracket ?? "dd,dd,d,dnfnfnf";
-    const folderVisibility = folderVisibilityBracket ?? "dd,dd,d,dnfnfnf";
+    // const folderParentId = folderParentIdBracket ?? "dd,dd,d,dnfnfnf";
+    // const folderVisibility = folderVisibilityBracket ?? "dd,dd,d,dnfnfnf";
     const inferFileName = (file: File | null) =>
       file?.name ? file.name.replace(/\.[^.]+$/, "") : "";
     const documentTitle =
       documentTitleBracket || folderName || inferFileName(fichier);
-    const documentDescription = documentDescriptionBracket ?? "dfjfjfjfjf";
-    const documentVisibility = documentVisibilityBracket ?? "dd,dd,d,dnfnfnf";
+    // const documentDescription = documentDescriptionBracket ?? "dfjfjfjfjf";
+    // const documentVisibility = documentVisibilityBracket ?? "dd,dd,d,dnfnfnf";
 
     // Required checks
     if (!folderName) {

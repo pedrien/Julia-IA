@@ -63,7 +63,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
       { status: 201 }
     );
   } catch (error) {
-    console.log(error.response);
+    console.log(error);
     return handleApiServerError(error);
   }
 };

@@ -2,7 +2,7 @@ import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
-import { fakeInfoFolder } from "@/mocks/folders/fake.info-folder";
+// import { fakeInfoFolder } from "@/mocks/folders/fake.info-folder";
 import {
   InfoFolderSchema,
   infoFolderSchema,
