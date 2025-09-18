@@ -1,10 +1,4 @@
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerBody,
-  Avatar,
-} from "@heroui/react";
+import { Drawer, DrawerContent, DrawerHeader, DrawerBody } from "@heroui/react";
 import { useDrawerContext } from "@/contexts/Drawer/DrawerContext";
 import { MeetingParticipant } from "@/validators/meetings/validator.meeting-recording-detail";
 

@@ -23,7 +23,7 @@ interface ModalStepProps {
 const ModalStep: React.FC<ModalStepProps> = ({
   recordedAudio,
   meetingId,
-  audioFile,
+  // audioFile,
 }) => {
   const { isModalOpen, closeModal, openModal } = useModalContext();
 
@@ -32,7 +32,7 @@ const ModalStep: React.FC<ModalStepProps> = ({
   const [progress, setProgress] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  const [audioFileState, setAudioFileState] = useState<File | null>(null);
+  const [, setAudioFileState] = useState<File | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const {

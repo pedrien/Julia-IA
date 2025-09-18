@@ -55,20 +55,20 @@ const TabsInfoMeeting = ({ id }: { id: string }) => {
   };
 
   // Fonction pour obtenir le texte du statut
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "EN_ATTENTE":
-        return "En attente";
-      case "EN_COURS":
-        return "En cours";
-      case "TRAITE":
-        return "Traité";
-      case "LU":
-        return "Lu";
-      default:
-        return status;
-    }
-  };
+  // const getStatusText = (status: string) => {
+  //   switch (status) {
+  //     case "EN_ATTENTE":
+  //       return "En attente";
+  //     case "EN_COURS":
+  //       return "En cours";
+  //     case "TRAITE":
+  //       return "Traité";
+  //     case "LU":
+  //       return "Lu";
+  //     default:
+  //       return status;
+  //   }
+  // };
 
   if (isLoading) {
     return (
