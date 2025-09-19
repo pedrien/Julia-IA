@@ -91,7 +91,7 @@ const TabsParticipants = ({ id }: { id: string }) => {
               }}
             >
               <Button
-                className="bg-transparent border border-colorBorder  text-colorTitle text-xs p-0 min-w-0 h-[26px] w-[26px]"
+                className="bg-transparent border hidden border-colorBorder  text-colorTitle text-xs p-0 min-w-0 h-[26px] w-[26px]"
                 onPress={() =>
                   openModal("ModalAddInternalParticipantsMeetings")
                 }
@@ -175,7 +175,7 @@ const TabsParticipants = ({ id }: { id: string }) => {
               }}
             >
               <Button
-                className="bg-transparent border border-colorBorder  text-colorTitle text-xs p-0 min-w-0 h-[26px] w-[26px]"
+                className="bg-transparent border border-colorBorder hidden  text-colorTitle text-xs p-0 min-w-0 h-[26px] w-[26px]"
                 onPress={() => openModal("NewInvite")}
               >
                 <Plus size={14}></Plus>
