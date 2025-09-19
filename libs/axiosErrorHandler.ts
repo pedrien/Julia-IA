@@ -25,8 +25,7 @@ export const handleAxiosError = (error: AxiosError) => {
       if (error.status === 403) {
         return NextResponse.json(
           {
-            error:
-              "Vous n’avez pas les droits nécessaires pour effectuer cette action.",
+            error: "Vous n'êtes pas authentifié",
           },
           { status: 403 }
         );
