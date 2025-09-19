@@ -6,7 +6,7 @@ export const meetingParticipantSchema = z.object({
   id: z.string(),
   name: z.string(),
   email: z.string(),
-  phone: z.string(),
+  phone: z.string().nullable(),
   has_processed_report: z.boolean().optional(),
   has_read_report: z.boolean().optional(),
   processed_date: z

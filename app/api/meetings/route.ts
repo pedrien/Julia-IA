@@ -68,7 +68,7 @@ export const GET = async (req: NextRequest) => {
       { status: 200 }
     );
   } catch (error) {
-    console.log(error.response);
+    console.log(error);
     return handleApiServerError(error);
   }
 };

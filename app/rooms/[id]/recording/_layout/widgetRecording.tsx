@@ -2,13 +2,22 @@ import { useDrawerContext } from "@/contexts/Drawer/DrawerContext";
 import { useLoading } from "@/contexts/Overlay/LoadingContext";
 import { useStartMeeting } from "@/hooks/features/meetings/hook.start-meeting";
 import { Button, Tooltip } from "@heroui/react";
-import { Info, Mic, Square, Trash, UsersRound } from "lucide-react";
+import {
+  Info,
+  Mic,
+  Square,
+  Trash,
+  UsersRound,
+  Pause,
+  Play,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface WidgetRecordingProps {
   onRecordingStart?: () => void;
   onRecordingStop?: (audioUrl?: string) => void;
   onRecordingDelete?: () => void;
+  onRecordingPause?: (isPaused: boolean) => void;
   id: string;
 }
 
@@ -16,6 +25,7 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
   onRecordingStart,
   onRecordingStop,
   onRecordingDelete,
+  onRecordingPause,
   id,
 }) => {
   const { openDrawer } = useDrawerContext();
@@ -23,8 +33,12 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+
+  // États pour l'enregistrement
   const [isRecording, setIsRecording] = useState<boolean>(false);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+
   const { startLoading, stopLoading } = useLoading();
   const [, setIsPlaying] = useState<boolean>(false);
   const [, setCurrentTime] = useState<number>(0);
@@ -157,6 +171,33 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
     startMeeting({ id_meeting: id });
   };
 
+  const handlePauseResumeRecording = () => {
+    const mediaRecorder = mediaRecorderRef.current;
+    if (!mediaRecorder || !isRecording) return;
+
+    if (isPaused) {
+      // Reprendre l'enregistrement
+      if (mediaRecorder.state === "paused") {
+        mediaRecorder.resume();
+        setIsPaused(false);
+        // Notifier le parent que l'enregistrement n'est plus en pause
+        if (onRecordingPause) {
+          onRecordingPause(false);
+        }
+      }
+    } else {
+      // Mettre en pause l'enregistrement
+      if (mediaRecorder.state === "recording") {
+        mediaRecorder.pause();
+        setIsPaused(true);
+        // Notifier le parent que l'enregistrement est en pause
+        if (onRecordingPause) {
+          onRecordingPause(true);
+        }
+      }
+    }
+  };
+
   const handleStopRecording = () => {
     if (!isRecording) return;
     const mediaRecorder = mediaRecorderRef.current;
@@ -164,6 +205,7 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
       mediaRecorder.stop();
     }
     setIsRecording(false);
+    setIsPaused(false);
   };
 
   const handleDeleteRecording = () => {
@@ -244,16 +286,17 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
             >
               <Button
                 className="w-[50px] h-[50px] min-w-0 p-0 rounded-full bg-bgCard dark:bg-bgGray text-colorTitle"
-                onPress={() => {
-                  handleStopRecording();
-                }}
+                onPress={handleStopRecording}
+                isDisabled={!isRecording}
               >
                 <Square size={22} />
               </Button>
             </Tooltip>
 
             <Tooltip
-              content={isRecording ? "En cours..." : "Démarrer"}
+              content={
+                isRecording ? (isPaused ? "Reprendre" : "Pause") : "Démarrer"
+              }
               classNames={{
                 content: [
                   "bg-black/70 backdrop-blur-sm border-0 text-white text-xs",
@@ -262,12 +305,27 @@ const WidgetRecording: React.FC<WidgetRecordingProps> = ({
             >
               <Button
                 className={`w-[60px] h-[60px] min-w-0 p-0 rounded-full ${
-                  isRecording ? "bg-[#ff7a7a]" : "bg-[#ff4949]"
+                  isRecording
+                    ? isPaused
+                      ? "bg-[#ffa500]"
+                      : "bg-[#ff7a7a]"
+                    : "bg-[#ff4949]"
                 } text-white`}
-                onPress={handleStartRecording}
-                isDisabled={isRecording}
+                onPress={
+                  isRecording
+                    ? handlePauseResumeRecording
+                    : handleStartRecording
+                }
               >
-                <Mic size={26} />
+                {isRecording ? (
+                  isPaused ? (
+                    <Play size={26} />
+                  ) : (
+                    <Pause size={26} />
+                  )
+                ) : (
+                  <Mic size={26} />
+                )}
               </Button>
             </Tooltip>
 

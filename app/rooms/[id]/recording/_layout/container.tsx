@@ -34,6 +34,7 @@ const Content = ({ id }: { id: string }) => {
   const [isModalOpenConfirmation, setIsModalOpenConfirmation] =
     useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [chronoResetSignal, setChronoResetSignal] = useState<number>(0);
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
   const [audioDuration, setAudioDuration] = useState<number>(0);
@@ -123,6 +124,10 @@ const Content = ({ id }: { id: string }) => {
     }
   };
 
+  const handleRecordingPause = (pauseState: boolean) => {
+    setIsPaused(pauseState);
+  };
+
   const handleRecordingDelete = () => {
     setChronoResetSignal((v) => v + 1);
     if (recordedAudio) {
@@ -132,6 +137,7 @@ const Content = ({ id }: { id: string }) => {
     setAudioFileState(null);
     setAudioDuration(0);
     setDuration(0);
+    setIsPaused(false);
   };
 
   if (isLoading) {
@@ -187,7 +193,10 @@ const Content = ({ id }: { id: string }) => {
                 ></div>
               </div>
             </div>
-            <Chrono isRunning={isRecording} resetSignal={chronoResetSignal} />
+            <Chrono
+              isRunning={isRecording && !isPaused}
+              resetSignal={chronoResetSignal}
+            />
           </div>
         </div>
         <div className="footer lg:py-10">
@@ -195,6 +204,7 @@ const Content = ({ id }: { id: string }) => {
             onRecordingStart={handleRecordingStart}
             onRecordingStop={handleRecordingStop}
             onRecordingDelete={handleRecordingDelete}
+            onRecordingPause={handleRecordingPause}
             id={id}
           />
         </div>

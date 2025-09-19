@@ -3,7 +3,7 @@ import { callApiWithToken } from "@/libs/axiosServer";
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
-import { fakeMeetingDocument } from "@/mocks/meetings/fake.meeting-details";
+// import { fakeMeetingDocument } from "@/mocks/meetings/fake.meeting-details";
 import {
   MeetingDocument,
   meetingDocumentSchema,
