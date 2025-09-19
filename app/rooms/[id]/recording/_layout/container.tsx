@@ -1,21 +1,22 @@
 "use client";
+import { UiLoadingData } from "@/components/common/UiLoadingData/UiLoadingData";
+import { AnimatedDataLoadError } from "@/components/common/animated-error-states/animated-error-states";
 import ViewApp from "@/components/common/containers/ViewApp";
+import ModalConfirmation from "@/components/common/modals/ModalConfirmation/ModalConfirmation";
+import ModalShareRapport from "@/components/features/room/modals/ModalShareRapport";
+import { useModalContext } from "@/contexts/Modal/ModalContext";
+import { useLoading } from "@/contexts/Overlay/LoadingContext";
+import { useEndMeeting } from "@/hooks/features/meetings/hook.end-meeting";
+import { useGetMeetingDetailRecording } from "@/hooks/features/meetings/hook.get-meeting-detail-recording";
+import { showToast } from "@/utils/utils.toast";
+import { Mic } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Chrono from "./chrono";
 import InfoRoom from "./drawers/infoRoom";
 import ParticipantRoom from "./drawers/participantRoom";
 import ModalStep from "./modalStep/modaltStep";
 import WidgetRecording from "./widgetRecording";
-import { useGetMeetingDetailRecording } from "@/hooks/features/meetings/hook.get-meeting-detail-recording";
-import { UiLoadingData } from "@/components/common/UiLoadingData/UiLoadingData";
-import { AnimatedDataLoadError } from "@/components/common/animated-error-states/animated-error-states";
-import ModalConfirmation from "@/components/common/modals/ModalConfirmation/ModalConfirmation";
-import { useEndMeeting } from "@/hooks/features/meetings/hook.end-meeting";
-import { useModalContext } from "@/contexts/Modal/ModalContext";
-import { useLoading } from "@/contexts/Overlay/LoadingContext";
-import ModalShareRapport from "@/components/features/room/modals/ModalShareRapport";
-import { useRouter } from "next/navigation";
-import { showToast } from "@/utils/utils.toast";
 
 const Content = ({ id }: { id: string }) => {
   const { openModal } = useModalContext();
@@ -157,15 +158,34 @@ const Content = ({ id }: { id: string }) => {
       <div className="flex flex-col block-recording h-screen bg-linear-to-b from-[#782efa36] to-bgCard">
         <div className="body flex-grow flex flex-col">
           <div className="m-auto flex flex-col justify-center items-center gap-3">
-            <div className="lg:w-[170px] lg:h-[170px] rounded-full overflow-hidden">
-              <video
-                src="/videos/3.mp4"
-                className="w-full h-full object-cover"
-                playsInline
-                loop
-                autoPlay
-                muted
-              ></video>
+            <div className="relative flex items-center justify-center mb-6 lg:mb-10">
+              <div className="relative z-10 icon-recording w-[140px] h-[140px] text-primaryColor bg-[#782efa29] dark:bg-[#ffffff12] dark:text-white backdrop-blur-[34px] rounded-full flex items-center justify-center">
+                <Mic size={50}></Mic>
+                <div
+                  className={`absolute w-[140px] h-[140px] rounded-full border-2 border-[#782efa29] dark:border-white/20 ${
+                    isRecording ? "animate-slow-pulse flex" : "hidden"
+                  }`}
+                  style={{ animationDelay: "0s" }}
+                ></div>
+                <div
+                  className={`absolute w-[180px] h-[180px]  rounded-full border-2 border-[#782efa29] dark:border-white/20 ${
+                    isRecording ? "animate-slow-pulse flex" : "hidden"
+                  }`}
+                  style={{ animationDelay: ".5s" }}
+                ></div>
+                <div
+                  className={`absolute w-[220px] h-[220px] rounded-full border-2 border-[#782efa29] dark:border-white/20 ${
+                    isRecording ? "animate-slow-pulse flex" : "hidden"
+                  }`}
+                  style={{ animationDelay: "1s" }}
+                ></div>
+                <div
+                  className={`absolute w-[220px] h-[220px] rounded-full border-2 border-[#782efa29] dark:border-white/20 ${
+                    isRecording ? "animate-slow-pulse flex" : "hidden"
+                  }`}
+                  style={{ animationDelay: "1.5s" }}
+                ></div>
+              </div>
             </div>
             <Chrono isRunning={isRecording} resetSignal={chronoResetSignal} />
           </div>

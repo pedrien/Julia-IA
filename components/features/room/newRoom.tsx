@@ -8,7 +8,6 @@ import { createMeetingSchema } from "@/validators/meetings/validator.create-meet
 import { Participant } from "@/validators/participants/validator.list-participants";
 import type { SelectedItems } from "@heroui/react";
 import {
-  Avatar,
   Button,
   Chip,
   Input,
@@ -20,7 +19,7 @@ import {
   Textarea,
 } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mic, Plus, RefreshCcw, X } from "lucide-react";
+import { Plus, RefreshCcw, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -431,50 +430,6 @@ const NewRoom = () => {
                           autoPlay
                           muted
                         ></video>
-                        <div className="block-design h-full flex flex-col justify-center items-center">
-                          <div className="relative flex items-center justify-center">
-                            {/* Icône centrale */}
-                            <div className="relative z-10 icon-recording w-[140px] h-[140px] text-white bg-[#ffffff1f] border-[1px] border-white/10 backdrop-blur-[34px] rounded-full flex items-center justify-center">
-                              <Avatar
-                                src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
-                                className="absolute top-[-70px] z-10"
-                              />
-                              <Avatar
-                                src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
-                                className="absolute left-[-70px] z-10"
-                              />
-                              <Avatar
-                                src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
-                                className="absolute right-[-70px] z-10"
-                              />
-                              <Mic size={50}></Mic>
-                              <div
-                                className="absolute w-[140px] h-[140px] rounded-full border-2 border-white/20 animate-slow-pulse"
-                                style={{ animationDelay: "0s" }}
-                              ></div>
-                              <div
-                                className="absolute w-[180px] h-[180px] rounded-full border-2 border-white/15 animate-slow-pulse"
-                                style={{ animationDelay: ".5s" }}
-                              ></div>
-                              <div
-                                className="absolute w-[220px] h-[220px] rounded-full border-2 border-white/10 animate-slow-pulse"
-                                style={{ animationDelay: "1s" }}
-                              ></div>
-                              <div
-                                className="absolute w-[220px] h-[220px] rounded-full border-2 border-white/10 animate-slow-pulse"
-                                style={{ animationDelay: "1.5s" }}
-                              ></div>
-                            </div>
-                          </div>
-                          <h3 className="text-white font-semibold text-[24px] text-center mt-4">
-                            Enregistrement en cours
-                          </h3>
-                          <p className="text-white text-sm text-center px-20">
-                            {
-                              "Vous pouvez démarrer l'enregistrement en appuyant sur le bouton enregistrer."
-                            }
-                          </p>
-                        </div>
                       </div>
                     </div>
                   </div>
