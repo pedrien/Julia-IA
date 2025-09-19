@@ -42,6 +42,7 @@ export const POST = async (req: NextRequest) => {
       { status: 200 }
     );
   } catch (error) {
+    console.log(error);
     return handleApiServerError(error);
   }
 };

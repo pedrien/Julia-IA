@@ -22,7 +22,6 @@ import { AnimatedDataLoadError } from "@/components/common/animated-error-states
 import { UiLoadingData } from "@/components/common/UiLoadingData/UiLoadingData";
 import { useFetchPdf } from "@/hooks/features/meetings/hook.fetch-pdf";
 import PdfView from "@/components/common/PdfView/PdfView";
-import { ENV } from "@/env";
 
 const BlockFiles = ({ id }: { id: string }) => {
   const { openModal } = useModalContext();
@@ -65,6 +64,10 @@ const BlockFiles = ({ id }: { id: string }) => {
 
   // Fonctions pour le lecteur audio
   const formatTime = (time: number) => {
+    // Vérifier si time est un nombre valide
+    if (!isFinite(time) || isNaN(time) || time < 0) {
+      return "00:00";
+    }
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes.toString().padStart(2, "0")}:${seconds
@@ -84,10 +87,12 @@ const BlockFiles = ({ id }: { id: string }) => {
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (audioRef.current) {
+    if (audioRef.current && isFinite(duration) && duration > 0) {
       const newTime = parseFloat(e.target.value);
-      audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
+      if (isFinite(newTime) && newTime >= 0 && newTime <= duration) {
+        audioRef.current.currentTime = newTime;
+        setCurrentTime(newTime);
+      }
     }
   };
 
@@ -113,27 +118,27 @@ const BlockFiles = ({ id }: { id: string }) => {
   };
 
   const skipForward = () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = Math.min(
-        audioRef.current.currentTime + 10,
-        duration
-      );
+    if (audioRef.current && isFinite(duration) && duration > 0) {
+      const newTime = Math.min(audioRef.current.currentTime + 10, duration);
+      if (isFinite(newTime)) {
+        audioRef.current.currentTime = newTime;
+      }
     }
   };
 
   const skipBackward = () => {
     if (audioRef.current) {
-      audioRef.current.currentTime = Math.max(
-        audioRef.current.currentTime - 10,
-        0
-      );
+      const newTime = Math.max(audioRef.current.currentTime - 10, 0);
+      if (isFinite(newTime)) {
+        audioRef.current.currentTime = newTime;
+      }
     }
   };
 
   const downloadAudio = () => {
     if (meetingDocument?.url_recording) {
       const link = document.createElement("a");
-      link.href = ENV.NEXT_PUBLIC_BASED_API_URL + meetingDocument.url_recording;
+      link.href = meetingDocument.url_recording;
       link.download = `meeting-${id}-recording.mp3`;
       document.body.appendChild(link);
       link.click();
@@ -144,7 +149,7 @@ const BlockFiles = ({ id }: { id: string }) => {
   const downloadReport = () => {
     if (meetingDocument?.url_report) {
       const link = document.createElement("a");
-      link.href = ENV.NEXT_PUBLIC_BASED_API_URL + meetingDocument.url_report;
+      link.href = meetingDocument.url_report;
       link.download = `meeting-${id}-report.pdf`;
       document.body.appendChild(link);
       link.click();
@@ -155,7 +160,7 @@ const BlockFiles = ({ id }: { id: string }) => {
     if (meetingDocument?.url_report) {
       startTransition(() => {
         fetchPdf({
-          url: ENV.NEXT_PUBLIC_BASED_API_URL + meetingDocument.url_report,
+          url: meetingDocument.url_report,
         });
       });
     }
@@ -167,16 +172,35 @@ const BlockFiles = ({ id }: { id: string }) => {
     if (!audio) return;
 
     const handleLoadedMetadata = () => {
-      setDuration(audio.duration);
+      const audioDuration = audio.duration;
+      // Vérifier que la duration est valide
+      if (isFinite(audioDuration) && audioDuration > 0) {
+        setDuration(audioDuration);
+      } else {
+        setDuration(0);
+        console.warn("Audio duration is invalid:", audioDuration);
+      }
       setIsLoadingAudio(false);
     };
 
     const handleTimeUpdate = () => {
-      setCurrentTime(audio.currentTime);
+      const currentTime = audio.currentTime;
+      // Vérifier que currentTime est valide
+      if (isFinite(currentTime) && currentTime >= 0) {
+        setCurrentTime(currentTime);
+      }
     };
 
     const handleEnded = () => {
       setIsPlaying(false);
+      setCurrentTime(0);
+    };
+
+    const handleError = () => {
+      console.error("Audio loading error");
+      setIsLoadingAudio(false);
+      setIsPlaying(false);
+      setDuration(0);
       setCurrentTime(0);
     };
 
@@ -191,6 +215,7 @@ const BlockFiles = ({ id }: { id: string }) => {
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("error", handleError);
     audio.addEventListener("loadstart", handleLoadStart);
     audio.addEventListener("canplay", handleCanPlay);
 
@@ -198,6 +223,7 @@ const BlockFiles = ({ id }: { id: string }) => {
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("error", handleError);
       audio.removeEventListener("loadstart", handleLoadStart);
       audio.removeEventListener("canplay", handleCanPlay);
     };
@@ -239,7 +265,7 @@ const BlockFiles = ({ id }: { id: string }) => {
       {/* Élément audio caché */}
       <audio
         ref={audioRef}
-        src={ENV.NEXT_PUBLIC_BASED_API_URL + meetingDocument?.url_recording}
+        src={meetingDocument?.url_recording}
         preload="metadata"
       />
 
@@ -328,15 +354,20 @@ const BlockFiles = ({ id }: { id: string }) => {
               <input
                 type="range"
                 min="0"
-                max={duration || 0}
-                value={currentTime}
+                max={isFinite(duration) && duration > 0 ? duration : 0}
+                value={isFinite(currentTime) ? currentTime : 0}
                 onChange={handleSeek}
+                disabled={!isFinite(duration) || duration <= 0}
                 className="w-full h-2 bg-bgGray rounded-lg appearance-none cursor-pointer slider"
                 style={{
                   background: `linear-gradient(to right, #8b5cf6 0%, #8b5cf6 ${
-                    (currentTime / duration) * 100
+                    isFinite(duration) && duration > 0 && isFinite(currentTime)
+                      ? (currentTime / duration) * 100
+                      : 0
                   }%, var(--bgGray) ${
-                    (currentTime / duration) * 100
+                    isFinite(duration) && duration > 0 && isFinite(currentTime)
+                      ? (currentTime / duration) * 100
+                      : 0
                   }%, var(--bgGray) 100%)`,
                 }}
               />
