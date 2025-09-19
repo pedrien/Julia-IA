@@ -51,6 +51,7 @@ export const addMeetingObservation = actionClient
         `${ENV.API_LOCAL_BASE_URL}meetings/${parsedInput.meetingId}/observations`,
         {
           content: parsedInput.content,
+          meeting_id: parsedInput.meetingId,
         },
         {
           headers: {

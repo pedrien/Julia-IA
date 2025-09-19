@@ -2,13 +2,13 @@
 import { handleApiServerError } from "@/libs/handleApiServerError";
 import { validateApiResponse } from "@/libs/validateApiResponse";
 import { verifyBearerToken } from "@/libs/verifyBearerToken";
-import { getParticipantObservations } from "@/mocks/meetings/fake.meeting-details";
 import {
   ListOberservationParticipants,
   listOberservationParticipantsSchema,
 } from "@/validators/participants/validator.list-oberservation-participants";
 import { addObservationSchema } from "@/validators/meetings/validator.add-obersvation";
 import { NextRequest, NextResponse } from "next/server";
+import { callApiWithToken } from "@/libs/axiosServer";
 
 /**
  * @api {get} /api/meetings/:id/observations Get participant observations for a meeting
@@ -60,25 +60,28 @@ export const GET = async (
       );
     }
 
-    // const requestData = await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `meetings/${id}/observations?participantId=${participantId}`,
-    //   undefined,
-    //   "GET"
-    // );
+    const requestData = await callApiWithToken(
+      tokenOrErrorResponse,
+      `meetings/${id}/annotations/${participantId}`,
+      undefined,
+      "GET"
+    );
 
-    // if (
-    //   !requestData ||
-    //   typeof requestData !== "object" ||
-    //   !("data" in requestData) ||
-    //   !requestData.data
-    // ) {
-    //   return NextResponse.json(
-    //     { message: "No observations found for this participant in this meeting." },
-    //     { status: 400 }
-    //   );
-    // }
-    const requestData = getParticipantObservations(participantId);
+    if (
+      !requestData ||
+      typeof requestData !== "object" ||
+      !("data" in requestData) ||
+      !requestData.data
+    ) {
+      return NextResponse.json(
+        {
+          message:
+            "No observations found for this participant in this meeting.",
+        },
+        { status: 400 }
+      );
+    }
+    // const requestData = getParticipantObservations(participantId);
 
     const data: ListOberservationParticipants = validateApiResponse(
       requestData,
@@ -152,17 +155,14 @@ export const POST = async (
       content: body.content,
     });
 
-    console.log(validatedBody);
-
-    // const requestData = await callApiWithToken(
-    //   tokenOrErrorResponse,
-    //   `meetings/${id}/observations`,
-    //   {
-    //     participantId: validatedBody.participantId,
-    //     content: validatedBody.content,
-    //   },
-    //   "POST"
-    // );
+    await callApiWithToken(
+      tokenOrErrorResponse,
+      `meetings/${id}/annotations/store`,
+      {
+        content: validatedBody.content,
+      },
+      "POST"
+    );
 
     return NextResponse.json(
       {
