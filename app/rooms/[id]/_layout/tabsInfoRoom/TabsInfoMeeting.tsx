@@ -28,14 +28,22 @@ const TabsInfoMeeting = ({ id }: { id: string }) => {
   };
 
   // Fonction pour formater la durée
-  const formatDuration = (minutes: number) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-
-    if (hours > 0) {
-      return `${hours}h ${mins}min`;
+  // La value est en secondes, donc on adapte pour afficher en sec, min, heure
+  const formatDuration = (seconds: number) => {
+    if (seconds < 60) {
+      return `${seconds}s`;
     }
-    return `${mins}min`;
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    if (mins < 60) {
+      return secs > 0 ? `${mins}min ${secs}s` : `${mins}min`;
+    }
+    const hours = Math.floor(mins / 60);
+    const remMins = mins % 60;
+    let result = `${hours}h`;
+    if (remMins > 0) result += ` ${remMins}min`;
+    if (secs > 0) result += ` ${secs}s`;
+    return result.trim();
   };
 
   // Fonction pour obtenir la couleur du statut

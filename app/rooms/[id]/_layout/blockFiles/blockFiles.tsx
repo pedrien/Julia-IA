@@ -62,6 +62,31 @@ const BlockFiles = ({ id }: { id: string }) => {
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // Effet pour permettre le mixed content si nécessaire
+  useEffect(() => {
+    // Ajouter une meta tag pour permettre le mixed content
+    const existingMeta = document.querySelector(
+      'meta[http-equiv="Content-Security-Policy"]'
+    );
+    if (
+      !existingMeta &&
+      typeof window !== "undefined" &&
+      window.location.protocol === "https:"
+    ) {
+      const meta = document.createElement("meta");
+      meta.httpEquiv = "Content-Security-Policy";
+      meta.content = "upgrade-insecure-requests";
+      document.head.appendChild(meta);
+
+      return () => {
+        // Nettoyer au démontage du composant
+        if (document.head.contains(meta)) {
+          document.head.removeChild(meta);
+        }
+      };
+    }
+  }, []);
+
   // Fonctions pour le lecteur audio
   const formatTime = (time: number) => {
     // Vérifier si time est un nombre valide
@@ -135,14 +160,38 @@ const BlockFiles = ({ id }: { id: string }) => {
     }
   };
 
-  const downloadAudio = () => {
+  const downloadAudio = async () => {
     if (meetingDocument?.url_recording) {
-      const link = document.createElement("a");
-      link.href = meetingDocument.url_recording;
-      link.download = `meeting-${id}-recording.mp3`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      try {
+        // Essayer de télécharger via fetch pour contourner les problèmes de CORS
+        const response = await fetch(meetingDocument.url_recording, {
+          mode: "cors",
+          credentials: "omit",
+        });
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `meeting-${id}-recording.mp3`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Nettoyer l'URL créée
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.warn("Fetch failed, trying direct download:", error);
+        // Fallback vers le téléchargement direct
+        const link = document.createElement("a");
+        link.href = meetingDocument.url_recording;
+        link.download = `meeting-${id}-recording.mp3`;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     }
   };
 
@@ -165,6 +214,18 @@ const BlockFiles = ({ id }: { id: string }) => {
       });
     }
   }, [meetingDocument?.url_report, fetchPdf]);
+
+  // Fonction pour convertir HTTP en HTTPS si nécessaire
+  const getSecureUrl = (url: string) => {
+    if (
+      typeof window !== "undefined" &&
+      window.location.protocol === "https:" &&
+      url.startsWith("http:")
+    ) {
+      return url.replace("http:", "https:");
+    }
+    return url;
+  };
 
   // Effets pour gérer les événements audio
   useEffect(() => {
@@ -196,12 +257,22 @@ const BlockFiles = ({ id }: { id: string }) => {
       setCurrentTime(0);
     };
 
-    const handleError = () => {
-      console.error("Audio loading error");
+    const handleError = (e: Event) => {
+      console.error("Audio loading error:", e);
       setIsLoadingAudio(false);
       setIsPlaying(false);
       setDuration(0);
       setCurrentTime(0);
+
+      // Essayer de recharger avec une URL sécurisée en cas d'erreur de mixed content
+      if (meetingDocument?.url_recording && audio.src) {
+        const secureUrl = getSecureUrl(meetingDocument.url_recording);
+        if (secureUrl !== audio.src) {
+          console.log("Trying secure URL:", secureUrl);
+          audio.src = secureUrl;
+          audio.load();
+        }
+      }
     };
 
     const handleLoadStart = () => {
@@ -265,8 +336,25 @@ const BlockFiles = ({ id }: { id: string }) => {
       {/* Élément audio caché */}
       <audio
         ref={audioRef}
-        src={meetingDocument?.url_recording}
+        src={
+          meetingDocument?.url_recording
+            ? getSecureUrl(meetingDocument.url_recording)
+            : undefined
+        }
         preload="metadata"
+        crossOrigin="anonymous"
+        onError={(e) => {
+          console.warn(
+            "Audio loading error, trying alternative approaches:",
+            e
+          );
+          // Essayer de recharger l'audio en cas d'erreur
+          if (audioRef.current && meetingDocument?.url_recording) {
+            // Essayer sans crossOrigin en cas d'échec
+            audioRef.current.crossOrigin = null;
+            audioRef.current.load();
+          }
+        }}
       />
 
       {/* Styles pour les sliders */}
