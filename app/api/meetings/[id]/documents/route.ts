@@ -64,9 +64,9 @@ export const GET = async (
       );
     }
     // const requestData = fakeMeetingDocument;
-    console.log(requestData.data);
+    console.log(requestData);
     const data: MeetingDocument = validateApiResponse(
-      requestData,
+      requestData.data,
       meetingDocumentSchema
     );
 
