@@ -145,6 +145,7 @@ const AvisParticipants = () => {
           <Button
             className="bg-primaryColor  text-white w-full font-medium"
             onPress={() => openModal("NewObserv")}
+            isDisabled
           >
             Laisser une observation
           </Button>

@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft,} from "lucide-react";
-import { Button, } from "@heroui/react";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@heroui/react";
 import { Tabs, Tab } from "@heroui/react";
 import { useModalContext } from "@/contexts/Modal/ModalContext";
 import TabsParticipants from "./TabsParticipants";
@@ -58,6 +58,7 @@ const TabsInfoRoom = ({ id }: { id: string }) => {
         <Button
           className="bg-primaryColor  text-white w-full font-medium"
           onPress={() => openModal("NewObserv")}
+          isDisabled
         >
           Laisser une observation
         </Button>
